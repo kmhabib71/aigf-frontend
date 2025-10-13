@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket & Conversation ID Test Script</title>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #f9f9f9;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .warning { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #0056b3; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        .log-container {
+            background: #000;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 5px;
+            height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .test-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .metric {
+            background: #e9ecef;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .metric-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Socket & Conversation ID Test Suite</h1>
+        <p>This test script validates the fixes for socket ID and conversation ID management issues.</p>
+
+        <!-- Test Control Panel -->
+        <div class="test-section">
+            <h2>Test Control Panel</h2>
+            <button id="startTests" onclick="runAllTests()">🚀 Run All Tests</button>
+            <button id="testHomePageFlow" onclick="testHomePageFlow()">🏠 Test Home Page Flow</button>
+            <button id="testNewChatFlow" onclick="testNewChatFlow()">➕ Test New Chat Flow</button>
+            <button id="testSocketPersistence" onclick="testSocketPersistence()">🔄 Test Socket Persistence</button>
+            <button id="clearLogs" onclick="clearLogs()">🧹 Clear Logs</button>
+        </div>
+
+        <!-- Test Metrics -->
+        <div class="metrics">
+            <div class="metric">
+                <div class="metric-value" id="testsRun">0</div>
+                <div>Tests Run</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value" id="testsPassed">0</div>
+                <div>Tests Passed</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value" id="testsFailed">0</div>
+                <div>Tests Failed</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value" id="currentSocketId">None</div>
+                <div>Current Socket ID</div>
+            </div>
+        </div>
+
+        <!-- Test Grid -->
+        <div class="test-grid">
+            <!-- Socket Connection Tests -->
+            <div class="test-section">
+                <h3>🔌 Socket Connection Tests</h3>
+                <div id="socketStatus" class="status info">Socket: Disconnected</div>
+                <div id="socketTests">
+                    <div id="test-socket-connect" class="status">🔄 Waiting...</div>
+                    <div id="test-socket-persist" class="status">🔄 Waiting...</div>
+                    <div id="test-socket-room-join" class="status">🔄 Waiting...</div>
+                </div>
+            </div>
+
+            <!-- Conversation Flow Tests -->
+            <div class="test-section">
+                <h3>💬 Conversation Flow Tests</h3>
+                <div id="conversationStatus" class="status info">Conversation: None</div>
+                <div id="conversationTests">
+                    <div id="test-home-page-creation" class="status">🔄 Waiting...</div>
+                    <div id="test-new-chat-creation" class="status">🔄 Waiting...</div>
+                    <div id="test-conversation-id-consistency" class="status">🔄 Waiting...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Streaming Tests -->
+        <div class="test-section">
+            <h3>⚡ Streaming Tests</h3>
+            <div id="streamingStatus" class="status info">Streaming: Idle</div>
+            <div id="streamingTests">
+                <div id="test-streaming-home-page" class="status">🔄 Waiting...</div>
+                <div id="test-streaming-new-chat" class="status">🔄 Waiting...</div>
+                <div id="test-conversation-filter" class="status">🔄 Waiting...</div>
+            </div>
+        </div>
+
+        <!-- Live Log -->
+        <div class="test-section">
+            <h3>📋 Live Test Log</h3>
+            <div id="testLog" class="log-container">Test log will appear here...\n</div>
+        </div>
+    </div>
+
+    <script>
+        // Test Suite Variables
+        let socket = null;
+        let currentConversationId = null;
+        let testMetrics = {
+            testsRun: 0,
+            testsPassed: 0,
+            testsFailed: 0
+        };
+
+        // Helper Functions
+        function log(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            const logElement = document.getElementById('testLog');
+            logElement.textContent += `[${timestamp}] ${message}\n`;
+            logElement.scrollTop = logElement.scrollHeight;
+            console.log(message);
+        }
+
+        function updateTestStatus(testId, status, message) {
+            const element = document.getElementById(testId);
+            element.className = `status ${status}`;
+            element.textContent = message;
+        }
+
+        function updateMetrics() {
+            document.getElementById('testsRun').textContent = testMetrics.testsRun;
+            document.getElementById('testsPassed').textContent = testMetrics.testsPassed;
+            document.getElementById('testsFailed').textContent = testMetrics.testsFailed;
+            document.getElementById('currentSocketId').textContent = socket?.id || 'None';
+        }
+
+        function passTest(testId, message) {
+            testMetrics.testsRun++;
+            testMetrics.testsPassed++;
+            updateTestStatus(testId, 'success', `✅ ${message}`);
+            updateMetrics();
+            log(`✅ PASS: ${message}`);
+        }
+
+        function failTest(testId, message) {
+            testMetrics.testsRun++;
+            testMetrics.testsFailed++;
+            updateTestStatus(testId, 'error', `❌ ${message}`);
+            updateMetrics();
+            log(`❌ FAIL: ${message}`);
+        }
+
+        function clearLogs() {
+            document.getElementById('testLog').textContent = 'Test log cleared...\n';
+            testMetrics = { testsRun: 0, testsPassed: 0, testsFailed: 0 };
+            updateMetrics();
+        }
+
+        // Socket Connection Tests
+        function connectSocket() {
+            return new Promise((resolve, reject) => {
+                log('🔌 Connecting to socket...');
+                socket = io('http://localhost:3001', {
+                    forceNew: false,
+                    reconnection: true,
+                    timeout: 60000,
+                    autoConnect: true
+                });
+
+                socket.on('connect', () => {
+                    log(`🔌 Socket connected with ID: ${socket.id}`);
+                    document.getElementById('socketStatus').className = 'status success';
+                    document.getElementById('socketStatus').textContent = `Socket: Connected (${socket.id})`;
+                    passTest('test-socket-connect', `Socket connected with ID: ${socket.id}`);
+                    updateMetrics();
+                    resolve(socket);
+                });
+
+                socket.on('disconnect', (reason) => {
+                    log(`🔌 Socket disconnected: ${reason}`);
+                    document.getElementById('socketStatus').className = 'status error';
+                    document.getElementById('socketStatus').textContent = `Socket: Disconnected (${reason})`;
+                });
+
+                socket.on('connect_error', (error) => {
+                    log(`❌ Socket connection error: ${error.message}`);
+                    failTest('test-socket-connect', `Connection failed: ${error.message}`);
+                    reject(error);
+                });
+
+                // Set timeout for connection
+                setTimeout(() => {
+                    if (!socket.connected) {
+                        failTest('test-socket-connect', 'Connection timeout after 5 seconds');
+                        reject(new Error('Connection timeout'));
+                    }
+                }, 5000);
+            });
+        }
+
+        // Test Home Page Flow (the broken one)
+        async function testHomePageFlow() {
+            log('🏠 Testing Home Page Flow...');
+
+            try {
+                if (!socket || !socket.connected) {
+                    await connectSocket();
+                }
+
+                // Simulate home page direct chat (no conversation ID initially)
+                log('📝 Simulating home page direct chat...');
+                currentConversationId = null;
+
+                // Create conversation via API (like home page does)
+                const response = await fetch('http://localhost:3001/api/conversations/new', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        title: 'Test Home Page Conversation',
+                        currentConversationId: null
+                    })
+                });
+
+                const data = await response.json();
+                if (data.conversation) {
+                    currentConversationId = data.conversation.conversationId;
+                    log(`🆕 Created conversation: ${currentConversationId}`);
+
+                    // Join socket room
+                    socket.emit('join-conversation', currentConversationId);
+                    log(`🏠 Joined room: ${currentConversationId}`);
+
+                    passTest('test-home-page-creation', `Home page conversation created: ${currentConversationId}`);
+
+                    // Test streaming with null initial conversation ID
+                    await testStreamingWithNullConversationId();
+
+                } else {
+                    failTest('test-home-page-creation', 'Failed to create conversation via API');
+                }
+
+            } catch (error) {
+                failTest('test-home-page-creation', `Home page flow error: ${error.message}`);
+            }
+        }
+
+        // Test New Chat Flow (the working one)
+        async function testNewChatFlow() {
+            log('➕ Testing New Chat Button Flow...');
+
+            try {
+                if (!socket || !socket.connected) {
+                    await connectSocket();
+                }
+
+                // Simulate new chat button flow
+                log('🔘 Simulating new chat button...');
+
+                const response = await fetch('http://localhost:3001/api/conversations/new', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        title: 'Test New Chat Conversation',
+                        currentConversationId: currentConversationId // Has existing conversation
+                    })
+                });
+
+                const data = await response.json();
+                if (data.conversation) {
+                    const newConversationId = data.conversation.conversationId;
+                    log(`🆕 Created new chat conversation: ${newConversationId}`);
+
+                    // Join socket room
+                    socket.emit('join-conversation', newConversationId);
+                    log(`🏠 Joined room: ${newConversationId}`);
+
+                    passTest('test-new-chat-creation', `New chat conversation created: ${newConversationId}`);
+
+                    // Update current conversation
+                    currentConversationId = newConversationId;
+
+                } else {
+                    failTest('test-new-chat-creation', 'Failed to create new chat conversation');
+                }
+
+            } catch (error) {
+                failTest('test-new-chat-creation', `New chat flow error: ${error.message}`);
+            }
+        }
+
+        // Test Streaming with Null Conversation ID (the fixed scenario)
+        function testStreamingWithNullConversationId() {
+            return new Promise((resolve, reject) => {
+                log('⚡ Testing streaming with null conversation ID...');
+
+                const testMessage = 'Hello, testing streaming response handling';
+                let responseReceived = false;
+
+                // Set up response listener
+                const handleResponse = (data) => {
+                    log(`📨 Received streaming response: ${JSON.stringify(data)}`);
+
+                    if (data.conversationId === currentConversationId) {
+                        responseReceived = true;
+                        passTest('test-streaming-home-page', 'Streaming response received correctly with null initial conversation ID');
+                        socket.off('chat-stream-response', handleResponse);
+                        resolve();
+                    } else {
+                        failTest('test-streaming-home-page', `Conversation ID mismatch: expected ${currentConversationId}, got ${data.conversationId}`);
+                        socket.off('chat-stream-response', handleResponse);
+                        reject(new Error('Conversation ID mismatch'));
+                    }
+                };
+
+                socket.on('chat-stream-response', handleResponse);
+
+                // Send streaming request
+                log(`🌊 Sending streaming request for conversation: ${currentConversationId}`);
+                socket.emit('chat-stream-request', {
+                    message: testMessage,
+                    conversationId: currentConversationId
+                });
+
+                // Set timeout for response
+                setTimeout(() => {
+                    if (!responseReceived) {
+                        failTest('test-streaming-home-page', 'Streaming response timeout');
+                        socket.off('chat-stream-response', handleResponse);
+                        reject(new Error('Response timeout'));
+                    }
+                }, 15000);
+            });
+        }
+
+        // Test Socket Persistence
+        async function testSocketPersistence() {
+            log('🔄 Testing socket persistence...');
+
+            try {
+                if (!socket || !socket.connected) {
+                    await connectSocket();
+                }
+
+                const originalSocketId = socket.id;
+                log(`📝 Original socket ID: ${originalSocketId}`);
+
+                // Simulate some operations that might cause disconnection
+                if (currentConversationId) {
+                    socket.emit('leave-conversation', currentConversationId);
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    socket.emit('join-conversation', currentConversationId);
+                    await new Promise(resolve => setTimeout(resolve, 100));
+
+                    const newSocketId = socket.id;
+
+                    if (originalSocketId === newSocketId && socket.connected) {
+                        passTest('test-socket-persist', `Socket persisted correctly: ${newSocketId}`);
+                    } else {
+                        failTest('test-socket-persist', `Socket changed unexpectedly: ${originalSocketId} -> ${newSocketId}`);
+                    }
+                } else {
+                    failTest('test-socket-persist', 'No conversation ID available for persistence test');
+                }
+
+            } catch (error) {
+                failTest('test-socket-persist', `Socket persistence error: ${error.message}`);
+            }
+        }
+
+        // Test Conversation ID Consistency
+        function testConversationIdConsistency() {
+            log('🔍 Testing conversation ID consistency...');
+
+            if (currentConversationId) {
+                const urlParams = new URLSearchParams(window.location.search);
+                const urlConversationId = urlParams.get('conversationId');
+
+                if (urlConversationId === currentConversationId) {
+                    passTest('test-conversation-id-consistency', 'Conversation ID consistent between URL and state');
+                } else {
+                    failTest('test-conversation-id-consistency', `ID mismatch: URL=${urlConversationId}, State=${currentConversationId}`);
+                }
+            } else {
+                // For home page test, this is expected
+                passTest('test-conversation-id-consistency', 'Conversation ID properly null for home page flow');
+            }
+        }
+
+        // Run All Tests
+        async function runAllTests() {
+            log('🚀 Starting comprehensive test suite...');
+            clearLogs();
+
+            try {
+                // Connect socket first
+                await connectSocket();
+
+                // Test home page flow (the broken scenario)
+                await testHomePageFlow();
+
+                // Test new chat flow (the working scenario)
+                await testNewChatFlow();
+
+                // Test socket persistence
+                await testSocketPersistence();
+
+                // Test conversation ID consistency
+                testConversationIdConsistency();
+
+                log(`🎉 Test suite completed! Results: ${testMetrics.testsPassed}/${testMetrics.testsRun} tests passed`);
+
+            } catch (error) {
+                log(`❌ Test suite failed: ${error.message}`);
+            }
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            log('🧪 Socket & Conversation ID Test Suite Ready');
+            log('👆 Click "Run All Tests" to start testing the fixes');
+            updateMetrics();
+        });
+    </script>
+</body>
+</html>

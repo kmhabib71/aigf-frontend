@@ -1,0 +1,117 @@
+.scene-block {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+
+.scene-block:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.scene-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background: linear-gradient(135deg, #f8f8f8, #fff);
+  border-bottom: 1px solid #e0e0e0;
+  cursor: pointer;
+  user-select: none;
+}
+
+.scene-header:hover {
+  background: linear-gradient(135deg, #f0f0f0, #f8f8f8);
+}
+
+.scene-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.scene-header h3 {
+  font-size: 1.1rem;
+  color: #333;
+  margin: 0;
+}
+
+.scene-comments-badge {
+  background: #e91e63;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.scene-collapse-button {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  color: #666;
+  cursor: pointer;
+  padding: 5px 10px;
+}
+
+.scene-image-container {
+  position: relative;
+  width: 100%;
+  max-height: 500px;
+  overflow: hidden;
+}
+
+.scene-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+.scene-image-prompt-hint {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  cursor: help;
+}
+
+.scene-content {
+  padding: 20px;
+  line-height: 1.8;
+}
+
+/* Hybrid Format Styling for Dialogue */
+.scene-content .prose p {
+  margin-bottom: 1rem;
+}
+
+.scene-content .prose strong {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.scene-content .prose em {
+  font-style: italic;
+  color: #4a4a4a;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .scene-header {
+    padding: 12px 15px;
+  }
+
+  .scene-header h3 {
+    font-size: 1rem;
+  }
+
+  .scene-content {
+    padding: 15px;
+  }
+}
