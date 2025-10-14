@@ -16,6 +16,16 @@ const firebaseConfig = {
     process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:123456789:web:abcdef123456",
 };
 
+// Debug logs to check environment variables
+console.log("Firebase Config Debug:");
+console.log("API Key:", firebaseConfig.apiKey);
+console.log("Auth Domain:", firebaseConfig.authDomain);
+console.log("Project ID:", firebaseConfig.projectId);
+console.log("Storage Bucket:", firebaseConfig.storageBucket);
+console.log("Messaging Sender ID:", firebaseConfig.messagingSenderId);
+console.log("App ID:", firebaseConfig.appId);
+console.log("Full Config:", firebaseConfig);
+
 // Initialize Firebase (avoid multiple instances)
 const app =
   getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
