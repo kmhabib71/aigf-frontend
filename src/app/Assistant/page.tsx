@@ -3,15 +3,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import { flushSync } from "react-dom";
 import { Socket } from "socket.io-client";
-import { useSocket } from "../contexts/SocketContext";
-import { useAuth } from "../contexts/AuthContext";
-import ConversationSidebar from "../components/ConversationSidebar";
-import { SmartGreeting } from "../features/smart-greeting";
-import NotesPanel from "../features/notes-system/NotesPanel";
-import { StreamingChat } from "../components/StreamingChat";
-import LanguageSelector from "../components/LanguageSelector";
-import SoftGateModal from "../components/SoftGateModal";
-import { sessionService } from "../lib/auth/sessionService";
+import { useSocket } from "@/contexts/SocketContext";
+import { useAuth } from "@/contexts/AuthContext";
+import ConversationSidebar from "@/components/ConversationSidebar";
+import { SmartGreeting } from "@/features/smart-greeting";
+import NotesPanel from "@/features/notes-system/NotesPanel";
+import { StreamingChat } from "@/components/StreamingChat";
+import LanguageSelector from "@/components/LanguageSelector";
+import SoftGateModal from "@/components/SoftGateModal";
+import { sessionService } from "@/lib/auth/sessionService";
 import {
   autoDetectLanguage,
   saveLanguagePreference,
@@ -19,7 +19,7 @@ import {
   translateText,
   translateBatch,
   extractCompleteSentences,
-} from "../lib/translationUtils";
+} from "@/lib/translationUtils";
 import {
   getConversationIdFromUrl,
   setConversationIdInUrl,
