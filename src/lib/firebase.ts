@@ -16,19 +16,6 @@ const firebaseConfig = {
     process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:123456789:web:abcdef123456",
 };
 
-// Debug: Check if we're in production and log env vars
-if (typeof window !== "undefined") {
-  console.log("Environment check:", {
-    NODE_ENV: process.env.NODE_ENV,
-    NEXT_PUBLIC_FIREBASE_API_KEY: process.env.NEXT_PUBLIC_FIREBASE_API_KEY
-      ? "SET"
-      : "NOT SET",
-    allEnvKeys: Object.keys(process.env).filter((key) =>
-      key.startsWith("NEXT_PUBLIC")
-    ),
-  });
-}
-
 // Initialize Firebase (avoid multiple instances)
 const app =
   getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
