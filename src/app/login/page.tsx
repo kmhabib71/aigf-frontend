@@ -1,22 +1,23 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useAuth } from '../../contexts/AuthContext';
+import React, { useState, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useAuth } from "../../contexts/AuthContext";
 
-export default function LoginPage() {
+function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { signInWithGoogle, signInWithEmail, isAuthenticated, loading } = useAuth();
+  const { signInWithGoogle, signInWithEmail, isAuthenticated, loading } =
+    useAuth();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   // Get redirect params
-  const redirectTo = searchParams.get('redirect') || '/';
-  const planParam = searchParams.get('plan');
+  const redirectTo = searchParams.get("redirect") || "/";
+  const planParam = searchParams.get("plan");
 
   useEffect(() => {
     if (!loading && isAuthenticated) {
@@ -27,17 +28,17 @@ export default function LoginPage() {
   const handleGoogleSignIn = async () => {
     try {
       setIsLoading(true);
-      setError('');
+      setError("");
       await signInWithGoogle();
 
       // Redirect based on plan parameter
-      if (planParam && planParam !== 'free') {
+      if (planParam && planParam !== "free") {
         router.push(`/pricing?plan=${planParam}`);
       } else {
         router.push(redirectTo);
       }
     } catch (err: any) {
-      setError(err.message || 'Failed to sign in with Google');
+      setError(err.message || "Failed to sign in with Google");
       setIsLoading(false);
     }
   };
@@ -46,23 +47,23 @@ export default function LoginPage() {
     e.preventDefault();
 
     if (!email || !password) {
-      setError('Please enter email and password');
+      setError("Please enter email and password");
       return;
     }
 
     try {
       setIsLoading(true);
-      setError('');
+      setError("");
       await signInWithEmail(email, password);
 
       // Redirect based on plan parameter
-      if (planParam && planParam !== 'free') {
+      if (planParam && planParam !== "free") {
         router.push(`/pricing?plan=${planParam}`);
       } else {
         router.push(redirectTo);
       }
     } catch (err: any) {
-      setError(err.message || 'Failed to sign in');
+      setError(err.message || "Failed to sign in");
       setIsLoading(false);
     }
   };
@@ -96,7 +97,8 @@ export default function LoginPage() {
           {/* Plan Notice */}
           {planParam && (
             <div className="mb-6 bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-lg text-sm">
-              Sign in to upgrade to <span className="font-semibold capitalize">{planParam}</span> plan
+              Sign in to upgrade to{" "}
+              <span className="font-semibold capitalize">{planParam}</span> plan
             </div>
           )}
 
@@ -124,7 +126,7 @@ export default function LoginPage() {
                 d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
               />
             </svg>
-            {isLoading ? 'Signing in...' : 'Continue with Google'}
+            {isLoading ? "Signing in..." : "Continue with Google"}
           </button>
 
           {/* Divider */}
@@ -137,7 +139,10 @@ export default function LoginPage() {
           {/* Email/Password Form */}
           <form onSubmit={handleEmailSignIn} className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label
+                htmlFor="email"
+                className="block text-sm font-semibold text-gray-700 mb-2"
+              >
                 Email
               </label>
               <input
@@ -153,7 +158,10 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label
+                htmlFor="password"
+                className="block text-sm font-semibold text-gray-700 mb-2"
+              >
                 Password
               </label>
               <input
@@ -173,14 +181,14 @@ export default function LoginPage() {
               disabled={isLoading}
               className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-3 rounded-full font-semibold hover:from-indigo-600 hover:to-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isLoading ? 'Signing in...' : 'Sign In'}
+              {isLoading ? "Signing in..." : "Sign In"}
             </button>
           </form>
 
           {/* Forgot Password */}
           <div className="mt-4 text-center">
             <button
-              onClick={() => router.push('/forgot-password')}
+              onClick={() => router.push("/forgot-password")}
               className="text-sm text-indigo-600 hover:text-indigo-700"
             >
               Forgot password?
@@ -190,9 +198,11 @@ export default function LoginPage() {
           {/* Sign Up Link */}
           <div className="mt-6 text-center">
             <p className="text-gray-600">
-              Don't have an account?{' '}
+              Don't have an account?{" "}
               <button
-                onClick={() => router.push(`/signup${planParam ? `?plan=${planParam}` : ''}`)}
+                onClick={() =>
+                  router.push(`/signup${planParam ? `?plan=${planParam}` : ""}`)
+                }
                 className="text-indigo-600 hover:text-indigo-700 font-semibold"
               >
                 Sign up
@@ -203,7 +213,7 @@ export default function LoginPage() {
           {/* Back to Home */}
           <div className="mt-4 text-center">
             <button
-              onClick={() => router.push('/')}
+              onClick={() => router.push("/")}
               className="text-sm text-gray-500 hover:text-gray-700"
             >
               ← Back to home
@@ -212,5 +222,19 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-purple-700 flex items-center justify-center">
+          <div className="text-white text-xl">Loading...</div>
+        </div>
+      }
+    >
+      <LoginContent />
+    </Suspense>
   );
 }

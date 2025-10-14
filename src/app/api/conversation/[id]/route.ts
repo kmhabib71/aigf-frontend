@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { OpenAI } from 'openai';
-import AdvancedConversationManager from '@/lib/advancedConversationManager.js';
+import { NextRequest, NextResponse } from "next/server";
+import { OpenAI } from "openai";
+import AdvancedConversationManager from "@/lib/advancedConversationManager";
 
 // Initialize OpenAI
 const openai = new OpenAI({
@@ -25,10 +25,13 @@ export async function GET(
       messages: conversation.messages,
       userProfile: conversation.userProfile,
       compressionHistory: conversation.compressionHistory,
-      stats: stats
+      stats: stats,
     });
   } catch (error) {
-    return NextResponse.json({ error: "Conversation not found" }, { status: 404 });
+    return NextResponse.json(
+      { error: "Conversation not found" },
+      { status: 404 }
+    );
   }
 }
 
@@ -42,6 +45,9 @@ export async function DELETE(
     await conversationManager.clearConversation(id);
     return NextResponse.json({ message: "Conversation and user data cleared" });
   } catch (error) {
-    return NextResponse.json({ error: "Conversation not found" }, { status: 404 });
+    return NextResponse.json(
+      { error: "Conversation not found" },
+      { status: 404 }
+    );
   }
 }

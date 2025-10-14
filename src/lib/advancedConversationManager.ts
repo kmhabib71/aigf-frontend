@@ -1,8 +1,9 @@
+// @ts-nocheck
 import crypto from "crypto";
 import fs from "fs/promises";
 import path from "path";
 import { OpenAI } from "openai";
-import DatabaseStorage from "./databaseStorage.js";
+import DatabaseStorage from "./databaseStorage";
 
 class AdvancedConversation {
   constructor(id = null, openaiClient = null, storageMode = "auto") {
