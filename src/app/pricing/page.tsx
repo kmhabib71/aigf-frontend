@@ -119,7 +119,7 @@ export default function PricingPage() {
       const provider = 'lemonsqueezy';
 
       // Create checkout session
-      const response = await fetch('http://localhost:3001/api/subscription/create-checkout', {
+      const response = await fetch(`${backendUrl}/api/subscription/create-checkout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

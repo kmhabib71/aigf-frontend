@@ -1,14 +1,14 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '../../contexts/AuthContext';
-
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "../../contexts/AuthContext";
+import { backendUrl } from "../../lib/config";
 interface User {
   uid: string;
   email: string;
   displayName: string;
-  plan: 'free' | 'plus' | 'pro';
+  plan: "free" | "plus" | "pro";
   messagesUsed: number;
   messageLimit: number;
   imagesUsed: number;
@@ -25,7 +25,7 @@ interface User {
 }
 
 interface TierConfig {
-  plan: 'free' | 'plus' | 'pro';
+  plan: "free" | "plus" | "pro";
   messageLimit: number;
   imageLimit: number;
   voiceCharLimit: number;
@@ -66,41 +66,47 @@ export default function AdminPage() {
   const router = useRouter();
   const { user, loading, isAuthenticated } = useAuth();
 
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'users' | 'tiers' | 'tokens'>('dashboard');
+  const [activeTab, setActiveTab] = useState<
+    "dashboard" | "users" | "tiers" | "tokens"
+  >("dashboard");
   const [stats, setStats] = useState<Stats | null>(null);
   const [users, setUsers] = useState<User[]>([]);
   const [tiers, setTiers] = useState<TierConfig[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [editingTier, setEditingTier] = useState<TierConfig | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filterPlan, setFilterPlan] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterPlan, setFilterPlan] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [tokenPeriod, setTokenPeriod] = useState<'daily' | 'weekly' | 'monthly'>('daily');
+  const [tokenPeriod, setTokenPeriod] = useState<
+    "daily" | "weekly" | "monthly"
+  >("daily");
   const [tokenStats, setTokenStats] = useState<any>(null);
   const [expandedUserId, setExpandedUserId] = useState<string | null>(null);
-  const [userModelBreakdown, setUserModelBreakdown] = useState<{[key: string]: any}>({});
+  const [userModelBreakdown, setUserModelBreakdown] = useState<{
+    [key: string]: any;
+  }>({});
   const [showCreditModal, setShowCreditModal] = useState(false);
   const [creditUser, setCreditUser] = useState<User | null>(null);
   const [creditBalance, setCreditBalance] = useState<any>(null);
   const [creditHistory, setCreditHistory] = useState<CreditHistory[]>([]);
   const [creditAmount, setCreditAmount] = useState<number>(0);
-  const [creditReason, setCreditReason] = useState<string>('');
+  const [creditReason, setCreditReason] = useState<string>("");
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
-      router.push('/login');
+      router.push("/login");
     } else if (isAuthenticated) {
       loadData();
     }
   }, [loading, isAuthenticated, router]);
 
   const getAuthHeaders = async () => {
-    const { authService } = await import('../../lib/auth/authService');
+    const { authService } = await import("../../lib/auth/authService");
     const token = await authService.getIdToken();
     return {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
     };
   };
 
@@ -110,13 +116,13 @@ export default function AdminPage() {
       const headers = await getAuthHeaders();
 
       const [statsRes, usersRes, tiersRes] = await Promise.all([
-        fetch('http://localhost:3001/api/admin/stats', { headers }),
-        fetch('http://localhost:3001/api/admin/users?limit=50', { headers }),
-        fetch('http://localhost:3001/api/admin/tiers', { headers }),
+        fetch(`${backendUrl}/api/admin/stats`, { headers }),
+        fetch(`${backendUrl}/api/admin/users?limit=50`, { headers }),
+        fetch(`${backendUrl}/api/admin/tiers`, { headers }),
       ]);
 
       if (!statsRes.ok || !usersRes.ok || !tiersRes.ok) {
-        throw new Error('Failed to load admin data');
+        throw new Error("Failed to load admin data");
       }
 
       const [statsData, usersData, tiersData] = await Promise.all([
@@ -130,42 +136,51 @@ export default function AdminPage() {
       setTiers(tiersData);
       setError(null);
     } catch (err: any) {
-      console.error('Load data error:', err);
-      setError(err.message || 'Failed to load data');
+      console.error("Load data error:", err);
+      setError(err.message || "Failed to load data");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const loadTokenStats = async (period: 'daily' | 'weekly' | 'monthly') => {
+  const loadTokenStats = async (period: "daily" | "weekly" | "monthly") => {
     try {
       const headers = await getAuthHeaders();
-      const response = await fetch(`http://localhost:3001/api/token-usage/admin/users?period=${period}`, { headers });
+      const response = await fetch(
+        `${backendUrl}/api/token-usage/admin/users?period=${period}`,
+        { headers }
+      );
 
-      if (!response.ok) throw new Error('Failed to load token stats');
+      if (!response.ok) throw new Error("Failed to load token stats");
 
       const data = await response.json();
       setTokenStats(data);
     } catch (err: any) {
-      console.error('Load token stats error:', err);
-      setError(err.message || 'Failed to load token stats');
+      console.error("Load token stats error:", err);
+      setError(err.message || "Failed to load token stats");
     }
   };
 
-  const loadUserModelBreakdown = async (userId: string, period: 'daily' | 'weekly' | 'monthly') => {
+  const loadUserModelBreakdown = async (
+    userId: string,
+    period: "daily" | "weekly" | "monthly"
+  ) => {
     try {
       const headers = await getAuthHeaders();
-      const response = await fetch(`http://localhost:3001/api/token-usage/admin/user/${userId}?period=${period}`, { headers });
+      const response = await fetch(
+        `${backendUrl}/api/token-usage/admin/user/${userId}?period=${period}`,
+        { headers }
+      );
 
-      if (!response.ok) throw new Error('Failed to load model breakdown');
+      if (!response.ok) throw new Error("Failed to load model breakdown");
 
       const data = await response.json();
-      setUserModelBreakdown(prev => ({
+      setUserModelBreakdown((prev) => ({
         ...prev,
-        [userId]: data.modelBreakdown
+        [userId]: data.modelBreakdown,
       }));
     } catch (err: any) {
-      console.error('Load model breakdown error:', err);
+      console.error("Load model breakdown error:", err);
     }
   };
 
@@ -181,112 +196,130 @@ export default function AdminPage() {
   };
 
   useEffect(() => {
-    if (activeTab === 'tokens') {
+    if (activeTab === "tokens") {
       loadTokenStats(tokenPeriod);
     }
   }, [activeTab, tokenPeriod]);
 
-  const handleUpdateUserPlan = async (uid: string, newPlan: 'free' | 'plus' | 'pro') => {
+  const handleUpdateUserPlan = async (
+    uid: string,
+    newPlan: "free" | "plus" | "pro"
+  ) => {
     try {
       const headers = await getAuthHeaders();
-      const response = await fetch(`http://localhost:3001/api/admin/users/${uid}/plan`, {
-        method: 'PATCH',
-        headers,
-        body: JSON.stringify({ plan: newPlan }),
-      });
+      const response = await fetch(
+        `${backendUrl}/api/admin/users/${uid}/plan`,
+        {
+          method: "PATCH",
+          headers,
+          body: JSON.stringify({ plan: newPlan }),
+        }
+      );
 
-      if (!response.ok) throw new Error('Failed to update plan');
+      if (!response.ok) throw new Error("Failed to update plan");
 
       await loadData();
-      alert('Plan updated successfully');
+      alert("Plan updated successfully");
     } catch (err: any) {
-      alert(err.message || 'Failed to update plan');
+      alert(err.message || "Failed to update plan");
     }
   };
 
-  const handleUpdateUserLimits = async (uid: string, limits: { messageLimit: number; imageLimit: number; voiceCharLimit: number }) => {
+  const handleUpdateUserLimits = async (
+    uid: string,
+    limits: { messageLimit: number; imageLimit: number; voiceCharLimit: number }
+  ) => {
     try {
       const headers = await getAuthHeaders();
-      const response = await fetch(`http://localhost:3001/api/admin/users/${uid}/limits`, {
-        method: 'PATCH',
-        headers,
-        body: JSON.stringify(limits),
-      });
+      const response = await fetch(
+        `${backendUrl}/api/admin/users/${uid}/limits`,
+        {
+          method: "PATCH",
+          headers,
+          body: JSON.stringify(limits),
+        }
+      );
 
-      if (!response.ok) throw new Error('Failed to update limits');
+      if (!response.ok) throw new Error("Failed to update limits");
 
       await loadData();
       setSelectedUser(null);
-      alert('Limits updated successfully');
+      alert("Limits updated successfully");
     } catch (err: any) {
-      alert(err.message || 'Failed to update limits');
+      alert(err.message || "Failed to update limits");
     }
   };
 
   const handleResetUsage = async (uid: string) => {
-    if (!confirm('Reset usage for this user?')) return;
+    if (!confirm("Reset usage for this user?")) return;
 
     try {
       const headers = await getAuthHeaders();
-      const response = await fetch(`http://localhost:3001/api/admin/users/${uid}/reset-usage`, {
-        method: 'POST',
-        headers,
-      });
+      const response = await fetch(
+        `${backendUrl}/api/admin/users/${uid}/reset-usage`,
+        {
+          method: "POST",
+          headers,
+        }
+      );
 
-      if (!response.ok) throw new Error('Failed to reset usage');
+      if (!response.ok) throw new Error("Failed to reset usage");
 
       await loadData();
-      alert('Usage reset successfully');
+      alert("Usage reset successfully");
     } catch (err: any) {
-      alert(err.message || 'Failed to reset usage');
+      alert(err.message || "Failed to reset usage");
     }
   };
 
   const handleBanUser = async (uid: string, banned: boolean) => {
-    if (!confirm(`${banned ? 'Ban' : 'Unban'} this user?`)) return;
+    if (!confirm(`${banned ? "Ban" : "Unban"} this user?`)) return;
 
     try {
       const headers = await getAuthHeaders();
-      const response = await fetch(`http://localhost:3001/api/admin/users/${uid}/ban`, {
-        method: 'PATCH',
+      const response = await fetch(`${backendUrl}/api/admin/users/${uid}/ban`, {
+        method: "PATCH",
         headers,
         body: JSON.stringify({ banned }),
       });
 
-      if (!response.ok) throw new Error('Failed to update ban status');
+      if (!response.ok) throw new Error("Failed to update ban status");
 
       await loadData();
-      alert(`User ${banned ? 'banned' : 'unbanned'} successfully`);
+      alert(`User ${banned ? "banned" : "unbanned"} successfully`);
     } catch (err: any) {
-      alert(err.message || 'Failed to update ban status');
+      alert(err.message || "Failed to update ban status");
     }
   };
 
   const handleUpdateTier = async (tier: TierConfig) => {
     try {
       const headers = await getAuthHeaders();
-      const response = await fetch(`http://localhost:3001/api/admin/tiers/${tier.plan}`, {
-        method: 'PATCH',
-        headers,
-        body: JSON.stringify({
-          messageLimit: tier.messageLimit,
-          imageLimit: tier.imageLimit,
-          voiceCharLimit: tier.voiceCharLimit,
-          price: tier.price,
-          features: tier.features,
-          creditsPerMonth: tier.creditsPerMonth,
-          rolloverPercentage: tier.rolloverPercentage,
-          useCreditSystem: tier.useCreditSystem,
-        }),
-      });
+      const response = await fetch(
+        `${backendUrl}/api/admin/tiers/${tier.plan}`,
+        {
+          method: "PATCH",
+          headers,
+          body: JSON.stringify({
+            messageLimit: tier.messageLimit,
+            imageLimit: tier.imageLimit,
+            voiceCharLimit: tier.voiceCharLimit,
+            price: tier.price,
+            features: tier.features,
+            creditsPerMonth: tier.creditsPerMonth,
+            rolloverPercentage: tier.rolloverPercentage,
+            useCreditSystem: tier.useCreditSystem,
+          }),
+        }
+      );
 
-      if (!response.ok) throw new Error('Failed to update tier');
+      if (!response.ok) throw new Error("Failed to update tier");
 
       await loadData();
       setEditingTier(null);
-      alert('Tier updated successfully and applied to all users');
+      alert("Tier updated successfully and applied to all users");
     } catch (err: any) {
-      alert(err.message || 'Failed to update tier');
+      alert(err.message || "Failed to update tier");
     }
   };
 
@@ -300,8 +333,12 @@ export default function AdminPage() {
     try {
       const headers = await getAuthHeaders();
       const [balanceRes, historyRes] = await Promise.all([
-        fetch(`http://localhost:3001/api/admin/users/${uid}/credits`, { headers }),
-        fetch(`http://localhost:3001/api/admin/users/${uid}/credits/history?limit=20`, { headers }),
+        fetch(`${backendUrl}/api/admin/users/${uid}/credits`, {
+          headers,
+        }),
+        fetch(`${backendUrl}/api/admin/users/${uid}/credits/history?limit=20`, {
+          headers,
+        }),
       ]);
 
       if (balanceRes.ok) {
@@ -314,7 +351,7 @@ export default function AdminPage() {
         setCreditHistory(history.history || []);
       }
     } catch (err: any) {
-      console.error('Load credit info error:', err);
+      console.error("Load credit info error:", err);
     }
   };
 
@@ -323,23 +360,26 @@ export default function AdminPage() {
 
     try {
       const headers = await getAuthHeaders();
-      const response = await fetch(`http://localhost:3001/api/admin/users/${creditUser.uid}/credits/add`, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({
-          credits: creditAmount,
-          reason: creditReason || 'Admin adjustment',
-        }),
-      });
+      const response = await fetch(
+        `${backendUrl}/api/admin/users/${creditUser.uid}/credits/add`,
+        {
+          method: "POST",
+          headers,
+          body: JSON.stringify({
+            credits: creditAmount,
+            reason: creditReason || "Admin adjustment",
+          }),
+        }
+      );
 
-      if (!response.ok) throw new Error('Failed to add credits');
+      if (!response.ok) throw new Error("Failed to add credits");
 
       await loadCreditInfo(creditUser.uid);
       setCreditAmount(0);
-      setCreditReason('');
-      alert('Credits added successfully');
+      setCreditReason("");
+      alert("Credits added successfully");
     } catch (err: any) {
-      alert(err.message || 'Failed to add credits');
+      alert(err.message || "Failed to add credits");
     }
   };
 
@@ -348,52 +388,59 @@ export default function AdminPage() {
 
     try {
       const headers = await getAuthHeaders();
-      const response = await fetch(`http://localhost:3001/api/admin/users/${creditUser.uid}/credits/deduct`, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({
-          credits: creditAmount,
-          reason: creditReason || 'Admin adjustment',
-        }),
-      });
+      const response = await fetch(
+        `${backendUrl}/api/admin/users/${creditUser.uid}/credits/deduct`,
+        {
+          method: "POST",
+          headers,
+          body: JSON.stringify({
+            credits: creditAmount,
+            reason: creditReason || "Admin adjustment",
+          }),
+        }
+      );
 
-      if (!response.ok) throw new Error('Failed to deduct credits');
+      if (!response.ok) throw new Error("Failed to deduct credits");
 
       await loadCreditInfo(creditUser.uid);
       setCreditAmount(0);
-      setCreditReason('');
-      alert('Credits deducted successfully');
+      setCreditReason("");
+      alert("Credits deducted successfully");
     } catch (err: any) {
-      alert(err.message || 'Failed to deduct credits');
+      alert(err.message || "Failed to deduct credits");
     }
   };
 
   const handleRefreshCredits = async () => {
     if (!creditUser) return;
 
-    if (!confirm('Manually refresh credits for this user?')) return;
+    if (!confirm("Manually refresh credits for this user?")) return;
 
     try {
       const headers = await getAuthHeaders();
-      const response = await fetch(`http://localhost:3001/api/admin/users/${creditUser.uid}/credits/refresh`, {
-        method: 'POST',
-        headers,
-      });
+      const response = await fetch(
+        `${backendUrl}/api/admin/users/${creditUser.uid}/credits/refresh`,
+        {
+          method: "POST",
+          headers,
+        }
+      );
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || 'Failed to refresh credits');
+        throw new Error(error.error || "Failed to refresh credits");
       }
 
       await loadCreditInfo(creditUser.uid);
-      alert('Credits refreshed successfully');
+      alert("Credits refreshed successfully");
     } catch (err: any) {
-      alert(err.message || 'Failed to refresh credits');
+      alert(err.message || "Failed to refresh credits");
     }
   };
 
-  const filteredUsers = users.filter(u => {
-    const matchesSearch = !searchQuery ||
+  const filteredUsers = users.filter((u) => {
+    const matchesSearch =
+      !searchQuery ||
       u.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
       u.displayName.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesPlan = !filterPlan || u.plan === filterPlan;
@@ -429,7 +476,7 @@ export default function AdminPage() {
               <span>Admin Panel</span>
             </h1>
             <button
-              onClick={() => router.push('/')}
+              onClick={() => router.push("/")}
               className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-full transition-colors"
             >
               Back to App
@@ -442,41 +489,41 @@ export default function AdminPage() {
         {/* Tabs */}
         <div className="flex gap-4 mb-8">
           <button
-            onClick={() => setActiveTab('dashboard')}
+            onClick={() => setActiveTab("dashboard")}
             className={`px-6 py-3 rounded-full font-semibold transition-all ${
-              activeTab === 'dashboard'
-                ? 'bg-white text-purple-700'
-                : 'bg-white/20 text-white hover:bg-white/30'
+              activeTab === "dashboard"
+                ? "bg-white text-purple-700"
+                : "bg-white/20 text-white hover:bg-white/30"
             }`}
           >
             Dashboard
           </button>
           <button
-            onClick={() => setActiveTab('users')}
+            onClick={() => setActiveTab("users")}
             className={`px-6 py-3 rounded-full font-semibold transition-all ${
-              activeTab === 'users'
-                ? 'bg-white text-purple-700'
-                : 'bg-white/20 text-white hover:bg-white/30'
+              activeTab === "users"
+                ? "bg-white text-purple-700"
+                : "bg-white/20 text-white hover:bg-white/30"
             }`}
           >
             Users ({users.length})
           </button>
           <button
-            onClick={() => setActiveTab('tiers')}
+            onClick={() => setActiveTab("tiers")}
             className={`px-6 py-3 rounded-full font-semibold transition-all ${
-              activeTab === 'tiers'
-                ? 'bg-white text-purple-700'
-                : 'bg-white/20 text-white hover:bg-white/30'
+              activeTab === "tiers"
+                ? "bg-white text-purple-700"
+                : "bg-white/20 text-white hover:bg-white/30"
             }`}
           >
             Tier Configuration
           </button>
           <button
-            onClick={() => setActiveTab('tokens')}
+            onClick={() => setActiveTab("tokens")}
             className={`px-6 py-3 rounded-full font-semibold transition-all ${
-              activeTab === 'tokens'
-                ? 'bg-white text-purple-700'
-                : 'bg-white/20 text-white hover:bg-white/30'
+              activeTab === "tokens"
+                ? "bg-white text-purple-700"
+                : "bg-white/20 text-white hover:bg-white/30"
             }`}
           >
             Token Usage
@@ -484,42 +531,66 @@ export default function AdminPage() {
         </div>
 
         {/* Dashboard Tab */}
-        {activeTab === 'dashboard' && stats && (
+        {activeTab === "dashboard" && stats && (
           <div className="space-y-6">
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="bg-white rounded-2xl p-6 shadow-lg">
-                <div className="text-gray-600 text-sm font-semibold mb-2">Total Users</div>
-                <div className="text-4xl font-bold text-gray-900">{stats.totalUsers}</div>
+                <div className="text-gray-600 text-sm font-semibold mb-2">
+                  Total Users
+                </div>
+                <div className="text-4xl font-bold text-gray-900">
+                  {stats.totalUsers}
+                </div>
               </div>
               <div className="bg-white rounded-2xl p-6 shadow-lg">
-                <div className="text-gray-600 text-sm font-semibold mb-2">Active Subscriptions</div>
-                <div className="text-4xl font-bold text-green-600">{stats.activeSubscriptions}</div>
+                <div className="text-gray-600 text-sm font-semibold mb-2">
+                  Active Subscriptions
+                </div>
+                <div className="text-4xl font-bold text-green-600">
+                  {stats.activeSubscriptions}
+                </div>
               </div>
               <div className="bg-white rounded-2xl p-6 shadow-lg">
-                <div className="text-gray-600 text-sm font-semibold mb-2">Monthly Revenue</div>
-                <div className="text-4xl font-bold text-purple-600">${stats.revenue.monthly.toFixed(2)}</div>
+                <div className="text-gray-600 text-sm font-semibold mb-2">
+                  Monthly Revenue
+                </div>
+                <div className="text-4xl font-bold text-purple-600">
+                  ${stats.revenue.monthly.toFixed(2)}
+                </div>
               </div>
               <div className="bg-white rounded-2xl p-6 shadow-lg">
-                <div className="text-gray-600 text-sm font-semibold mb-2">Anonymous Sessions</div>
-                <div className="text-4xl font-bold text-orange-600">{stats.anonymousSessions}</div>
+                <div className="text-gray-600 text-sm font-semibold mb-2">
+                  Anonymous Sessions
+                </div>
+                <div className="text-4xl font-bold text-orange-600">
+                  {stats.anonymousSessions}
+                </div>
               </div>
             </div>
 
             {/* Plan Distribution */}
             <div className="bg-white rounded-2xl p-6 shadow-lg">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Plan Distribution</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">
+                Plan Distribution
+              </h3>
               <div className="grid grid-cols-3 gap-4">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-gray-600">{stats.planDistribution.free}</div>
+                  <div className="text-3xl font-bold text-gray-600">
+                    {stats.planDistribution.free}
+                  </div>
                   <div className="text-sm text-gray-600">Free</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-indigo-600">{stats.planDistribution.plus}</div>
+                  <div className="text-3xl font-bold text-indigo-600">
+                    {stats.planDistribution.plus}
+                  </div>
                   <div className="text-sm text-gray-600">Plus</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-purple-600">{stats.planDistribution.pro}</div>
+                  <div className="text-3xl font-bold text-purple-600">
+                    {stats.planDistribution.pro}
+                  </div>
                   <div className="text-sm text-gray-600">Pro</div>
                 </div>
               </div>
@@ -527,12 +598,19 @@ export default function AdminPage() {
 
             {/* Recent Users */}
             <div className="bg-white rounded-2xl p-6 shadow-lg">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Recent Sign-ups</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">
+                Recent Sign-ups
+              </h3>
               <div className="space-y-3">
-                {stats.recentUsers.map(u => (
-                  <div key={u.uid} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
+                {stats.recentUsers.map((u) => (
+                  <div
+                    key={u.uid}
+                    className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0"
+                  >
                     <div>
-                      <div className="font-semibold text-gray-900">{u.displayName}</div>
+                      <div className="font-semibold text-gray-900">
+                        {u.displayName}
+                      </div>
                       <div className="text-sm text-gray-600">{u.email}</div>
                     </div>
                     <div className="text-right">
@@ -551,7 +629,7 @@ export default function AdminPage() {
         )}
 
         {/* Users Tab */}
-        {activeTab === 'users' && (
+        {activeTab === "users" && (
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
             {/* Search & Filter */}
             <div className="p-6 border-b border-gray-200 space-y-4">
@@ -564,26 +642,42 @@ export default function AdminPage() {
               />
               <div className="flex gap-2">
                 <button
-                  onClick={() => setFilterPlan('')}
-                  className={`px-4 py-2 rounded-lg font-semibold ${!filterPlan ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-700'}`}
+                  onClick={() => setFilterPlan("")}
+                  className={`px-4 py-2 rounded-lg font-semibold ${
+                    !filterPlan
+                      ? "bg-purple-600 text-white"
+                      : "bg-gray-200 text-gray-700"
+                  }`}
                 >
                   All
                 </button>
                 <button
-                  onClick={() => setFilterPlan('free')}
-                  className={`px-4 py-2 rounded-lg font-semibold ${filterPlan === 'free' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-700'}`}
+                  onClick={() => setFilterPlan("free")}
+                  className={`px-4 py-2 rounded-lg font-semibold ${
+                    filterPlan === "free"
+                      ? "bg-purple-600 text-white"
+                      : "bg-gray-200 text-gray-700"
+                  }`}
                 >
                   Free
                 </button>
                 <button
-                  onClick={() => setFilterPlan('plus')}
-                  className={`px-4 py-2 rounded-lg font-semibold ${filterPlan === 'plus' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-700'}`}
+                  onClick={() => setFilterPlan("plus")}
+                  className={`px-4 py-2 rounded-lg font-semibold ${
+                    filterPlan === "plus"
+                      ? "bg-purple-600 text-white"
+                      : "bg-gray-200 text-gray-700"
+                  }`}
                 >
                   Plus
                 </button>
                 <button
-                  onClick={() => setFilterPlan('pro')}
-                  className={`px-4 py-2 rounded-lg font-semibold ${filterPlan === 'pro' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-700'}`}
+                  onClick={() => setFilterPlan("pro")}
+                  className={`px-4 py-2 rounded-lg font-semibold ${
+                    filterPlan === "pro"
+                      ? "bg-purple-600 text-white"
+                      : "bg-gray-200 text-gray-700"
+                  }`}
                 >
                   Pro
                 </button>
@@ -595,37 +689,60 @@ export default function AdminPage() {
               <table className="w-full">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Plan</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Credits</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usage</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      User
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Plan
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Credits
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Usage
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Status
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Actions
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {filteredUsers.map(user => (
+                  {filteredUsers.map((user) => (
                     <tr key={user.uid} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div>
-                          <div className="font-semibold text-gray-900">{user.displayName}</div>
-                          <div className="text-sm text-gray-600">{user.email}</div>
+                          <div className="font-semibold text-gray-900">
+                            {user.displayName}
+                          </div>
+                          <div className="text-sm text-gray-600">
+                            {user.email}
+                          </div>
                           {user.isAdmin && (
-                            <span className="inline-block mt-1 px-2 py-0.5 bg-red-100 text-red-700 text-xs font-semibold rounded">Admin</span>
+                            <span className="inline-block mt-1 px-2 py-0.5 bg-red-100 text-red-700 text-xs font-semibold rounded">
+                              Admin
+                            </span>
                           )}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold capitalize ${
-                          user.plan === 'free' ? 'bg-gray-100 text-gray-700' :
-                          user.plan === 'plus' ? 'bg-indigo-100 text-indigo-700' :
-                          'bg-purple-100 text-purple-700'
-                        }`}>
+                        <span
+                          className={`inline-block px-3 py-1 rounded-full text-xs font-semibold capitalize ${
+                            user.plan === "free"
+                              ? "bg-gray-100 text-gray-700"
+                              : user.plan === "plus"
+                              ? "bg-indigo-100 text-indigo-700"
+                              : "bg-purple-100 text-purple-700"
+                          }`}
+                        >
                           {user.plan}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        {user.plan !== 'free' && user.creditBalance !== undefined ? (
+                        {user.plan !== "free" &&
+                        user.creditBalance !== undefined ? (
                           <div className="text-sm">
                             <div className="font-semibold text-green-600">
                               {user.creditBalance} Credits
@@ -640,18 +757,31 @@ export default function AdminPage() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="text-xs space-y-1">
-                          <div>💬 {user.messagesUsed}/{user.messageLimit}</div>
-                          <div>🖼️ {user.imagesUsed}/{user.imageLimit}</div>
-                          <div>🎤 {(user.voiceCharsUsed/1000).toFixed(0)}K/{(user.voiceCharLimit/1000)}K</div>
+                          <div>
+                            💬 {user.messagesUsed}/{user.messageLimit}
+                          </div>
+                          <div>
+                            🖼️ {user.imagesUsed}/{user.imageLimit}
+                          </div>
+                          <div>
+                            🎤 {(user.voiceCharsUsed / 1000).toFixed(0)}K/
+                            {user.voiceCharLimit / 1000}K
+                          </div>
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         {user.isBanned ? (
-                          <span className="px-2 py-1 bg-red-100 text-red-700 text-xs font-semibold rounded">Banned</span>
-                        ) : user.subscriptionStatus === 'active' ? (
-                          <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded">Active</span>
+                          <span className="px-2 py-1 bg-red-100 text-red-700 text-xs font-semibold rounded">
+                            Banned
+                          </span>
+                        ) : user.subscriptionStatus === "active" ? (
+                          <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded">
+                            Active
+                          </span>
                         ) : (
-                          <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs font-semibold rounded">Normal</span>
+                          <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs font-semibold rounded">
+                            Normal
+                          </span>
                         )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm">
@@ -670,13 +800,15 @@ export default function AdminPage() {
                               Reset
                             </button>
                             <button
-                              onClick={() => handleBanUser(user.uid, !user.isBanned)}
+                              onClick={() =>
+                                handleBanUser(user.uid, !user.isBanned)
+                              }
                               className="text-red-600 hover:text-red-900"
                             >
-                              {user.isBanned ? 'Unban' : 'Ban'}
+                              {user.isBanned ? "Unban" : "Ban"}
                             </button>
                           </div>
-                          {user.plan !== 'free' && (
+                          {user.plan !== "free" && (
                             <button
                               onClick={() => openCreditManagement(user)}
                               className="text-purple-600 hover:text-purple-900 text-xs font-semibold"
@@ -695,43 +827,72 @@ export default function AdminPage() {
         )}
 
         {/* Tiers Tab */}
-        {activeTab === 'tiers' && (
+        {activeTab === "tiers" && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {tiers.map(tier => (
-              <div key={tier.plan} className="bg-white rounded-2xl shadow-lg p-6">
-                <h3 className="text-2xl font-bold text-gray-900 mb-4 capitalize">{tier.plan}</h3>
+            {tiers.map((tier) => (
+              <div
+                key={tier.plan}
+                className="bg-white rounded-2xl shadow-lg p-6"
+              >
+                <h3 className="text-2xl font-bold text-gray-900 mb-4 capitalize">
+                  {tier.plan}
+                </h3>
                 <div className="text-3xl font-bold text-purple-600 mb-6">
-                  ${tier.price}<span className="text-lg text-gray-600">/mo</span>
+                  ${tier.price}
+                  <span className="text-lg text-gray-600">/mo</span>
                 </div>
 
                 {editingTier?.plan === tier.plan ? (
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-1">Price</label>
+                      <label className="block text-sm font-semibold text-gray-700 mb-1">
+                        Price
+                      </label>
                       <input
                         type="number"
                         step="0.01"
                         value={editingTier.price}
-                        onChange={(e) => setEditingTier({...editingTier, price: parseFloat(e.target.value)})}
+                        onChange={(e) =>
+                          setEditingTier({
+                            ...editingTier,
+                            price: parseFloat(e.target.value),
+                          })
+                        }
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-1">Credits/Month</label>
+                      <label className="block text-sm font-semibold text-gray-700 mb-1">
+                        Credits/Month
+                      </label>
                       <input
                         type="number"
                         value={editingTier.creditsPerMonth || 0}
-                        onChange={(e) => setEditingTier({...editingTier, creditsPerMonth: parseInt(e.target.value)})}
+                        onChange={(e) =>
+                          setEditingTier({
+                            ...editingTier,
+                            creditsPerMonth: parseInt(e.target.value),
+                          })
+                        }
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                       />
-                      <div className="text-xs text-gray-500 mt-1">1 credit = $0.01 USD</div>
+                      <div className="text-xs text-gray-500 mt-1">
+                        1 credit = $0.01 USD
+                      </div>
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-1">Rollover %</label>
+                      <label className="block text-sm font-semibold text-gray-700 mb-1">
+                        Rollover %
+                      </label>
                       <input
                         type="number"
                         value={editingTier.rolloverPercentage || 50}
-                        onChange={(e) => setEditingTier({...editingTier, rolloverPercentage: parseInt(e.target.value)})}
+                        onChange={(e) =>
+                          setEditingTier({
+                            ...editingTier,
+                            rolloverPercentage: parseInt(e.target.value),
+                          })
+                        }
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                       />
                     </div>
@@ -739,37 +900,65 @@ export default function AdminPage() {
                       <input
                         type="checkbox"
                         checked={editingTier.useCreditSystem || false}
-                        onChange={(e) => setEditingTier({...editingTier, useCreditSystem: e.target.checked})}
+                        onChange={(e) =>
+                          setEditingTier({
+                            ...editingTier,
+                            useCreditSystem: e.target.checked,
+                          })
+                        }
                         className="w-4 h-4"
                       />
-                      <label className="text-sm font-semibold text-gray-700">Use Credit System</label>
+                      <label className="text-sm font-semibold text-gray-700">
+                        Use Credit System
+                      </label>
                     </div>
                     {!editingTier.useCreditSystem && (
                       <>
                         <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-1">Messages/Month</label>
+                          <label className="block text-sm font-semibold text-gray-700 mb-1">
+                            Messages/Month
+                          </label>
                           <input
                             type="number"
                             value={editingTier.messageLimit}
-                            onChange={(e) => setEditingTier({...editingTier, messageLimit: parseInt(e.target.value)})}
+                            onChange={(e) =>
+                              setEditingTier({
+                                ...editingTier,
+                                messageLimit: parseInt(e.target.value),
+                              })
+                            }
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-1">Images/Month</label>
+                          <label className="block text-sm font-semibold text-gray-700 mb-1">
+                            Images/Month
+                          </label>
                           <input
                             type="number"
                             value={editingTier.imageLimit}
-                            onChange={(e) => setEditingTier({...editingTier, imageLimit: parseInt(e.target.value)})}
+                            onChange={(e) =>
+                              setEditingTier({
+                                ...editingTier,
+                                imageLimit: parseInt(e.target.value),
+                              })
+                            }
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-1">Voice Chars/Month</label>
+                          <label className="block text-sm font-semibold text-gray-700 mb-1">
+                            Voice Chars/Month
+                          </label>
                           <input
                             type="number"
                             value={editingTier.voiceCharLimit}
-                            onChange={(e) => setEditingTier({...editingTier, voiceCharLimit: parseInt(e.target.value)})}
+                            onChange={(e) =>
+                              setEditingTier({
+                                ...editingTier,
+                                voiceCharLimit: parseInt(e.target.value),
+                              })
+                            }
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                           />
                         </div>
@@ -796,38 +985,51 @@ export default function AdminPage() {
                       <>
                         <div className="flex justify-between text-sm">
                           <span className="text-gray-600">Credits/Month:</span>
-                          <span className="font-semibold text-green-600">{tier.creditsPerMonth} credits</span>
+                          <span className="font-semibold text-green-600">
+                            {tier.creditsPerMonth} credits
+                          </span>
                         </div>
                         <div className="flex justify-between text-sm">
                           <span className="text-gray-600">Value:</span>
-                          <span className="font-semibold">${((tier.creditsPerMonth || 0) / 100).toFixed(2)}</span>
+                          <span className="font-semibold">
+                            ${((tier.creditsPerMonth || 0) / 100).toFixed(2)}
+                          </span>
                         </div>
                         <div className="flex justify-between text-sm">
                           <span className="text-gray-600">Rollover:</span>
-                          <span className="font-semibold">{tier.rolloverPercentage}%</span>
+                          <span className="font-semibold">
+                            {tier.rolloverPercentage}%
+                          </span>
                         </div>
                         <div className="px-3 py-2 bg-green-50 border border-green-200 rounded-lg text-xs text-green-700">
-                          <strong>Credit System</strong> - Usage charged at 3x API cost
+                          <strong>Credit System</strong> - Usage charged at 3x
+                          API cost
                         </div>
                       </>
                     ) : (
                       <>
                         <div className="flex justify-between text-sm">
                           <span className="text-gray-600">Messages:</span>
-                          <span className="font-semibold">{tier.messageLimit.toLocaleString()}/mo</span>
+                          <span className="font-semibold">
+                            {tier.messageLimit.toLocaleString()}/mo
+                          </span>
                         </div>
                         <div className="flex justify-between text-sm">
                           <span className="text-gray-600">Images:</span>
-                          <span className="font-semibold">{tier.imageLimit}/mo</span>
+                          <span className="font-semibold">
+                            {tier.imageLimit}/mo
+                          </span>
                         </div>
                         <div className="flex justify-between text-sm">
                           <span className="text-gray-600">Voice:</span>
-                          <span className="font-semibold">{(tier.voiceCharLimit/1000)}K chars/mo</span>
+                          <span className="font-semibold">
+                            {tier.voiceCharLimit / 1000}K chars/mo
+                          </span>
                         </div>
                       </>
                     )}
                     <button
-                      onClick={() => setEditingTier({...tier})}
+                      onClick={() => setEditingTier({ ...tier })}
                       className="w-full mt-4 bg-purple-600 text-white py-2 rounded-lg font-semibold hover:bg-purple-700"
                     >
                       Edit Tier
@@ -840,27 +1042,41 @@ export default function AdminPage() {
         )}
 
         {/* Token Usage Tab */}
-        {activeTab === 'tokens' && (
+        {activeTab === "tokens" && (
           <div className="space-y-6">
             {/* Period Selector */}
             <div className="bg-white rounded-2xl p-6 shadow-lg">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Token Usage Analytics</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">
+                Token Usage Analytics
+              </h3>
               <div className="flex gap-2">
                 <button
-                  onClick={() => setTokenPeriod('daily')}
-                  className={`px-4 py-2 rounded-lg font-semibold ${tokenPeriod === 'daily' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-700'}`}
+                  onClick={() => setTokenPeriod("daily")}
+                  className={`px-4 py-2 rounded-lg font-semibold ${
+                    tokenPeriod === "daily"
+                      ? "bg-purple-600 text-white"
+                      : "bg-gray-200 text-gray-700"
+                  }`}
                 >
                   Today
                 </button>
                 <button
-                  onClick={() => setTokenPeriod('weekly')}
-                  className={`px-4 py-2 rounded-lg font-semibold ${tokenPeriod === 'weekly' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-700'}`}
+                  onClick={() => setTokenPeriod("weekly")}
+                  className={`px-4 py-2 rounded-lg font-semibold ${
+                    tokenPeriod === "weekly"
+                      ? "bg-purple-600 text-white"
+                      : "bg-gray-200 text-gray-700"
+                  }`}
                 >
                   This Week
                 </button>
                 <button
-                  onClick={() => setTokenPeriod('monthly')}
-                  className={`px-4 py-2 rounded-lg font-semibold ${tokenPeriod === 'monthly' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-700'}`}
+                  onClick={() => setTokenPeriod("monthly")}
+                  className={`px-4 py-2 rounded-lg font-semibold ${
+                    tokenPeriod === "monthly"
+                      ? "bg-purple-600 text-white"
+                      : "bg-gray-200 text-gray-700"
+                  }`}
                 >
                   This Month
                 </button>
@@ -875,8 +1091,16 @@ export default function AdminPage() {
                     User Token Usage ({tokenStats.totalUsers} users)
                   </h3>
                   <p className="text-sm text-gray-600 mt-1">
-                    Period: {tokenStats.dateRange?.start ? new Date(tokenStats.dateRange.start).toLocaleDateString() : ''} -
-                    {tokenStats.dateRange?.end ? new Date(tokenStats.dateRange.end).toLocaleDateString() : ''}
+                    Period:{" "}
+                    {tokenStats.dateRange?.start
+                      ? new Date(
+                          tokenStats.dateRange.start
+                        ).toLocaleDateString()
+                      : ""}{" "}
+                    -
+                    {tokenStats.dateRange?.end
+                      ? new Date(tokenStats.dateRange.end).toLocaleDateString()
+                      : ""}
                   </p>
                 </div>
 
@@ -884,28 +1108,49 @@ export default function AdminPage() {
                   <table className="w-full">
                     <thead className="bg-gray-50">
                       <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Requests</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Input Tokens</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Output Tokens</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Tokens</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cost</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Models</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          User
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Requests
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Input Tokens
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Output Tokens
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Total Tokens
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Cost
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Models
+                        </th>
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                       {tokenStats.users.map((user: any) => (
                         <React.Fragment key={user._id}>
-                          <tr className="hover:bg-gray-50 cursor-pointer" onClick={() => toggleUserExpansion(user._id)}>
+                          <tr
+                            className="hover:bg-gray-50 cursor-pointer"
+                            onClick={() => toggleUserExpansion(user._id)}
+                          >
                             <td className="px-6 py-4 whitespace-nowrap">
                               <div className="flex items-center gap-2">
                                 <span className="text-gray-400">
-                                  {expandedUserId === user._id ? '▼' : '▶'}
+                                  {expandedUserId === user._id ? "▼" : "▶"}
                                 </span>
                                 <div>
-                                  <div className="font-semibold text-gray-900">{user._id.substring(0, 8)}...</div>
+                                  <div className="font-semibold text-gray-900">
+                                    {user._id.substring(0, 8)}...
+                                  </div>
                                   {user.userEmail && (
-                                    <div className="text-sm text-gray-600">{user.userEmail}</div>
+                                    <div className="text-sm text-gray-600">
+                                      {user.userEmail}
+                                    </div>
                                   )}
                                 </div>
                               </div>
@@ -926,45 +1171,80 @@ export default function AdminPage() {
                               ${user.totalCost.toFixed(6)}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600">
-                              {expandedUserId === user._id ? 'See below ↓' : 'Click to view'}
+                              {expandedUserId === user._id
+                                ? "See below ↓"
+                                : "Click to view"}
                             </td>
                           </tr>
-                          {expandedUserId === user._id && userModelBreakdown[user._id] && (
-                            <tr key={`${user._id}-details`} className="bg-blue-50">
-                              <td colSpan={7} className="px-6 py-4">
-                                <div className="text-sm font-semibold text-gray-700 mb-2">Model Usage Breakdown:</div>
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                  {userModelBreakdown[user._id].map((model: any) => (
-                                    <div key={model._id} className="bg-white rounded-lg p-3 shadow-sm border border-gray-200">
-                                      <div className="font-bold text-purple-700 mb-1">{model._id}</div>
-                                      <div className="text-xs space-y-1">
-                                        <div className="flex justify-between">
-                                          <span className="text-gray-600">Requests:</span>
-                                          <span className="font-semibold">{model.requestCount}</span>
+                          {expandedUserId === user._id &&
+                            userModelBreakdown[user._id] && (
+                              <tr
+                                key={`${user._id}-details`}
+                                className="bg-blue-50"
+                              >
+                                <td colSpan={7} className="px-6 py-4">
+                                  <div className="text-sm font-semibold text-gray-700 mb-2">
+                                    Model Usage Breakdown:
+                                  </div>
+                                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    {userModelBreakdown[user._id].map(
+                                      (model: any) => (
+                                        <div
+                                          key={model._id}
+                                          className="bg-white rounded-lg p-3 shadow-sm border border-gray-200"
+                                        >
+                                          <div className="font-bold text-purple-700 mb-1">
+                                            {model._id}
+                                          </div>
+                                          <div className="text-xs space-y-1">
+                                            <div className="flex justify-between">
+                                              <span className="text-gray-600">
+                                                Requests:
+                                              </span>
+                                              <span className="font-semibold">
+                                                {model.requestCount}
+                                              </span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                              <span className="text-gray-600">
+                                                Input:
+                                              </span>
+                                              <span className="font-semibold">
+                                                {model.totalInputTokens.toLocaleString()}
+                                              </span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                              <span className="text-gray-600">
+                                                Output:
+                                              </span>
+                                              <span className="font-semibold">
+                                                {model.totalOutputTokens.toLocaleString()}
+                                              </span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                              <span className="text-gray-600">
+                                                Total:
+                                              </span>
+                                              <span className="font-semibold text-gray-900">
+                                                {model.totalTokens.toLocaleString()}
+                                              </span>
+                                            </div>
+                                            <div className="flex justify-between border-t pt-1">
+                                              <span className="text-gray-600">
+                                                Cost:
+                                              </span>
+                                              <span className="font-semibold text-green-600">
+                                                ${model.totalCost.toFixed(6)}
+                                              </span>
+                                            </div>
+                                          </div>
                                         </div>
-                                        <div className="flex justify-between">
-                                          <span className="text-gray-600">Input:</span>
-                                          <span className="font-semibold">{model.totalInputTokens.toLocaleString()}</span>
-                                        </div>
-                                        <div className="flex justify-between">
-                                          <span className="text-gray-600">Output:</span>
-                                          <span className="font-semibold">{model.totalOutputTokens.toLocaleString()}</span>
-                                        </div>
-                                        <div className="flex justify-between">
-                                          <span className="text-gray-600">Total:</span>
-                                          <span className="font-semibold text-gray-900">{model.totalTokens.toLocaleString()}</span>
-                                        </div>
-                                        <div className="flex justify-between border-t pt-1">
-                                          <span className="text-gray-600">Cost:</span>
-                                          <span className="font-semibold text-green-600">${model.totalCost.toFixed(6)}</span>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  ))}
-                                </div>
-                              </td>
-                            </tr>
-                          )}
+                                      )
+                                    )}
+                                  </div>
+                                </td>
+                              </tr>
+                            )}
                         </React.Fragment>
                       ))}
                     </tbody>
@@ -975,7 +1255,9 @@ export default function AdminPage() {
 
             {!tokenStats && (
               <div className="bg-white rounded-2xl p-12 shadow-lg text-center">
-                <div className="text-gray-400 text-xl">Loading token usage data...</div>
+                <div className="text-gray-400 text-xl">
+                  Loading token usage data...
+                </div>
               </div>
             )}
           </div>
@@ -984,24 +1266,46 @@ export default function AdminPage() {
 
       {/* Credit Management Modal */}
       {showCreditModal && creditUser && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setShowCreditModal(false)}>
-          <div className="bg-white rounded-2xl p-8 max-w-4xl w-full m-4 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">💳 Credit Management: {creditUser.displayName}</h2>
+        <div
+          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+          onClick={() => setShowCreditModal(false)}
+        >
+          <div
+            className="bg-white rounded-2xl p-8 max-w-4xl w-full m-4 max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              💳 Credit Management: {creditUser.displayName}
+            </h2>
 
             {/* Credit Balance */}
             {creditBalance && (
               <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 mb-6 border border-green-200">
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="text-sm text-gray-600 font-semibold mb-1">Current Balance</div>
-                    <div className="text-4xl font-bold text-green-600">{creditBalance.balance} Credits</div>
-                    <div className="text-sm text-gray-600 mt-1">${creditBalance.balanceUSD.toFixed(2)} USD</div>
+                    <div className="text-sm text-gray-600 font-semibold mb-1">
+                      Current Balance
+                    </div>
+                    <div className="text-4xl font-bold text-green-600">
+                      {creditBalance.balance} Credits
+                    </div>
+                    <div className="text-sm text-gray-600 mt-1">
+                      ${creditBalance.balanceUSD.toFixed(2)} USD
+                    </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-xs text-gray-600">Plan: <span className="font-semibold capitalize">{creditBalance.plan}</span></div>
+                    <div className="text-xs text-gray-600">
+                      Plan:{" "}
+                      <span className="font-semibold capitalize">
+                        {creditBalance.plan}
+                      </span>
+                    </div>
                     {creditBalance.lastRefresh && (
                       <div className="text-xs text-gray-600 mt-1">
-                        Last Refresh: {new Date(creditBalance.lastRefresh).toLocaleDateString()}
+                        Last Refresh:{" "}
+                        {new Date(
+                          creditBalance.lastRefresh
+                        ).toLocaleDateString()}
                       </div>
                     )}
                   </div>
@@ -1012,21 +1316,31 @@ export default function AdminPage() {
             <div className="grid md:grid-cols-2 gap-6 mb-6">
               {/* Add/Deduct Credits */}
               <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Adjust Credits</h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-4">
+                  Adjust Credits
+                </h3>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Amount (credits)</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Amount (credits)
+                    </label>
                     <input
                       type="number"
                       value={creditAmount}
-                      onChange={(e) => setCreditAmount(parseInt(e.target.value) || 0)}
+                      onChange={(e) =>
+                        setCreditAmount(parseInt(e.target.value) || 0)
+                      }
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                       placeholder="Enter credits"
                     />
-                    <div className="text-xs text-gray-500 mt-1">= ${(creditAmount / 100).toFixed(2)} USD</div>
+                    <div className="text-xs text-gray-500 mt-1">
+                      = ${(creditAmount / 100).toFixed(2)} USD
+                    </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Reason</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Reason
+                    </label>
                     <input
                       type="text"
                       value={creditReason}
@@ -1056,7 +1370,9 @@ export default function AdminPage() {
 
               {/* Manual Refresh */}
               <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Actions</h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-4">
+                  Actions
+                </h3>
                 <div className="space-y-3">
                   <button
                     onClick={handleRefreshCredits}
@@ -1065,7 +1381,9 @@ export default function AdminPage() {
                     🔄 Manual Credit Refresh
                   </button>
                   <div className="text-xs text-gray-600 bg-white rounded-lg p-3">
-                    <strong>Note:</strong> Manual refresh will apply 50% rollover from current balance and add new monthly credits based on their plan.
+                    <strong>Note:</strong> Manual refresh will apply 50%
+                    rollover from current balance and add new monthly credits
+                    based on their plan.
                   </div>
                 </div>
               </div>
@@ -1073,32 +1391,59 @@ export default function AdminPage() {
 
             {/* Credit History */}
             <div className="bg-gray-50 rounded-xl p-6 border border-gray-200 mb-4">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">Recent Credit History</h3>
+              <h3 className="text-lg font-bold text-gray-900 mb-4">
+                Recent Credit History
+              </h3>
               <div className="space-y-2 max-h-64 overflow-y-auto">
                 {creditHistory.length > 0 ? (
                   creditHistory.map((entry, idx) => (
-                    <div key={idx} className="bg-white rounded-lg p-3 border border-gray-200">
+                    <div
+                      key={idx}
+                      className="bg-white rounded-lg p-3 border border-gray-200"
+                    >
                       <div className="flex items-center justify-between mb-1">
-                        <span className={`text-xs font-semibold px-2 py-1 rounded-full ${
-                          entry.type === 'usage' || entry.type === 'image_generation' ? 'bg-red-100 text-red-700' :
-                          entry.type === 'admin_add' || entry.type === 'refresh' || entry.type === 'rollover' ? 'bg-green-100 text-green-700' :
-                          'bg-gray-100 text-gray-700'
-                        }`}>
-                          {entry.type.replace('_', ' ').toUpperCase()}
+                        <span
+                          className={`text-xs font-semibold px-2 py-1 rounded-full ${
+                            entry.type === "usage" ||
+                            entry.type === "image_generation"
+                              ? "bg-red-100 text-red-700"
+                              : entry.type === "admin_add" ||
+                                entry.type === "refresh" ||
+                                entry.type === "rollover"
+                              ? "bg-green-100 text-green-700"
+                              : "bg-gray-100 text-gray-700"
+                          }`}
+                        >
+                          {entry.type.replace("_", " ").toUpperCase()}
                         </span>
-                        <span className={`text-sm font-bold ${entry.amount >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                          {entry.amount >= 0 ? '+' : ''}{entry.amount}
+                        <span
+                          className={`text-sm font-bold ${
+                            entry.amount >= 0
+                              ? "text-green-600"
+                              : "text-red-600"
+                          }`}
+                        >
+                          {entry.amount >= 0 ? "+" : ""}
+                          {entry.amount}
                         </span>
                       </div>
-                      <div className="text-xs text-gray-600">{entry.description}</div>
+                      <div className="text-xs text-gray-600">
+                        {entry.description}
+                      </div>
                       <div className="flex items-center justify-between mt-1">
-                        <span className="text-xs text-gray-500">{new Date(entry.timestamp).toLocaleString()}</span>
-                        <span className="text-xs font-semibold text-gray-700">Balance: {entry.balance}</span>
+                        <span className="text-xs text-gray-500">
+                          {new Date(entry.timestamp).toLocaleString()}
+                        </span>
+                        <span className="text-xs font-semibold text-gray-700">
+                          Balance: {entry.balance}
+                        </span>
                       </div>
                     </div>
                   ))
                 ) : (
-                  <div className="text-center text-gray-500 py-4">No credit history available</div>
+                  <div className="text-center text-gray-500 py-4">
+                    No credit history available
+                  </div>
                 )}
               </div>
             </div>
@@ -1115,16 +1460,31 @@ export default function AdminPage() {
 
       {/* User Edit Modal */}
       {selectedUser && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setSelectedUser(null)}>
-          <div className="bg-white rounded-2xl p-8 max-w-2xl w-full m-4" onClick={(e) => e.stopPropagation()}>
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Edit User: {selectedUser.displayName}</h2>
+        <div
+          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+          onClick={() => setSelectedUser(null)}
+        >
+          <div
+            className="bg-white rounded-2xl p-8 max-w-2xl w-full m-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              Edit User: {selectedUser.displayName}
+            </h2>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Plan</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Plan
+                </label>
                 <select
                   value={selectedUser.plan}
-                  onChange={(e) => handleUpdateUserPlan(selectedUser.uid, e.target.value as any)}
+                  onChange={(e) =>
+                    handleUpdateUserPlan(
+                      selectedUser.uid,
+                      e.target.value as any
+                    )
+                  }
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                 >
                   <option value="free">Free</option>
@@ -1134,7 +1494,9 @@ export default function AdminPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Message Limit</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Message Limit
+                </label>
                 <input
                   type="number"
                   defaultValue={selectedUser.messageLimit}
@@ -1144,7 +1506,9 @@ export default function AdminPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Image Limit</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Image Limit
+                </label>
                 <input
                   type="number"
                   defaultValue={selectedUser.imageLimit}
@@ -1154,7 +1518,9 @@ export default function AdminPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Voice Character Limit</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Voice Character Limit
+                </label>
                 <input
                   type="number"
                   defaultValue={selectedUser.voiceCharLimit}
@@ -1166,10 +1532,32 @@ export default function AdminPage() {
               <div className="flex gap-3 mt-6">
                 <button
                   onClick={() => {
-                    const messageLimit = parseInt((document.getElementById('messageLimit') as HTMLInputElement).value);
-                    const imageLimit = parseInt((document.getElementById('imageLimit') as HTMLInputElement).value);
-                    const voiceCharLimit = parseInt((document.getElementById('voiceCharLimit') as HTMLInputElement).value);
-                    handleUpdateUserLimits(selectedUser.uid, { messageLimit, imageLimit, voiceCharLimit });
+                    const messageLimit = parseInt(
+                      (
+                        document.getElementById(
+                          "messageLimit"
+                        ) as HTMLInputElement
+                      ).value
+                    );
+                    const imageLimit = parseInt(
+                      (
+                        document.getElementById(
+                          "imageLimit"
+                        ) as HTMLInputElement
+                      ).value
+                    );
+                    const voiceCharLimit = parseInt(
+                      (
+                        document.getElementById(
+                          "voiceCharLimit"
+                        ) as HTMLInputElement
+                      ).value
+                    );
+                    handleUpdateUserLimits(selectedUser.uid, {
+                      messageLimit,
+                      imageLimit,
+                      voiceCharLimit,
+                    });
                   }}
                   className="flex-1 bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700"
                 >

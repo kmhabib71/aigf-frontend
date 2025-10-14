@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from "react";
 
 interface TimeData {
   timestamp: string;
@@ -51,7 +51,9 @@ interface UseSmartGreetingReturn {
   refetch: () => Promise<void>;
 }
 
-export const useSmartGreeting = (autoFetch: boolean = true): UseSmartGreetingReturn => {
+export const useSmartGreeting = (
+  autoFetch: boolean = true
+): UseSmartGreetingReturn => {
   const [greeting, setGreeting] = useState<SmartGreetingResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -61,7 +63,7 @@ export const useSmartGreeting = (autoFetch: boolean = true): UseSmartGreetingRet
       setIsLoading(true);
       setError(null);
 
-      const response = await fetch('http://localhost:3001/api/greeting/smart-greeting');
+      const response = await fetch(`${backendUrl}/api/greeting/smart-greeting`);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -74,7 +76,8 @@ export const useSmartGreeting = (autoFetch: boolean = true): UseSmartGreetingRet
         setError(data.error);
       }
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch greeting';
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to fetch greeting";
       setError(errorMessage);
 
       // Set fallback greeting
@@ -82,7 +85,7 @@ export const useSmartGreeting = (autoFetch: boolean = true): UseSmartGreetingRet
         success: false,
         greeting: "Hello! Welcome! How can I help you today? 😊",
         timestamp: new Date().toISOString(),
-        error: errorMessage
+        error: errorMessage,
       });
     } finally {
       setIsLoading(false);
@@ -99,7 +102,7 @@ export const useSmartGreeting = (autoFetch: boolean = true): UseSmartGreetingRet
     greeting,
     isLoading,
     error,
-    refetch: fetchGreeting
+    refetch: fetchGreeting,
   };
 };
 

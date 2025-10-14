@@ -42,7 +42,7 @@ export default function CommentsThread({
 
     try {
       const response = await fetch(
-        `http://localhost:3001/api/romance/story/${storyId}/comment`,
+        `${backendUrl}/api/romance/story/${storyId}/comment`,
         {
           method: "POST",
           headers: {

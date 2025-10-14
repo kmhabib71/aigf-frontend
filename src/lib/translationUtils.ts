@@ -7,6 +7,7 @@
  * Extract complete sentences from a text buffer
  * Detects sentence boundaries: . ! ? or double newline
  */
+import { backendUrl } from "@/lib/config";
 export function extractCompleteSentences(buffer: string): {
   completeSentences: string[];
   remainder: string;
@@ -49,7 +50,7 @@ export async function detectUserLocation(): Promise<{
   detectedLanguage: string;
 } | null> {
   try {
-    const response = await fetch("http://localhost:3001/api/detect-user-location");
+    const response = await fetch(`${backendUrl}/api/detect-user-location`);
 
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`);
@@ -79,7 +80,7 @@ export async function detectLanguageFromCountry(
   countryCode: string
 ): Promise<string> {
   try {
-    const response = await fetch("http://localhost:3001/api/detect-language", {
+    const response = await fetch(`${backendUrl}/api/detect-language`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ countryCode }),
@@ -106,7 +107,7 @@ export async function translateText(
   }
 
   try {
-    const response = await fetch("http://localhost:3001/api/translate", {
+    const response = await fetch(`${backendUrl}/api/translate`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -137,7 +138,7 @@ export async function translateBatch(
   }
 
   try {
-    const response = await fetch("http://localhost:3001/api/translate-batch", {
+    const response = await fetch(`${backendUrl}/api/translate-batch`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

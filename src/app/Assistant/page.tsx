@@ -29,7 +29,7 @@ import {
   isConversationUrl,
   isHomePage,
 } from "../lib/urlParams";
-
+import { backendUrl } from "@/lib/config";
 interface Message {
   role: "user" | "assistant";
   content: string;
@@ -340,9 +340,7 @@ export default function Assistant() {
   const loadConversationHistory = async (id: string) => {
     try {
       console.log(`📂 Loading conversation history for: ${id}`);
-      const response = await fetch(
-        `http://localhost:3001/api/conversation/${id}`
-      );
+      const response = await fetch(`${backendUrl}/api/conversation/${id}`);
 
       if (response.ok) {
         const data = await response.json();
@@ -441,19 +439,16 @@ export default function Assistant() {
     if (!currentConversationId) {
       // Create a new conversation via backend API (same as "New Chat" button)
       try {
-        const response = await fetch(
-          "http://localhost:3001/api/conversations/new",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              title: "New Conversation",
-              currentConversationId: null,
-            }),
-          }
-        );
+        const response = await fetch(`${backendUrl}/api/conversations/new`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title: "New Conversation",
+            currentConversationId: null,
+          }),
+        });
 
         const data = await response.json();
         if (data.conversation) {
@@ -665,7 +660,7 @@ export default function Assistant() {
     if (conversationId) {
       try {
         const response = await fetch(
-          `http://localhost:3001/api/conversations/${conversationId}/nsfw-mode`
+          `${backendUrl}/api/conversations/${conversationId}/nsfw-mode`
         );
         if (response.ok) {
           const data = await response.json();
@@ -737,7 +732,7 @@ export default function Assistant() {
     if (conversationId) {
       try {
         const response = await fetch(
-          `http://localhost:3001/api/conversations/${conversationId}/nsfw-mode`
+          `${backendUrl}/api/conversations/${conversationId}/nsfw-mode`
         );
         if (response.ok) {
           const data = await response.json();
@@ -809,7 +804,7 @@ export default function Assistant() {
     const fetchNsfwMode = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3001/api/conversations/${conversationId}/nsfw-mode`
+          `${backendUrl}/api/conversations/${conversationId}/nsfw-mode`
         );
         if (response.ok) {
           const data = await response.json();
@@ -840,19 +835,16 @@ export default function Assistant() {
       // If no conversation yet, create one first
       let currentConversationId = conversationId;
       if (!currentConversationId) {
-        const response = await fetch(
-          "http://localhost:3001/api/conversations/new",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              title: "New Conversation",
-              currentConversationId: null,
-            }),
-          }
-        );
+        const response = await fetch(`${backendUrl}/api/conversations/new`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title: "New Conversation",
+            currentConversationId: null,
+          }),
+        });
 
         const data = await response.json();
         if (data.conversation) {
@@ -867,7 +859,7 @@ export default function Assistant() {
 
       // Toggle NSFW mode
       const response = await fetch(
-        `http://localhost:3001/api/conversations/${currentConversationId}/nsfw-mode`,
+        `${backendUrl}/api/conversations/${currentConversationId}/nsfw-mode`,
         {
           method: "PATCH",
           headers: {
@@ -898,7 +890,7 @@ export default function Assistant() {
   const loadPersona = async (convId: string) => {
     try {
       const response = await fetch(
-        `http://localhost:3001/api/conversations/${convId}/persona`
+        `${backendUrl}/api/conversations/${convId}/persona`
       );
       const data = await response.json();
       setPersona(data.persona || "");
@@ -912,16 +904,13 @@ export default function Assistant() {
     if (!conversationId) return;
 
     try {
-      await fetch(
-        `http://localhost:3001/api/conversations/${conversationId}/persona`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ persona: personaText }),
-        }
-      );
+      await fetch(`${backendUrl}/api/conversations/${conversationId}/persona`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ persona: personaText }),
+      });
       console.log("🎭 Persona saved successfully");
     } catch (error) {
       console.error("Error saving persona:", error);

@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
-import { Socket } from 'socket.io-client';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import CommentsThread from './CommentsThread';
-import './StoryLine.css';
+import React, { useState, useEffect, useRef } from "react";
+import { Socket } from "socket.io-client";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import CommentsThread from "./CommentsThread";
+import "./StoryLine.css";
 
 interface VisualMoment {
   lineNumber: number;
@@ -42,7 +42,7 @@ export default function StoryLine({
   idToken,
   socket,
   visualMoments,
-  comments
+  comments,
 }: StoryLineProps) {
   const [showActions, setShowActions] = useState(false);
   const [showComments, setShowComments] = useState(false);
@@ -63,31 +63,34 @@ export default function StoryLine({
     setIsGeneratingImage(true);
 
     try {
-      const response = await fetch(`http://localhost:3001/api/romance/story/${storyId}/generate-image`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${idToken}`
-        },
-        body: JSON.stringify({
-          sceneIdx,
-          lineIdx
-        })
-      });
+      const response = await fetch(
+        `${backendUrl}/api/romance/story/${storyId}/generate-image`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${idToken}`,
+          },
+          body: JSON.stringify({
+            sceneIdx,
+            lineIdx,
+          }),
+        }
+      );
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || 'Failed to generate image');
+        throw new Error(error.error || "Failed to generate image");
         setIsGeneratingImage(false);
       }
 
       const data = await response.json();
-      console.log('✅ Image generated:', data);
+      console.log("✅ Image generated:", data);
 
       // Image will be added via Socket.io real-time update
       // Don't set isGeneratingImage to false here - wait for the visual moment to arrive
     } catch (error: any) {
-      console.error('❌ Generate image error:', error);
+      console.error("❌ Generate image error:", error);
       alert(`Failed to generate image: ${error.message}`);
       setIsGeneratingImage(false);
     }
@@ -105,8 +108,10 @@ export default function StoryLine({
           remarkPlugins={[remarkGfm]}
           components={{
             p: ({ node, ...props }) => <span {...props} />,
-            strong: ({ node, ...props }) => <strong className="font-bold" {...props} />,
-            em: ({ node, ...props }) => <em className="italic" {...props} />
+            strong: ({ node, ...props }) => (
+              <strong className="font-bold" {...props} />
+            ),
+            em: ({ node, ...props }) => <em className="italic" {...props} />,
           }}
         >
           {line}
@@ -175,7 +180,7 @@ export default function StoryLine({
             className="action-button generate-image-button"
             title="Generate image for this line"
           >
-            {isGeneratingImage ? '⏳' : '🎨'} Generate Image
+            {isGeneratingImage ? "⏳" : "🎨"} Generate Image
           </button>
           <button
             onClick={() => setShowComments(!showComments)}

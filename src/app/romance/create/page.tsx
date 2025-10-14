@@ -9,7 +9,7 @@ import { authService } from "@/lib/auth/authService";
 import TropeSelector from "@/components/RomanceCanvas/TropeSelector";
 import StreamingStoryCreation from "@/components/RomanceCanvas/StreamingStoryCreation";
 import SoftGateModal from "@/components/SoftGateModal";
-
+import { backendUrl } from "@/lib/config";
 export default function CreateStoryPage() {
   const router = useRouter();
   const { user, isAuthenticated, anonymousSession } = useAuth();
@@ -114,7 +114,7 @@ export default function CreateStoryPage() {
         headers["Authorization"] = `Bearer ${idToken}`;
       }
 
-      const response = await fetch("http://localhost:3001/api/romance/create", {
+      const response = await fetch(`${backendUrl}/api/romance/create`, {
         method: "POST",
         headers,
         body: JSON.stringify({

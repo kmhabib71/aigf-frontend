@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-
+import { backendUrl } from "@/lib/config";
 interface Language {
   code: string;
   name: string;
@@ -28,7 +28,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
   useEffect(() => {
     const fetchLanguages = async () => {
       try {
-        const response = await fetch("http://localhost:3001/api/languages");
+        const response = await fetch(`${backendUrl}/api/languages`);
         const data = await response.json();
         setLanguages(data.languages || {});
       } catch (error) {

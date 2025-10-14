@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { useAuth } from '@/contexts/AuthContext';
-import { io, Socket } from 'socket.io-client';
-import StoryCanvas from '@/components/RomanceCanvas/StoryCanvas';
-import ChatWithCharacter from '@/components/RomanceCanvas/ChatWithCharacter';
-import { auth } from '@/lib/firebase';
-
+import React, { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
+import { io, Socket } from "socket.io-client";
+import StoryCanvas from "@/components/RomanceCanvas/StoryCanvas";
+import ChatWithCharacter from "@/components/RomanceCanvas/ChatWithCharacter";
+import { auth } from "@/lib/firebase";
+import { backendUrl } from "@/lib/config";
 interface Story {
   _id: string;
   title: string;
@@ -60,25 +60,25 @@ export default function StoryViewPage() {
 
   const [story, setStory] = useState<Story | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [socket, setSocket] = useState<Socket | null>(null);
-  const [idToken, setIdToken] = useState<string>('');
+  const [idToken, setIdToken] = useState<string>("");
 
   // Initialize Socket.io connection
   useEffect(() => {
     if (!isAuthenticated) return;
 
-    const newSocket = io('http://localhost:3001', {
-      transports: ['websocket'],
-      reconnection: true
+    const newSocket = io(`${backendUrl}`, {
+      transports: ["websocket"],
+      reconnection: true,
     });
 
-    newSocket.on('connect', () => {
-      console.log('✅ Socket.io connected for Romance Canvas');
+    newSocket.on("connect", () => {
+      console.log("✅ Socket.io connected for Romance Canvas");
     });
 
-    newSocket.on('disconnect', () => {
-      console.log('❌ Socket.io disconnected');
+    newSocket.on("disconnect", () => {
+      console.log("❌ Socket.io disconnected");
     });
 
     setSocket(newSocket);
@@ -90,7 +90,7 @@ export default function StoryViewPage() {
 
   useEffect(() => {
     if (!isAuthenticated) {
-      router.push('/login?redirect=/romance/story/' + storyId);
+      router.push("/login?redirect=/romance/story/" + storyId);
       return;
     }
 
@@ -102,26 +102,29 @@ export default function StoryViewPage() {
       // Get token from Firebase auth.currentUser instead of the AuthUser object
       const currentUser = auth.currentUser;
       if (!currentUser) {
-        throw new Error('Authentication required');
+        throw new Error("Authentication required");
       }
 
       const token = await currentUser.getIdToken();
       setIdToken(token);
 
-      const response = await fetch(`http://localhost:3001/api/romance/story/${storyId}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
+      const response = await fetch(
+        `${backendUrl}/api/romance/story/${storyId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      });
+      );
 
       if (!response.ok) {
-        throw new Error('Failed to load story');
+        throw new Error("Failed to load story");
       }
 
       const data = await response.json();
       setStory(data);
     } catch (err: any) {
-      console.error('Load story error:', err);
+      console.error("Load story error:", err);
       setError(err.message);
     } finally {
       setLoading(false);
@@ -145,7 +148,9 @@ export default function StoryViewPage() {
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-pink-50 to-white">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-pink-500 mx-auto mb-4"></div>
-          <p className="text-gray-600 text-lg font-medium">Loading your romantic story...</p>
+          <p className="text-gray-600 text-lg font-medium">
+            Loading your romantic story...
+          </p>
         </div>
       </div>
     );
@@ -156,17 +161,22 @@ export default function StoryViewPage() {
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-pink-50 to-white">
         <div className="text-center max-w-md px-6">
           <div className="text-6xl mb-4">📖</div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Story Not Found</h2>
-          <p className="text-red-600 mb-6">{error || 'The story you\'re looking for doesn\'t exist or you don\'t have permission to view it.'}</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            Story Not Found
+          </h2>
+          <p className="text-red-600 mb-6">
+            {error ||
+              "The story you're looking for doesn't exist or you don't have permission to view it."}
+          </p>
           <div className="flex gap-3 justify-center">
             <button
-              onClick={() => router.push('/romance/create')}
+              onClick={() => router.push("/romance/create")}
               className="px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-lg font-semibold hover:from-pink-600 hover:to-purple-700 shadow-lg"
             >
               ✨ Create New Story
             </button>
             <button
-              onClick={() => router.push('/')}
+              onClick={() => router.push("/")}
               className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300"
             >
               🏠 Back to Home
@@ -183,7 +193,7 @@ export default function StoryViewPage() {
       <div className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <button
-            onClick={() => router.push('/')}
+            onClick={() => router.push("/")}
             className="text-gray-600 hover:text-gray-900 flex items-center gap-2"
           >
             ← Back
@@ -192,7 +202,7 @@ export default function StoryViewPage() {
             {story.title}
           </h2>
           <button
-            onClick={() => router.push('/romance/create')}
+            onClick={() => router.push("/romance/create")}
             className="px-4 py-2 bg-pink-500 text-white rounded-lg text-sm font-medium hover:bg-pink-600"
           >
             ✨ New Story
@@ -209,7 +219,8 @@ export default function StoryViewPage() {
           onStoryUpdate={handleStoryUpdate}
           idToken={idToken}
           chatButton={
-            story.metadata.characters && story.metadata.characters.length > 0 ? (
+            story.metadata.characters &&
+            story.metadata.characters.length > 0 ? (
               <ChatWithCharacter
                 storyId={storyId}
                 socket={socket}
@@ -227,8 +238,9 @@ export default function StoryViewPage() {
             ✅ <span>Phase 2 Complete - Interactive Storyboard Canvas!</span>
           </h3>
           <p className="text-sm text-gray-700 mb-4">
-            Your Romance Canvas now features real-time collaboration, interactive commenting,
-            line-by-line image generation, and AI-powered story continuation!
+            Your Romance Canvas now features real-time collaboration,
+            interactive commenting, line-by-line image generation, and
+            AI-powered story continuation!
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-gray-700">
             <div className="flex items-start gap-2">
@@ -250,7 +262,6 @@ export default function StoryViewPage() {
           </div>
         </div>
       </div>
-
     </div>
   );
 }

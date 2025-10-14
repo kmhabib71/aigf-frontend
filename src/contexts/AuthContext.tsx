@@ -1,22 +1,22 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { authService, AuthUser } from '../lib/auth/authService';
-import { sessionService, AnonymousSession } from '../lib/auth/sessionService';
-
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { authService, AuthUser } from "../lib/auth/authService";
+import { sessionService, AnonymousSession } from "../lib/auth/sessionService";
+import { backendUrl } from "@/lib/config";
 interface UserProfile {
   uid: string;
   email: string | null;
   displayName: string | null;
   photoURL: string | null;
-  plan: 'free' | 'plus' | 'pro';
+  plan: "free" | "plus" | "pro";
   messagesUsed: number;
   messageLimit: number;
   imagesUsed: number;
   imageLimit: number;
   voiceCharsUsed: number;
   voiceCharLimit: number;
-  subscriptionStatus: 'active' | 'canceled' | 'expired' | null;
+  subscriptionStatus: "active" | "canceled" | "expired" | null;
   subscriptionEndsAt: Date | null;
   createdAt: Date;
   lastActive: Date;
@@ -36,7 +36,11 @@ interface AuthContextType {
   remainingFreeMessages: number;
   signInWithGoogle: () => Promise<void>;
   signInWithEmail: (email: string, password: string) => Promise<void>;
-  signUpWithEmail: (email: string, password: string, displayName: string) => Promise<void>;
+  signUpWithEmail: (
+    email: string,
+    password: string,
+    displayName: string
+  ) => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
   signOut: () => Promise<void>;
   refreshUserProfile: () => Promise<void>;
@@ -47,7 +51,8 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const [anonymousSession, setAnonymousSession] = useState<AnonymousSession | null>(null);
+  const [anonymousSession, setAnonymousSession] =
+    useState<AnonymousSession | null>(null);
   const [loading, setLoading] = useState(true);
   const [canSendMessage, setCanSendMessage] = useState(true);
   const [remainingFreeMessages, setRemainingFreeMessages] = useState(5);
@@ -82,11 +87,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const idToken = await authService.getIdToken();
       if (!idToken) return;
 
-      await fetch('http://localhost:3001/api/auth/sync-user', {
-        method: 'POST',
+      await fetch(`${backendUrl}/api/auth/sync-user`, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${idToken}`,
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${idToken}`,
         },
         body: JSON.stringify({
           uid: authUser.uid,
@@ -97,7 +102,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }),
       });
     } catch (error) {
-      console.error('Failed to sync user to database:', error);
+      console.error("Failed to sync user to database:", error);
     }
   };
 
@@ -113,7 +118,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const remaining = await sessionService.getRemainingMessages();
       setRemainingFreeMessages(remaining);
     } catch (error) {
-      console.error('Failed to initialize anonymous session:', error);
+      console.error("Failed to initialize anonymous session:", error);
     }
   };
 
@@ -123,9 +128,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const idToken = await authService.getIdToken();
       if (!idToken) return;
 
-      const response = await fetch(`http://localhost:3001/api/auth/profile/${uid}`, {
+      const response = await fetch(`${backendUrl}/api/auth/profile/${uid}`, {
         headers: {
-          'Authorization': `Bearer ${idToken}`,
+          Authorization: `Bearer ${idToken}`,
         },
       });
 
@@ -138,7 +143,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setCanSendMessage(canSend);
       }
     } catch (error) {
-      console.error('Failed to fetch user profile:', error);
+      console.error("Failed to fetch user profile:", error);
     }
   };
 
@@ -184,9 +189,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const signUpWithEmail = async (email: string, password: string, displayName: string) => {
+  const signUpWithEmail = async (
+    email: string,
+    password: string,
+    displayName: string
+  ) => {
     try {
-      const authUser = await authService.signUpWithEmail(email, password, displayName);
+      const authUser = await authService.signUpWithEmail(
+        email,
+        password,
+        displayName
+      );
 
       // Migrate anonymous session messages if exists
       const session = await sessionService.getSessionForMigration();
@@ -212,16 +225,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   // Migrate anonymous session messages to user account
-  const migrateSessionMessages = async (uid: string, session: AnonymousSession) => {
+  const migrateSessionMessages = async (
+    uid: string,
+    session: AnonymousSession
+  ) => {
     try {
       const idToken = await authService.getIdToken();
       if (!idToken) return;
 
-      await fetch('http://localhost:3001/api/auth/migrate-session', {
-        method: 'POST',
+      await fetch(`${backendUrl}/api/auth/migrate-session`, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${idToken}`,
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${idToken}`,
         },
         body: JSON.stringify({
           uid,
@@ -229,7 +245,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }),
       });
     } catch (error) {
-      console.error('Failed to migrate session messages:', error);
+      console.error("Failed to migrate session messages:", error);
     }
   };
 
@@ -255,7 +271,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 }

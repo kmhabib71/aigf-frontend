@@ -28,7 +28,7 @@ import {
   isConversationUrl,
   isHomePage,
 } from "../../lib/urlParams";
-
+import { backendUrl } from "@/lib/config";
 interface Message {
   role: "user" | "assistant";
   content: string;
@@ -234,9 +234,7 @@ export default function ChatPage() {
   const loadConversationHistory = async (id: string) => {
     try {
       console.log(`📂 Loading conversation history for: ${id}`);
-      const response = await fetch(
-        `http://localhost:3001/api/conversation/${id}`
-      );
+      const response = await fetch(`${backendUrl}/api/conversation/${id}`);
 
       if (response.ok) {
         const data = await response.json();
@@ -335,19 +333,16 @@ export default function ChatPage() {
     if (!currentConversationId) {
       // Create a new conversation via backend API (same as "New Chat" button)
       try {
-        const response = await fetch(
-          "http://localhost:3001/api/conversations/new",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              title: "New Conversation",
-              currentConversationId: null,
-            }),
-          }
-        );
+        const response = await fetch(`${backendUrl}/api/conversations/new`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title: "New Conversation",
+            currentConversationId: null,
+          }),
+        });
 
         const data = await response.json();
         if (data.conversation) {
@@ -584,7 +579,11 @@ export default function ChatPage() {
 
     // Add final streaming content to messages (or image-only message)
     if (finalContent || (imageUrls && imageUrls.length > 0)) {
-      console.log(`💾 Saving final message: ${finalContent?.length || 0} chars, ${imageUrls?.length || 0} images`);
+      console.log(
+        `💾 Saving final message: ${finalContent?.length || 0} chars, ${
+          imageUrls?.length || 0
+        } images`
+      );
       const aiMessage: Message = {
         role: "assistant",
         content: finalContent || "Here's your image:",
@@ -674,7 +673,7 @@ export default function ChatPage() {
     const fetchNsfwMode = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3001/api/conversations/${conversationId}/nsfw-mode`
+          `${backendUrl}/api/conversations/${conversationId}/nsfw-mode`
         );
         if (response.ok) {
           const data = await response.json();
@@ -686,10 +685,12 @@ export default function ChatPage() {
           );
           // If backend has it disabled, enable it
           if (!data.nsfwMode) {
-            console.log(`🔥 Enabling romantic mode on backend for ${conversationId}`);
+            console.log(
+              `🔥 Enabling romantic mode on backend for ${conversationId}`
+            );
             // Enable it on the backend
             fetch(
-              `http://localhost:3001/api/conversations/${conversationId}/nsfw-mode`,
+              `${backendUrl}/api/conversations/${conversationId}/nsfw-mode`,
               {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
@@ -717,7 +718,7 @@ export default function ChatPage() {
   const loadPersona = async (convId: string) => {
     try {
       const response = await fetch(
-        `http://localhost:3001/api/conversations/${convId}/persona`
+        `${backendUrl}/api/conversations/${convId}/persona`
       );
       const data = await response.json();
       setPersona(data.persona || "");
@@ -731,16 +732,13 @@ export default function ChatPage() {
     if (!conversationId) return;
 
     try {
-      await fetch(
-        `http://localhost:3001/api/conversations/${conversationId}/persona`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ persona: personaText }),
-        }
-      );
+      await fetch(`${backendUrl}/api/conversations/${conversationId}/persona`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ persona: personaText }),
+      });
       console.log("🎭 Persona saved successfully");
     } catch (error) {
       console.error("Error saving persona:", error);
@@ -788,17 +786,17 @@ export default function ChatPage() {
               {/* Title */}
               <div className="text-center">
                 <h1 className="text-2xl font-bold mb-2">Romantic AI Chat</h1>
-                <p className="text-sm opacity-90">
+                {/* <p className="text-sm opacity-90">
                   Your personal romantic companion
-                </p>
+                </p> */}
 
                 {/* STREAMING MODE INDICATOR */}
-                <div className="mt-3 flex items-center justify-center gap-2">
+                {/* <div className="mt-3 flex items-center justify-center gap-2">
                   <span className="text-yellow-400">⚡</span>
                   <span className="text-sm opacity-75">
                     Real-time streaming chat
                   </span>
-                </div>
+                </div> */}
                 {/* Token Progress Bar */}
                 {stats.totalTokens && stats.totalTokens > 0 && (
                   <div className="mt-2">
@@ -835,7 +833,9 @@ export default function ChatPage() {
                 {/* Romantic Mode Indicator - Always Active */}
                 <div className="bg-red-500/90 rounded-full px-4 py-2 flex items-center gap-2">
                   <span>🔥</span>
-                  <span className="text-white text-sm font-semibold">Romantic Mode</span>
+                  <span className="text-white text-sm font-semibold">
+                    Romantic Mode
+                  </span>
                 </div>
                 {/* Persona Button */}
                 <button

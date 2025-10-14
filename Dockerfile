@@ -24,7 +24,12 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install production dependencies only
-RUN npm ci --only=production
+# instead of: RUN npm ci
+RUN if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then \
+      npm ci; \
+    else \
+      npm install; \
+    fi
 
 # Copy built app from builder
 COPY --from=builder /app/.next ./.next

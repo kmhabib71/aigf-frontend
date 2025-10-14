@@ -102,7 +102,9 @@ export default function StoryCanvas({
           case "image_added":
             if (newStory.scenes[update.sceneIdx]) {
               // Check if visual moment already exists (prevent duplicates)
-              const exists = newStory.scenes[update.sceneIdx].visualMoments.some(
+              const exists = newStory.scenes[
+                update.sceneIdx
+              ].visualMoments.some(
                 (vm) => vm.imageUrl === update.visualMoment.imageUrl
               );
               if (!exists) {
@@ -110,7 +112,9 @@ export default function StoryCanvas({
                   update.visualMoment
                 );
               } else {
-                console.log("⏭️ Visual moment already exists, skipping duplicate");
+                console.log(
+                  "⏭️ Visual moment already exists, skipping duplicate"
+                );
               }
             }
             break;
@@ -134,8 +138,12 @@ export default function StoryCanvas({
           case "comment_added":
             if (newStory.scenes[update.sceneIdx]) {
               // Check if comment already exists (prevent duplicates)
-              const commentExists = newStory.scenes[update.sceneIdx].comments.some(
-                (c) => c.createdAt === update.comment.createdAt && c.text === update.comment.text
+              const commentExists = newStory.scenes[
+                update.sceneIdx
+              ].comments.some(
+                (c) =>
+                  c.createdAt === update.comment.createdAt &&
+                  c.text === update.comment.text
               );
               if (!commentExists) {
                 newStory.scenes[update.sceneIdx].comments.push(update.comment);
@@ -174,7 +182,7 @@ export default function StoryCanvas({
 
     try {
       const response = await fetch(
-        `http://localhost:3001/api/romance/story/${storyId}/continue`,
+        `${backendUrl}/api/romance/story/${storyId}/continue`,
         {
           method: "POST",
           headers: {

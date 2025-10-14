@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "../contexts/AuthContext";
 import { authService } from "../lib/auth/authService";
 import Header from "../components/layout/Header";
-
+import { backendUrl } from "../lib/config";
 interface TrendingStory {
   id: string;
   title: string;
@@ -56,7 +56,9 @@ export default function LandingPage() {
 
   const fetchTrendingStories = async () => {
     try {
-      const response = await fetch("http://localhost:3001/api/romance/stories/trending?limit=3");
+      const response = await fetch(
+        `${backendUrl}/api/romance/stories/trending?limit=3`
+      );
       const data = await response.json();
       if (data.success) {
         setTrendingStories(data.stories);
@@ -73,7 +75,7 @@ export default function LandingPage() {
       if (!token) return;
 
       const response = await fetch(
-        `http://localhost:3001/api/romance/stories/continue/${user.uid}`,
+        `${backendUrl}/api/romance/stories/continue/${user.uid}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -383,7 +385,9 @@ export default function LandingPage() {
                             {story.characters.length > 0 && (
                               <button
                                 onClick={() =>
-                                  router.push(`/romance/story/${story.id}?chat=${story.characters[0].name}`)
+                                  router.push(
+                                    `/romance/story/${story.id}?chat=${story.characters[0].name}`
+                                  )
                                 }
                                 className="px-4 py-2 bg-white border-2 border-purple-300 text-purple-700 rounded-xl font-semibold hover:bg-purple-50 transition-colors"
                                 title={`Chat with ${story.characters[0].name}`}

@@ -8,9 +8,9 @@ import {
   User,
   sendPasswordResetEmail,
   updateProfile,
-} from 'firebase/auth';
-import { auth, googleProvider } from '../firebase';
-
+} from "firebase/auth";
+import { auth, googleProvider } from "../firebase";
+import { backendUrl } from "@/lib/config";
 export interface AuthUser {
   uid: string;
   email: string | null;
@@ -31,15 +31,23 @@ class AuthService {
 
       return this.formatUser(user);
     } catch (error: any) {
-      console.error('Google sign in error:', error);
-      throw new Error(error.message || 'Failed to sign in with Google');
+      console.error("Google sign in error:", error);
+      throw new Error(error.message || "Failed to sign in with Google");
     }
   }
 
   // Email/Password Sign Up
-  async signUpWithEmail(email: string, password: string, displayName: string): Promise<AuthUser> {
+  async signUpWithEmail(
+    email: string,
+    password: string,
+    displayName: string
+  ): Promise<AuthUser> {
     try {
-      const result = await createUserWithEmailAndPassword(auth, email, password);
+      const result = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       const user = result.user;
 
       // Update display name
@@ -50,8 +58,8 @@ class AuthService {
 
       return this.formatUser(user);
     } catch (error: any) {
-      console.error('Email sign up error:', error);
-      throw new Error(error.message || 'Failed to create account');
+      console.error("Email sign up error:", error);
+      throw new Error(error.message || "Failed to create account");
     }
   }
 
@@ -66,8 +74,8 @@ class AuthService {
 
       return this.formatUser(user);
     } catch (error: any) {
-      console.error('Email sign in error:', error);
-      throw new Error(error.message || 'Invalid email or password');
+      console.error("Email sign in error:", error);
+      throw new Error(error.message || "Invalid email or password");
     }
   }
 
@@ -76,8 +84,8 @@ class AuthService {
     try {
       await sendPasswordResetEmail(auth, email);
     } catch (error: any) {
-      console.error('Password reset error:', error);
-      throw new Error(error.message || 'Failed to send reset email');
+      console.error("Password reset error:", error);
+      throw new Error(error.message || "Failed to send reset email");
     }
   }
 
@@ -86,8 +94,8 @@ class AuthService {
     try {
       await signOut(auth);
     } catch (error: any) {
-      console.error('Sign out error:', error);
-      throw new Error(error.message || 'Failed to sign out');
+      console.error("Sign out error:", error);
+      throw new Error(error.message || "Failed to sign out");
     }
   }
 
@@ -116,15 +124,18 @@ class AuthService {
   }
 
   // Sync user to backend (create or update in MongoDB)
-  private async syncUserToBackend(user: User, displayName?: string): Promise<void> {
+  private async syncUserToBackend(
+    user: User,
+    displayName?: string
+  ): Promise<void> {
     try {
       const idToken = await user.getIdToken();
 
-      const response = await fetch('http://localhost:3001/api/auth/sync-user', {
-        method: 'POST',
+      const response = await fetch(`${backendUrl}/api/auth/sync-user`, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${idToken}`,
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${idToken}`,
         },
         body: JSON.stringify({
           uid: user.uid,
@@ -136,10 +147,10 @@ class AuthService {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to sync user to backend');
+        throw new Error("Failed to sync user to backend");
       }
     } catch (error) {
-      console.error('Backend sync error:', error);
+      console.error("Backend sync error:", error);
       // Don't throw - auth still works even if backend sync fails
     }
   }

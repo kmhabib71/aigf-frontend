@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-
+import React, { useState, useEffect } from "react";
+import { backendUrl } from "@/lib/config";
 interface TimeData {
   timestamp: string;
   localTime: string;
@@ -45,7 +45,8 @@ interface SmartGreetingResponse {
 }
 
 const SmartGreeting: React.FC = () => {
-  const [greetingData, setGreetingData] = useState<SmartGreetingResponse | null>(null);
+  const [greetingData, setGreetingData] =
+    useState<SmartGreetingResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -58,24 +59,24 @@ const SmartGreeting: React.FC = () => {
       setIsLoading(true);
       setError(null);
 
-      const response = await fetch('http://localhost:3001/api/greeting/smart-greeting');
+      const response = await fetch(`${backendUrl}/api/greeting/smart-greeting`);
       const data: SmartGreetingResponse = await response.json();
 
       if (data.success) {
         setGreetingData(data);
       } else {
-        setError(data.error || 'Failed to fetch greeting');
+        setError(data.error || "Failed to fetch greeting");
         // Still show fallback greeting
         setGreetingData(data);
       }
     } catch (err) {
-      console.error('Error fetching smart greeting:', err);
-      setError('Network error occurred');
+      console.error("Error fetching smart greeting:", err);
+      setError("Network error occurred");
       // Set fallback greeting
       setGreetingData({
         success: false,
         greeting: "Hello! Welcome! How can I help you today? 😊",
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
     } finally {
       setIsLoading(false);
@@ -84,35 +85,44 @@ const SmartGreeting: React.FC = () => {
 
   const getTimeIcon = (timeOfDay: string) => {
     switch (timeOfDay) {
-      case 'morning':
-        return '🌅';
-      case 'afternoon':
-        return '☀️';
-      case 'evening':
-        return '🌆';
-      case 'night':
-        return '🌙';
+      case "morning":
+        return "🌅";
+      case "afternoon":
+        return "☀️";
+      case "evening":
+        return "🌆";
+      case "night":
+        return "🌙";
       default:
-        return '⏰';
+        return "⏰";
     }
   };
 
   const getWeatherIcon = (iconCode: string | null) => {
-    if (!iconCode) return '🌤️';
+    if (!iconCode) return "🌤️";
 
     const iconMap: { [key: string]: string } = {
-      '01d': '☀️', '01n': '🌙',
-      '02d': '⛅', '02n': '☁️',
-      '03d': '☁️', '03n': '☁️',
-      '04d': '☁️', '04n': '☁️',
-      '09d': '🌧️', '09n': '🌧️',
-      '10d': '🌦️', '10n': '🌧️',
-      '11d': '⛈️', '11n': '⛈️',
-      '13d': '❄️', '13n': '❄️',
-      '50d': '🌫️', '50n': '🌫️'
+      "01d": "☀️",
+      "01n": "🌙",
+      "02d": "⛅",
+      "02n": "☁️",
+      "03d": "☁️",
+      "03n": "☁️",
+      "04d": "☁️",
+      "04n": "☁️",
+      "09d": "🌧️",
+      "09n": "🌧️",
+      "10d": "🌦️",
+      "10n": "🌧️",
+      "11d": "⛈️",
+      "11n": "⛈️",
+      "13d": "❄️",
+      "13n": "❄️",
+      "50d": "🌫️",
+      "50n": "🌫️",
     };
 
-    return iconMap[iconCode] || '🌤️';
+    return iconMap[iconCode] || "🌤️";
   };
 
   if (isLoading) {
@@ -136,31 +146,38 @@ const SmartGreeting: React.FC = () => {
         {greetingData?.data && (
           <div className="greeting-details">
             <div className="detail-item time-info">
-              <span className="icon">{getTimeIcon(greetingData.data.time.timeOfDay)}</span>
+              <span className="icon">
+                {getTimeIcon(greetingData.data.time.timeOfDay)}
+              </span>
               <span className="text">
-                {greetingData.data.time.dayOfWeek}, {greetingData.data.time.date}
+                {greetingData.data.time.dayOfWeek},{" "}
+                {greetingData.data.time.date}
               </span>
             </div>
 
-            {greetingData.data.location.city !== 'Unknown' && (
+            {greetingData.data.location.city !== "Unknown" && (
               <div className="detail-item location-info">
                 <span className="icon">📍</span>
                 <span className="text">
                   {greetingData.data.location.city}
-                  {greetingData.data.location.region !== 'Unknown' &&
-                   greetingData.data.location.region !== greetingData.data.location.city &&
-                   `, ${greetingData.data.location.region}`}
+                  {greetingData.data.location.region !== "Unknown" &&
+                    greetingData.data.location.region !==
+                      greetingData.data.location.city &&
+                    `, ${greetingData.data.location.region}`}
                 </span>
               </div>
             )}
 
             {greetingData.data.weather.temperature !== null && (
               <div className="detail-item weather-info">
-                <span className="icon">{getWeatherIcon(greetingData.data.weather.icon)}</span>
+                <span className="icon">
+                  {getWeatherIcon(greetingData.data.weather.icon)}
+                </span>
                 <span className="text">
                   {greetingData.data.weather.temperature}°C
-                  {greetingData.data.weather.description !== 'Weather data unavailable' &&
-                   `, ${greetingData.data.weather.description}`}
+                  {greetingData.data.weather.description !==
+                    "Weather data unavailable" &&
+                    `, ${greetingData.data.weather.description}`}
                 </span>
               </div>
             )}
@@ -169,7 +186,10 @@ const SmartGreeting: React.FC = () => {
 
         {error && !greetingData?.success && (
           <div className="error-notice">
-            <small>⚠️ Some location/weather data couldn't be loaded, but you're still very welcome!</small>
+            <small>
+              ⚠️ Some location/weather data couldn't be loaded, but you're still
+              very welcome!
+            </small>
           </div>
         )}
       </div>
@@ -198,8 +218,12 @@ const SmartGreeting: React.FC = () => {
         }
 
         @keyframes spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
         }
 
         .greeting-content {

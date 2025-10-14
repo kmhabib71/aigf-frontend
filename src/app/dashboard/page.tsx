@@ -1,19 +1,26 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '../../contexts/AuthContext';
-import CreditBalance from '../../components/CreditBalance';
-
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "../../contexts/AuthContext";
+import CreditBalance from "../../components/CreditBalance";
+import { backendUrl } from "@/lib/config";
 export default function DashboardPage() {
   const router = useRouter();
-  const { user, userProfile, loading, isAuthenticated, signOut, refreshUserProfile } = useAuth();
+  const {
+    user,
+    userProfile,
+    loading,
+    isAuthenticated,
+    signOut,
+    refreshUserProfile,
+  } = useAuth();
   const [portalLoading, setPortalLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
-      router.push('/login');
+      router.push("/login");
     }
   }, [loading, isAuthenticated, router]);
 
@@ -29,18 +36,18 @@ export default function DashboardPage() {
       setError(null);
 
       const response = await fetch(
-        `http://localhost:3001/api/subscription/portal/${user?.uid}`
+        `${backendUrl}/api/subscription/portal/${user?.uid}`
       );
 
       if (!response.ok) {
-        throw new Error('Failed to get portal URL');
+        throw new Error("Failed to get portal URL");
       }
 
       const data = await response.json();
-      window.open(data.portalUrl, '_blank');
+      window.open(data.portalUrl, "_blank");
     } catch (err: any) {
-      console.error('Portal error:', err);
-      setError(err.message || 'Failed to open subscription portal');
+      console.error("Portal error:", err);
+      setError(err.message || "Failed to open subscription portal");
     } finally {
       setPortalLoading(false);
     }
@@ -48,7 +55,7 @@ export default function DashboardPage() {
 
   const handleSignOut = async () => {
     await signOut();
-    router.push('/');
+    router.push("/");
   };
 
   if (loading || !userProfile) {
@@ -65,23 +72,32 @@ export default function DashboardPage() {
   };
 
   const getUsageColor = (percentage: number) => {
-    if (percentage >= 90) return 'bg-red-500';
-    if (percentage >= 75) return 'bg-yellow-500';
-    return 'bg-green-500';
+    if (percentage >= 90) return "bg-red-500";
+    if (percentage >= 75) return "bg-yellow-500";
+    return "bg-green-500";
   };
 
   const formatDate = (date: Date | null) => {
-    if (!date) return 'N/A';
-    return new Date(date).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
+    if (!date) return "N/A";
+    return new Date(date).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
   };
 
-  const messagePercentage = getUsagePercentage(userProfile.messagesUsed, userProfile.messageLimit);
-  const imagePercentage = getUsagePercentage(userProfile.imagesUsed, userProfile.imageLimit);
-  const voicePercentage = getUsagePercentage(userProfile.voiceCharsUsed, userProfile.voiceCharLimit);
+  const messagePercentage = getUsagePercentage(
+    userProfile.messagesUsed,
+    userProfile.messageLimit
+  );
+  const imagePercentage = getUsagePercentage(
+    userProfile.imagesUsed,
+    userProfile.imageLimit
+  );
+  const voicePercentage = getUsagePercentage(
+    userProfile.voiceCharsUsed,
+    userProfile.voiceCharLimit
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-purple-700">
@@ -90,7 +106,7 @@ export default function DashboardPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <button
-              onClick={() => router.push('/')}
+              onClick={() => router.push("/")}
               className="text-white text-xl font-bold flex items-center gap-2 hover:opacity-80 transition-opacity"
             >
               <span>💬</span>
@@ -99,14 +115,15 @@ export default function DashboardPage() {
 
             <div className="flex items-center gap-4">
               {/* Credit Balance (compact for header) */}
-              {userProfile.useCreditSystem && userProfile.creditBalance !== undefined && (
-                <CreditBalance
-                  credits={userProfile.creditBalance}
-                  plan={userProfile.plan}
-                  variant="compact"
-                  showWarning={true}
-                />
-              )}
+              {userProfile.useCreditSystem &&
+                userProfile.creditBalance !== undefined && (
+                  <CreditBalance
+                    credits={userProfile.creditBalance}
+                    plan={userProfile.plan}
+                    variant="compact"
+                    showWarning={true}
+                  />
+                )}
 
               <button
                 onClick={handleSignOut}
@@ -149,11 +166,11 @@ export default function DashboardPage() {
                   {userProfile.photoURL ? (
                     <img
                       src={userProfile.photoURL}
-                      alt={userProfile.displayName || 'User'}
+                      alt={userProfile.displayName || "User"}
                       className="w-full h-full rounded-full object-cover"
                     />
                   ) : (
-                    userProfile.displayName?.[0]?.toUpperCase() || '👤'
+                    userProfile.displayName?.[0]?.toUpperCase() || "👤"
                   )}
                 </div>
                 <div>
@@ -191,9 +208,9 @@ export default function DashboardPage() {
                   <span className="text-2xl font-bold capitalize">
                     {userProfile.plan}
                   </span>
-                  {userProfile.plan !== 'free' && (
+                  {userProfile.plan !== "free" && (
                     <span className="text-sm">
-                      ${userProfile.plan === 'plus' ? '9.99' : '29.99'}/mo
+                      ${userProfile.plan === "plus" ? "9.99" : "29.99"}/mo
                     </span>
                   )}
                 </div>
@@ -203,11 +220,15 @@ export default function DashboardPage() {
                 <div className="space-y-2 text-sm text-gray-600 mb-4">
                   <div className="flex justify-between">
                     <span>Status:</span>
-                    <span className={`font-semibold capitalize ${
-                      userProfile.subscriptionStatus === 'active' ? 'text-green-600' :
-                      userProfile.subscriptionStatus === 'canceled' ? 'text-yellow-600' :
-                      'text-red-600'
-                    }`}>
+                    <span
+                      className={`font-semibold capitalize ${
+                        userProfile.subscriptionStatus === "active"
+                          ? "text-green-600"
+                          : userProfile.subscriptionStatus === "canceled"
+                          ? "text-yellow-600"
+                          : "text-red-600"
+                      }`}
+                    >
                       {userProfile.subscriptionStatus}
                     </span>
                   </div>
@@ -223,9 +244,9 @@ export default function DashboardPage() {
               )}
 
               <div className="space-y-3">
-                {userProfile.plan !== 'pro' && (
+                {userProfile.plan !== "pro" && (
                   <button
-                    onClick={() => router.push('/pricing')}
+                    onClick={() => router.push("/pricing")}
                     className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-2 rounded-full font-semibold hover:from-indigo-600 hover:to-purple-700 transition-all"
                   >
                     Upgrade Plan
@@ -238,7 +259,7 @@ export default function DashboardPage() {
                     disabled={portalLoading}
                     className="w-full bg-gray-200 text-gray-900 py-2 rounded-full font-semibold hover:bg-gray-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {portalLoading ? 'Loading...' : 'Manage Subscription'}
+                    {portalLoading ? "Loading..." : "Manage Subscription"}
                   </button>
                 )}
               </div>
@@ -248,35 +269,38 @@ export default function DashboardPage() {
           {/* Right Column - Usage Stats */}
           <div className="lg:col-span-2 space-y-6">
             {/* Credit Balance Card (Plus/Pro users) */}
-            {userProfile.useCreditSystem && userProfile.creditBalance !== undefined && (
-              <div className="bg-white rounded-3xl shadow-2xl p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-2xl font-bold text-gray-900">
-                    Credit Balance
-                  </h3>
-                  <button
-                    onClick={refreshUserProfile}
-                    className="text-indigo-600 hover:text-indigo-700 text-sm font-semibold"
-                  >
-                    Refresh
-                  </button>
-                </div>
+            {userProfile.useCreditSystem &&
+              userProfile.creditBalance !== undefined && (
+                <div className="bg-white rounded-3xl shadow-2xl p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-2xl font-bold text-gray-900">
+                      Credit Balance
+                    </h3>
+                    <button
+                      onClick={refreshUserProfile}
+                      className="text-indigo-600 hover:text-indigo-700 text-sm font-semibold"
+                    >
+                      Refresh
+                    </button>
+                  </div>
 
-                <CreditBalance
-                  credits={userProfile.creditBalance}
-                  plan={userProfile.plan}
-                  variant="detailed"
-                  showWarning={true}
-                  lastRefresh={userProfile.lastCreditRefresh}
-                />
-              </div>
-            )}
+                  <CreditBalance
+                    credits={userProfile.creditBalance}
+                    plan={userProfile.plan}
+                    variant="detailed"
+                    showWarning={true}
+                    lastRefresh={userProfile.lastCreditRefresh}
+                  />
+                </div>
+              )}
 
             {/* Usage Overview */}
             <div className="bg-white rounded-3xl shadow-2xl p-6">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-2xl font-bold text-gray-900">
-                  {userProfile.useCreditSystem ? 'Usage Limits (Fallback)' : 'Usage This Month'}
+                  {userProfile.useCreditSystem
+                    ? "Usage Limits (Fallback)"
+                    : "Usage This Month"}
                 </h3>
                 <button
                   onClick={refreshUserProfile}
@@ -292,9 +316,12 @@ export default function DashboardPage() {
                   <div className="flex items-start gap-2">
                     <span className="text-lg">ℹ️</span>
                     <div className="text-sm text-blue-900">
-                      <div className="font-semibold">Credit-Based System Active</div>
+                      <div className="font-semibold">
+                        Credit-Based System Active
+                      </div>
                       <div className="text-xs text-blue-700 mt-1">
-                        Your usage is tracked via credits. The limits below only apply if your credits are depleted.
+                        Your usage is tracked via credits. The limits below only
+                        apply if your credits are depleted.
                       </div>
                     </div>
                   </div>
@@ -317,12 +344,15 @@ export default function DashboardPage() {
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
                     <div
-                      className={`h-full transition-all ${getUsageColor(messagePercentage)}`}
+                      className={`h-full transition-all ${getUsageColor(
+                        messagePercentage
+                      )}`}
                       style={{ width: `${messagePercentage}%` }}
                     />
                   </div>
                   <p className="text-xs text-gray-500 mt-1">
-                    {userProfile.messageLimit - userProfile.messagesUsed} messages remaining
+                    {userProfile.messageLimit - userProfile.messagesUsed}{" "}
+                    messages remaining
                   </p>
                 </div>
 
@@ -341,18 +371,21 @@ export default function DashboardPage() {
                       )}
                     </div>
                     <span className="text-sm font-semibold text-gray-600">
-                      {userProfile.imagesUsed} / {userProfile.imageLimit || '0'}
+                      {userProfile.imagesUsed} / {userProfile.imageLimit || "0"}
                     </span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
                     <div
-                      className={`h-full transition-all ${getUsageColor(imagePercentage)}`}
+                      className={`h-full transition-all ${getUsageColor(
+                        imagePercentage
+                      )}`}
                       style={{ width: `${imagePercentage}%` }}
                     />
                   </div>
                   {userProfile.imageLimit > 0 && (
                     <p className="text-xs text-gray-500 mt-1">
-                      {userProfile.imageLimit - userProfile.imagesUsed} images remaining
+                      {userProfile.imageLimit - userProfile.imagesUsed} images
+                      remaining
                     </p>
                   )}
                 </div>
@@ -372,18 +405,26 @@ export default function DashboardPage() {
                       )}
                     </div>
                     <span className="text-sm font-semibold text-gray-600">
-                      {(userProfile.voiceCharsUsed / 1000).toFixed(1)}K / {(userProfile.voiceCharLimit / 1000)}K chars
+                      {(userProfile.voiceCharsUsed / 1000).toFixed(1)}K /{" "}
+                      {userProfile.voiceCharLimit / 1000}K chars
                     </span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
                     <div
-                      className={`h-full transition-all ${getUsageColor(voicePercentage)}`}
+                      className={`h-full transition-all ${getUsageColor(
+                        voicePercentage
+                      )}`}
                       style={{ width: `${voicePercentage}%` }}
                     />
                   </div>
                   {userProfile.voiceCharLimit > 0 && (
                     <p className="text-xs text-gray-500 mt-1">
-                      {((userProfile.voiceCharLimit - userProfile.voiceCharsUsed) / 1000).toFixed(1)}K characters remaining
+                      {(
+                        (userProfile.voiceCharLimit -
+                          userProfile.voiceCharsUsed) /
+                        1000
+                      ).toFixed(1)}
+                      K characters remaining
                     </p>
                   )}
                 </div>
@@ -392,7 +433,7 @@ export default function DashboardPage() {
               {/* Usage Reset Date */}
               <div className="mt-6 pt-6 border-t border-gray-200">
                 <p className="text-sm text-gray-600">
-                  Usage resets on:{' '}
+                  Usage resets on:{" "}
                   <span className="font-semibold text-gray-900">
                     {formatDate(userProfile.usageResetAt || null)}
                   </span>
@@ -407,15 +448,17 @@ export default function DashboardPage() {
               </h3>
               <div className="grid grid-cols-2 gap-4">
                 <button
-                  onClick={() => router.push('/')}
+                  onClick={() => router.push("/")}
                   className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-4 rounded-2xl hover:from-indigo-600 hover:to-purple-700 transition-all text-left"
                 >
                   <div className="text-2xl mb-2">💬</div>
                   <div className="font-semibold">Start Chatting</div>
-                  <div className="text-xs opacity-80">Continue conversation</div>
+                  <div className="text-xs opacity-80">
+                    Continue conversation
+                  </div>
                 </button>
                 <button
-                  onClick={() => router.push('/pricing')}
+                  onClick={() => router.push("/pricing")}
                   className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white p-4 rounded-2xl hover:from-yellow-500 hover:to-orange-600 transition-all text-left"
                 >
                   <div className="text-2xl mb-2">⭐</div>
