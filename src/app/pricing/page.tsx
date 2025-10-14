@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '../../contexts/AuthContext';
-
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "../../contexts/AuthContext";
+import { backendUrl } from "@/lib/config";
 interface PlanFeature {
   name: string;
   included: boolean;
@@ -18,7 +18,7 @@ interface PricingTier {
   features: PlanFeature[];
   highlighted: boolean;
   cta: string;
-  planId: 'free' | 'plus' | 'pro';
+  planId: "free" | "plus" | "pro";
 }
 
 export default function PricingPage() {
@@ -29,73 +29,89 @@ export default function PricingPage() {
 
   const pricingTiers: PricingTier[] = [
     {
-      name: 'Free',
+      name: "Free",
       price: 0,
-      period: 'forever',
-      description: 'Start your journey with AI companionship',
-      planId: 'free',
+      period: "forever",
+      description: "Start your journey with AI companionship",
+      planId: "free",
       highlighted: false,
-      cta: 'Get Started',
+      cta: "Get Started",
       features: [
-        { name: 'Messages', included: true, value: '3 free messages' },
-        { name: 'Story Creation', included: true, value: '1 scene only' },
-        { name: 'Basic Chat', included: true },
-        { name: 'Image Generation', included: false },
-        { name: 'NSFW Mode', included: false },
-        { name: 'Credit Rollover', included: false },
-        { name: 'Priority Support', included: false },
-        { name: 'Advanced Features', included: false },
+        { name: "Messages", included: true, value: "3 free messages" },
+        { name: "Story Creation", included: true, value: "1 scene only" },
+        { name: "Basic Chat", included: true },
+        { name: "Image Generation", included: false },
+        { name: "NSFW Mode", included: false },
+        { name: "Credit Rollover", included: false },
+        { name: "Priority Support", included: false },
+        { name: "Advanced Features", included: false },
       ],
     },
     {
-      name: 'Plus',
+      name: "Plus",
       price: 9.99,
-      period: 'month',
-      description: 'Credit-based usage for flexibility',
-      planId: 'plus',
+      period: "month",
+      description: "Credit-based usage for flexibility",
+      planId: "plus",
       highlighted: true,
-      cta: 'Upgrade to Plus',
+      cta: "Upgrade to Plus",
       features: [
-        { name: 'Monthly Credits', included: true, value: '999 Credits ($9.99 value)' },
-        { name: 'Unlimited Chat', included: true },
-        { name: 'Unlimited Stories', included: true },
-        { name: 'Image Generation', included: true, value: '~3 credits/image' },
-        { name: 'NSFW Mode', included: true },
-        { name: 'Credit Rollover', included: true, value: '50% unused credits' },
-        { name: 'Pay as You Go', included: true, value: 'Usage-based billing' },
-        { name: 'Priority Support', included: false },
+        {
+          name: "Monthly Credits",
+          included: true,
+          value: "999 Credits ($9.99 value)",
+        },
+        { name: "Unlimited Chat", included: true },
+        { name: "Unlimited Stories", included: true },
+        { name: "Image Generation", included: true, value: "~3 credits/image" },
+        { name: "NSFW Mode", included: true },
+        {
+          name: "Credit Rollover",
+          included: true,
+          value: "50% unused credits",
+        },
+        { name: "Pay as You Go", included: true, value: "Usage-based billing" },
+        { name: "Priority Support", included: false },
       ],
     },
     {
-      name: 'Pro',
+      name: "Pro",
       price: 19.99,
-      period: 'month',
-      description: 'Maximum credits for power users',
-      planId: 'pro',
+      period: "month",
+      description: "Maximum credits for power users",
+      planId: "pro",
       highlighted: false,
-      cta: 'Upgrade to Pro',
+      cta: "Upgrade to Pro",
       features: [
-        { name: 'Monthly Credits', included: true, value: '1999 Credits ($19.99 value)' },
-        { name: 'Unlimited Chat', included: true },
-        { name: 'Unlimited Stories', included: true },
-        { name: 'Image Generation', included: true, value: '~3 credits/image' },
-        { name: 'NSFW Mode', included: true },
-        { name: 'Credit Rollover', included: true, value: '50% unused credits' },
-        { name: 'Pay as You Go', included: true, value: 'Usage-based billing' },
-        { name: 'Priority Support', included: true },
-        { name: 'Advanced Features', included: true },
+        {
+          name: "Monthly Credits",
+          included: true,
+          value: "1999 Credits ($19.99 value)",
+        },
+        { name: "Unlimited Chat", included: true },
+        { name: "Unlimited Stories", included: true },
+        { name: "Image Generation", included: true, value: "~3 credits/image" },
+        { name: "NSFW Mode", included: true },
+        {
+          name: "Credit Rollover",
+          included: true,
+          value: "50% unused credits",
+        },
+        { name: "Pay as You Go", included: true, value: "Usage-based billing" },
+        { name: "Priority Support", included: true },
+        { name: "Advanced Features", included: true },
       ],
     },
   ];
 
-  const handleSelectPlan = async (planId: 'free' | 'plus' | 'pro') => {
+  const handleSelectPlan = async (planId: "free" | "plus" | "pro") => {
     try {
       // Free plan - redirect to signup or chat
-      if (planId === 'free') {
+      if (planId === "free") {
         if (isAuthenticated) {
-          router.push('/');
+          router.push("/");
         } else {
-          router.push('/login?plan=free');
+          router.push("/login?plan=free");
         }
         return;
       }
@@ -108,7 +124,7 @@ export default function PricingPage() {
 
       // Already on this plan
       if (userProfile?.plan === planId) {
-        router.push('/dashboard');
+        router.push("/dashboard");
         return;
       }
 
@@ -116,24 +132,27 @@ export default function PricingPage() {
       setError(null);
 
       // Determine provider (use LemonSqueezy as default, can be made dynamic)
-      const provider = 'lemonsqueezy';
+      const provider = "lemonsqueezy";
 
       // Create checkout session
-      const response = await fetch(`${backendUrl}/api/subscription/create-checkout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          uid: user?.uid,
-          email: user?.email,
-          plan: planId,
-          provider: provider,
-        }),
-      });
+      const response = await fetch(
+        `${backendUrl}/api/subscription/create-checkout`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            uid: user?.uid,
+            email: user?.email,
+            plan: planId,
+            provider: provider,
+          }),
+        }
+      );
 
       if (!response.ok) {
-        throw new Error('Failed to create checkout session');
+        throw new Error("Failed to create checkout session");
       }
 
       const data = await response.json();
@@ -141,8 +160,8 @@ export default function PricingPage() {
       // Redirect to checkout
       window.location.href = data.checkoutUrl;
     } catch (err: any) {
-      console.error('Checkout error:', err);
-      setError(err.message || 'Failed to start checkout');
+      console.error("Checkout error:", err);
+      setError(err.message || "Failed to start checkout");
       setLoading(null);
     }
   };
@@ -154,7 +173,7 @@ export default function PricingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <button
-              onClick={() => router.push('/')}
+              onClick={() => router.push("/")}
               className="text-white text-xl font-bold flex items-center gap-2 hover:opacity-80 transition-opacity"
             >
               <span>💬</span>
@@ -162,14 +181,14 @@ export default function PricingPage() {
             </button>
             {isAuthenticated ? (
               <button
-                onClick={() => router.push('/dashboard')}
+                onClick={() => router.push("/dashboard")}
                 className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-full transition-colors"
               >
                 Dashboard
               </button>
             ) : (
               <button
-                onClick={() => router.push('/login')}
+                onClick={() => router.push("/login")}
                 className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-full transition-colors"
               >
                 Sign In
@@ -192,7 +211,9 @@ export default function PricingPage() {
           {userProfile && (
             <div className="mt-4 inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-white">
               <span>Current Plan:</span>
-              <span className="font-semibold capitalize">{userProfile.plan}</span>
+              <span className="font-semibold capitalize">
+                {userProfile.plan}
+              </span>
             </div>
           )}
         </div>
@@ -210,9 +231,7 @@ export default function PricingPage() {
             <div
               key={tier.planId}
               className={`relative bg-white rounded-3xl shadow-2xl overflow-hidden transform transition-all hover:scale-105 ${
-                tier.highlighted
-                  ? 'ring-4 ring-yellow-400 md:scale-110'
-                  : ''
+                tier.highlighted ? "ring-4 ring-yellow-400 md:scale-110" : ""
               }`}
             >
               {/* Highlighted Badge */}
@@ -249,19 +268,21 @@ export default function PricingPage() {
                 {/* CTA Button */}
                 <button
                   onClick={() => handleSelectPlan(tier.planId)}
-                  disabled={loading === tier.planId || userProfile?.plan === tier.planId}
+                  disabled={
+                    loading === tier.planId || userProfile?.plan === tier.planId
+                  }
                   className={`w-full py-3 rounded-full font-semibold transition-all ${
                     tier.highlighted
-                      ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700'
-                      : 'bg-gray-200 text-gray-900 hover:bg-gray-300'
+                      ? "bg-gradient-to-r from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700"
+                      : "bg-gray-200 text-gray-900 hover:bg-gray-300"
                   } ${
                     loading === tier.planId
-                      ? 'opacity-50 cursor-not-allowed'
-                      : ''
+                      ? "opacity-50 cursor-not-allowed"
+                      : ""
                   } ${
                     userProfile?.plan === tier.planId
-                      ? 'opacity-50 cursor-not-allowed'
-                      : ''
+                      ? "opacity-50 cursor-not-allowed"
+                      : ""
                   }`}
                 >
                   {loading === tier.planId ? (
@@ -270,7 +291,7 @@ export default function PricingPage() {
                       Loading...
                     </span>
                   ) : userProfile?.plan === tier.planId ? (
-                    'Current Plan'
+                    "Current Plan"
                   ) : (
                     tier.cta
                   )}
@@ -279,15 +300,12 @@ export default function PricingPage() {
                 {/* Features List */}
                 <ul className="mt-8 space-y-4">
                   {tier.features.map((feature, idx) => (
-                    <li
-                      key={idx}
-                      className="flex items-start gap-3"
-                    >
+                    <li key={idx} className="flex items-start gap-3">
                       <span
                         className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center ${
                           feature.included
-                            ? 'bg-green-100 text-green-600'
-                            : 'bg-gray-100 text-gray-400'
+                            ? "bg-green-100 text-green-600"
+                            : "bg-gray-100 text-gray-400"
                         }`}
                       >
                         {feature.included ? (
@@ -318,7 +336,7 @@ export default function PricingPage() {
                       </span>
                       <span
                         className={`text-sm ${
-                          feature.included ? 'text-gray-700' : 'text-gray-400'
+                          feature.included ? "text-gray-700" : "text-gray-400"
                         }`}
                       >
                         {feature.name}
@@ -350,8 +368,8 @@ export default function PricingPage() {
               <div className="text-3xl mb-3">💳</div>
               <h3 className="font-bold text-xl mb-2">Simple Pricing</h3>
               <p className="text-white/80 text-sm">
-                1 Credit = $0.01 USD. Credits are deducted based on AI model usage.
-                You only pay for what you use, no hidden fees.
+                1 Credit = $0.01 USD. Credits are deducted based on AI model
+                usage. You only pay for what you use, no hidden fees.
               </p>
             </div>
 
@@ -359,8 +377,8 @@ export default function PricingPage() {
               <div className="text-3xl mb-3">🔄</div>
               <h3 className="font-bold text-xl mb-2">50% Rollover</h3>
               <p className="text-white/80 text-sm">
-                Unused credits don't go to waste. 50% of your unused credits roll over
-                to the next month, so you're always building value.
+                Unused credits don't go to waste. 50% of your unused credits
+                roll over to the next month, so you're always building value.
               </p>
             </div>
 
@@ -368,8 +386,9 @@ export default function PricingPage() {
               <div className="text-3xl mb-3">📊</div>
               <h3 className="font-bold text-xl mb-2">Usage-Based</h3>
               <p className="text-white/80 text-sm">
-                Different AI models cost different amounts. Text conversations use fewer
-                credits, images cost ~3 credits each. You control your spending.
+                Different AI models cost different amounts. Text conversations
+                use fewer credits, images cost ~3 credits each. You control your
+                spending.
               </p>
             </div>
 
@@ -377,8 +396,9 @@ export default function PricingPage() {
               <div className="text-3xl mb-3">⚡</div>
               <h3 className="font-bold text-xl mb-2">Fair Markup</h3>
               <p className="text-white/80 text-sm">
-                We charge 3x the API cost (1x for cost, 2x for platform maintenance).
-                This keeps pricing fair while ensuring quality service.
+                We charge 3x the API cost (1x for cost, 2x for platform
+                maintenance). This keeps pricing fair while ensuring quality
+                service.
               </p>
             </div>
           </div>
@@ -387,11 +407,15 @@ export default function PricingPage() {
             <h3 className="font-bold text-lg mb-4">Example Usage Costs:</h3>
             <div className="space-y-3 text-sm">
               <div className="flex justify-between items-center">
-                <span className="text-white/80">💬 GPT-4o-mini conversation (100K tokens)</span>
+                <span className="text-white/80">
+                  💬 GPT-4o-mini conversation (100K tokens)
+                </span>
                 <span className="font-semibold">~45 credits</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-white/80">🔥 Venice-uncensored conversation (100K tokens)</span>
+                <span className="text-white/80">
+                  🔥 Venice-uncensored conversation (100K tokens)
+                </span>
                 <span className="font-semibold">~60 credits</span>
               </div>
               <div className="flex justify-between items-center">
@@ -401,41 +425,55 @@ export default function PricingPage() {
             </div>
             <p className="text-xs text-white/60 mt-4">
               * Actual costs vary based on conversation length and complexity.
-              Most conversations use significantly fewer tokens than shown above.
+              Most conversations use significantly fewer tokens than shown
+              above.
             </p>
           </div>
         </div>
 
         {/* FAQ */}
         <div className="mt-12 max-w-4xl mx-auto bg-white/10 backdrop-blur-md rounded-3xl p-8 text-white">
-          <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
+          <h2 className="text-2xl font-bold mb-6">
+            Frequently Asked Questions
+          </h2>
           <div className="space-y-4">
             <div>
-              <h3 className="font-semibold mb-2">Can I change my plan anytime?</h3>
+              <h3 className="font-semibold mb-2">
+                Can I change my plan anytime?
+              </h3>
               <p className="text-white/80">
-                Yes! You can upgrade or downgrade your plan at any time from your dashboard.
-                Unused credits will roll over according to your plan's rollover policy.
+                Yes! You can upgrade or downgrade your plan at any time from
+                your dashboard. Unused credits will roll over according to your
+                plan's rollover policy.
               </p>
             </div>
             <div>
-              <h3 className="font-semibold mb-2">What happens if I run out of credits?</h3>
+              <h3 className="font-semibold mb-2">
+                What happens if I run out of credits?
+              </h3>
               <p className="text-white/80">
-                When your credits are depleted, you'll be limited to free tier features (3 messages + 1 scene).
-                You can add more credits or upgrade your plan to continue using advanced features.
+                When your credits are depleted, you'll be limited to free tier
+                features (3 messages + 1 scene). You can add more credits or
+                upgrade your plan to continue using advanced features.
               </p>
             </div>
             <div>
-              <h3 className="font-semibold mb-2">How do credit rollovers work?</h3>
+              <h3 className="font-semibold mb-2">
+                How do credit rollovers work?
+              </h3>
               <p className="text-white/80">
-                At the end of each billing cycle, 50% of your unused credits automatically roll over to next month.
-                This ensures you always get value from your subscription, even if you don't use all your credits.
+                At the end of each billing cycle, 50% of your unused credits
+                automatically roll over to next month. This ensures you always
+                get value from your subscription, even if you don't use all your
+                credits.
               </p>
             </div>
             <div>
               <h3 className="font-semibold mb-2">Is my data secure?</h3>
               <p className="text-white/80">
-                Absolutely. We use industry-standard encryption and never share your personal conversations.
-                All data is stored securely and you maintain full control over your information.
+                Absolutely. We use industry-standard encryption and never share
+                your personal conversations. All data is stored securely and you
+                maintain full control over your information.
               </p>
             </div>
           </div>

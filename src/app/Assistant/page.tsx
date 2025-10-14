@@ -28,7 +28,7 @@ import {
   onConversationIdChange,
   isConversationUrl,
   isHomePage,
-} from "../lib/urlParams";
+} from "@/lib/urlParams";
 import { backendUrl } from "@/lib/config";
 interface Message {
   role: "user" | "assistant";
