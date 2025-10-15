@@ -6,6 +6,7 @@ import {
   navigateToNewConversation,
 } from "../lib/urlParams";
 import { backendUrl } from "@/lib/config";
+import { useAuth } from "@/contexts/AuthContext";
 interface Conversation {
   conversationId: string;
   title: string;
@@ -29,6 +30,7 @@ export default function ConversationSidebar({
   onConversationSelect,
   onNewConversation,
 }: ConversationSidebarProps) {
+  const { user, anonymousSession } = useAuth();
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [loading, setLoading] = useState(false);
   const [newChatLoading, setNewChatLoading] = useState(false);
@@ -48,7 +50,18 @@ export default function ConversationSidebar({
   const loadConversations = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${backendUrl}/api/conversations`);
+      // Get user ID for filtering conversations
+      const userId = user?.uid || anonymousSession?.sessionId;
+      if (!userId) {
+        console.warn("No user ID available for loading conversations");
+        setConversations([]);
+        setLoading(false);
+        return;
+      }
+
+      const response = await fetch(
+        `${backendUrl}/api/conversations?userId=${encodeURIComponent(userId)}`
+      );
       const data = await response.json();
       setConversations(data.conversations || []);
     } catch (error) {
@@ -64,6 +77,14 @@ export default function ConversationSidebar({
 
     setNewChatLoading(true);
     try {
+      // Get user ID for new conversation
+      const userId = user?.uid || anonymousSession?.sessionId;
+      if (!userId) {
+        console.error("No user ID available for creating new conversation");
+        setNewChatLoading(false);
+        return;
+      }
+
       const response = await fetch(`${backendUrl}/api/conversations/new`, {
         method: "POST",
         headers: {
@@ -72,6 +93,7 @@ export default function ConversationSidebar({
         body: JSON.stringify({
           title: "New Conversation",
           currentConversationId: currentConversationId || null,
+          userId: userId,
         }),
       });
 
