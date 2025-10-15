@@ -98,7 +98,7 @@ export default function ChatPage() {
   });
 
   // ROMANTIC MODE STATE (Always enabled - Venice AI)
-  const [nsfwMode, setNsfwMode] = useState(true);
+  // nsfwMode is always true for chat page to force Venice AI
   const [isTogglingMode, setIsTogglingMode] = useState(false);
 
   // PERSONA STATE
@@ -293,7 +293,6 @@ export default function ChatPage() {
           body: JSON.stringify({
             title: "New Conversation",
             currentConversationId: null,
-            nsfwMode: true,
           }),
         });
 
