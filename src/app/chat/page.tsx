@@ -303,6 +303,7 @@ export default function ChatPage() {
             title: "New Conversation",
             currentConversationId: null,
             nsfwMode: true,
+            userId: user?.uid || anonymousSession?.sessionId || null,
           }),
         });
 
@@ -639,7 +640,15 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="h-screen relative bg-gradient-to-br from-purple-50 via-pink-50 to-cyan-50 overflow-hidden">
+    <div
+      className="h-screen relative bg-gradient-to-br from-purple-50 via-pink-50 to-cyan-50 overflow-hidden"
+      style={{
+        backgroundImage: 'url("/image.png")',
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
       {/* Animated Background Orbs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div
@@ -695,7 +704,10 @@ export default function ChatPage() {
         <div className="flex-1 flex p-4 min-w-0">
           {/* Chat Container */}
           <div className="flex-1 flex items-center justify-center h-full">
-            <div className="w-full max-w-6xl h-full bg-white/80 backdrop-blur-2xl rounded-[3rem] border border-white/60 shadow-2xl hover:shadow-purple-300/20 flex flex-col overflow-hidden relative">
+            <div className="w-full max-w-6xl h-full bg-transparent rounded-[3rem] border border-black/20 shadow-2xl hover:shadow-purple-300/20 flex flex-col overflow-hidden relative">
+              <div className="absolute inset-0 glass-filter"></div>
+              <div className="absolute inset-0 bg-black/20 rounded-[3rem]"></div>
+              <div className="absolute inset-0 box-shadow-inset rounded-[3rem]"></div>
               {/* Top Left Controls */}
               <div className="absolute top-4 left-4 z-10 flex gap-2">
                 {/* Mobile Hamburger Menu for Sidebar */}
@@ -858,7 +870,7 @@ export default function ChatPage() {
               )}
 
               {/* Messages */}
-              <div className="flex-1 overflow-y-auto p-6 bg-gradient-to-b from-white/50 to-purple-50/30 space-y-6">
+              <div className="flex-1 overflow-y-auto p-6 bg-gradient-to-b from-black/10 to-black/5 space-y-6">
                 {/* Smart Greeting - only show if no messages or it's a new conversation */}
                 {/* {messages.length === 0 && <SmartGreeting />} */}
 
@@ -873,7 +885,7 @@ export default function ChatPage() {
                       className={`max-w-[70%] p-4 rounded-2xl ${
                         message.role === "user"
                           ? "bg-gradient-to-br from-purple-500 via-pink-500 to-cyan-500 text-white rounded-br-sm shadow-lg hover:shadow-purple-300/50"
-                          : "bg-white/90 backdrop-blur-sm text-gray-800 border border-white/60 rounded-bl-sm shadow-lg hover:shadow-cyan-300/30"
+                          : "bg-black/20 backdrop-blur-sm text-black border border-black/20 rounded-bl-sm shadow-lg hover:shadow-cyan-300/30"
                       }`}
                     >
                       {/* Message Images */}
@@ -941,7 +953,7 @@ export default function ChatPage() {
                     );
                     return (
                       <div className="flex justify-start">
-                        <div className="bg-white/90 backdrop-blur-sm border border-white/60 rounded-2xl rounded-bl-sm p-4 shadow-lg hover:shadow-cyan-300/30 max-w-[70%]">
+                        <div className="bg-black/20 backdrop-blur-sm border border-black/20 rounded-2xl rounded-bl-sm p-4 shadow-lg hover:shadow-cyan-300/30 max-w-[70%]">
                           {toolProcessingMessage ? (
                             <div className="flex items-center gap-2 text-blue-600">
                               <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
@@ -1032,7 +1044,7 @@ export default function ChatPage() {
               </div>
 
               {/* Input */}
-              <div className="p-6 bg-white/80 backdrop-blur-sm border-t border-white/60">
+              <div className="p-6 bg-black/20 backdrop-blur-sm border-t border-black/20">
                 <form onSubmit={sendMessage} className="flex gap-3">
                   <input
                     ref={messageInputRef}
@@ -1041,7 +1053,7 @@ export default function ChatPage() {
                     onChange={handleInputChange}
                     placeholder="Type your message..."
                     disabled={isStreamingInProgress}
-                    className="flex-1 px-6 py-4 border-2 border-white/60 rounded-full text-lg text-gray-900 placeholder-gray-500 outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-200/50 transition-all disabled:opacity-50 bg-white/70 backdrop-blur-sm"
+                    className="flex-1 px-6 py-4 border-2 border-black/20 rounded-full text-lg text-black placeholder-gray-500 outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-200/50 transition-all disabled:opacity-50 bg-black/10 backdrop-blur-sm"
                     required
                   />
                   <button
@@ -1084,7 +1096,41 @@ export default function ChatPage() {
           .animation-delay-2000 {
             animation-delay: 2s;
           }
+
+          .box-shadow-inset {
+            box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.75),
+              inset 0 0 5px rgba(255, 255, 255, 0.75);
+          }
+
+          .glass-filter {
+            backdrop-filter: blur(4px);
+            filter: url(#lensFilter) saturate(120%) brightness(1.15);
+          }
         `}</style>
+
+        {/* SVG Filter Definition */}
+        <svg xmlns="http://www.w3.org/2000/svg" style={{ display: "none" }}>
+          <filter
+            id="lensFilter"
+            x="0%"
+            y="0%"
+            width="100%"
+            height="100%"
+            filterUnits="objectBoundingBox"
+          >
+            <feComponentTransfer in="SourceAlpha" result="alpha">
+              <feFuncA type="identity" />
+            </feComponentTransfer>
+            <feGaussianBlur in="alpha" stdDeviation="50" result="blur" />
+            <feDisplacementMap
+              in="SourceGraphic"
+              in2="blur"
+              scale="50"
+              xChannelSelector="A"
+              yChannelSelector="A"
+            />
+          </filter>
+        </svg>
       </div>
     </div>
   );

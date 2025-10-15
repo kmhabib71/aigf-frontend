@@ -220,14 +220,19 @@ export default function ConversationSidebar({
 
       {/* Sidebar */}
       <div
-        className={`fixed top-0 left-0 h-screen w-80 bg-purple-200 text-white transform transition-transform duration-300 ease-in-out z-50 flex flex-col ${
+        className={`fixed top-0 left-0 h-screen w-80 text-white transform transition-transform duration-300 ease-in-out z-50 flex flex-col overflow-hidden relative ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         } lg:relative lg:translate-x-0 lg:h-full lg:flex-shrink-0`}
         style={{ height: "calc(100vh - 80px)" }}
       >
+        <div className="absolute inset-0 bg-black/20 rounded-r-[3rem]"></div>
+        <div className="absolute inset-0 backdrop-blur-4px rounded-r-[3rem]"></div>
+        <div className="absolute inset-0 box-shadow-inset rounded-r-[3rem]"></div>
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-purple-700/50">
-          <h2 className="text-xl font-semibold">Conversations</h2>
+        <div className="flex items-center justify-between p-4 border-b border-black/20 relative z-10">
+          <h2 className="text-xl font-semibold text-purple-800">
+            Conversations
+          </h2>
           <button
             onClick={onClose}
             className="p-2 rounded-lg hover:bg-purple-700/50 transition-colors lg:hidden"
@@ -249,14 +254,14 @@ export default function ConversationSidebar({
         </div>
 
         {/* New Chat Button */}
-        <div className="p-4 border-b border-purple-700/50">
+        <div className="p-4 border-b border-black/20 relative z-10">
           <button
             onClick={handleNewChat}
             disabled={newChatLoading}
             className={`w-full font-medium py-3 px-4 rounded-lg transition-all flex items-center justify-center gap-2 ${
               newChatLoading
-                ? "bg-blue-500 cursor-wait text-white opacity-75"
-                : "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+                ? "bg-cyan-500 cursor-wait text-white opacity-75"
+                : "bg-cyan-600 hover:bg-cyan-700 text-white cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
             }`}
           >
             {newChatLoading ? (
@@ -304,7 +309,7 @@ export default function ConversationSidebar({
         </div>
 
         {/* Conversations List */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto relative z-10">
           {loading ? (
             <div className="p-4 text-center text-purple-200">
               Loading conversations...
@@ -314,7 +319,7 @@ export default function ConversationSidebar({
               No conversations yet
             </div>
           ) : (
-            <div className="p-2">
+            <div className="p-2 text-gray-700">
               {conversations.map((conversation) => (
                 <div
                   key={conversation.conversationId}
@@ -323,10 +328,10 @@ export default function ConversationSidebar({
                     onConversationSelect(conversation.conversationId);
                     onClose();
                   }}
-                  className={`p-3 rounded-lg mb-2 cursor-pointer transition-colors group hover:bg-purple-700/50 ${
+                  className={`p-3 rounded-lg mb-2 cursor-pointer transition-colors group hover:bg-black/20 ${
                     conversation.conversationId === currentConversationId
-                      ? "bg-purple-700/70 border border-pink-400"
-                      : "hover:bg-purple-800/50"
+                      ? "bg-black/30 border border-pink-400"
+                      : "hover:bg-black/10"
                   }`}
                 >
                   <div className="flex items-start justify-between">
@@ -334,10 +339,10 @@ export default function ConversationSidebar({
                       <h3 className="font-medium text-sm truncate">
                         {conversation.title}
                       </h3>
-                      <p className="text-xs text-purple-300 mt-1">
+                      <p className="text-xs text-purple-900 mt-1">
                         {formatDate(conversation.lastActivity)}
                       </p>
-                      <div className="flex items-center gap-3 mt-2 text-xs text-purple-400">
+                      <div className="flex items-center gap-3 mt-2 text-xs text-purple-800">
                         <span className="flex items-center gap-1">
                           <svg
                             className="w-3 h-3"
@@ -359,7 +364,7 @@ export default function ConversationSidebar({
                             conversation.conversationId ===
                             currentConversationId
                               ? "bg-pink-600 text-pink-100"
-                              : "bg-purple-700 text-purple-200"
+                              : "bg-black/20 text-black"
                           }`}
                         >
                           {conversation.conversationId === currentConversationId
@@ -372,7 +377,7 @@ export default function ConversationSidebar({
                       onClick={(e) =>
                         handleDeleteConversation(conversation.conversationId, e)
                       }
-                      className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-purple-600/50 transition-all ml-2"
+                      className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-black/20 transition-all ml-2"
                       title="Delete conversation"
                     >
                       <svg
@@ -397,12 +402,19 @@ export default function ConversationSidebar({
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-purple-700/50">
-          <div className="text-xs text-purple-200 text-center">
-            AI Girlfriend Chat
+        <div className="p-4 border-t border-black/20 relative z-10">
+          <div className="text-xs text-purple-800 text-center">
+            Romance Canvas © 2026
           </div>
         </div>
       </div>
+
+      <style jsx>{`
+        .box-shadow-inset {
+          box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.75),
+            inset 0 0 5px rgba(255, 255, 255, 0.75);
+        }
+      `}</style>
     </>
   );
 }
