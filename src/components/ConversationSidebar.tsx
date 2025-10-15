@@ -7,6 +7,7 @@ import {
 } from "../lib/urlParams";
 import { backendUrl } from "@/lib/config";
 import { useAuth } from "@/contexts/AuthContext";
+import GlassEffect from "./GlassEffect";
 interface Conversation {
   conversationId: string;
   title: string;
@@ -219,20 +220,19 @@ export default function ConversationSidebar({
       )}
 
       {/* Sidebar */}
-      <div
-        className={`fixed top-0 left-0 h-screen w-80 text-white transform transition-transform duration-300 ease-in-out z-50 flex flex-col overflow-hidden relative ${
+      <GlassEffect
+        className={`fixed top-0 left-0 h-screen w-80 text-white transform transition-transform duration-300 ease-in-out z-50 flex flex-col overflow-hidden ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         } lg:relative lg:translate-x-0 lg:h-full lg:flex-shrink-0`}
-        style={{ height: "calc(100vh - 80px)" }}
+        style={{
+          height: "calc(100vh - 80px)",
+          marginTop: isOpen ? "80px" : "0",
+        }}
+        borderRadius="3rem"
       >
-        <div className="absolute inset-0 bg-black/20 rounded-r-[3rem]"></div>
-        <div className="absolute inset-0 backdrop-blur-4px rounded-r-[3rem]"></div>
-        <div className="absolute inset-0 box-shadow-inset rounded-r-[3rem]"></div>
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-black/20 relative z-10">
-          <h2 className="text-xl font-semibold text-purple-800">
-            Conversations
-          </h2>
+          <h2 className="text-xl font-semibold text-white">Conversations</h2>
           <button
             onClick={onClose}
             className="p-2 rounded-lg hover:bg-purple-700/50 transition-colors lg:hidden"
@@ -309,7 +309,10 @@ export default function ConversationSidebar({
         </div>
 
         {/* Conversations List */}
-        <div className="flex-1 overflow-y-auto relative z-10">
+        <div
+          className="flex-1 overflow-y-auto relative z-10 scrollbar-hide"
+          style={{ maxHeight: "calc(100vh - 300px)" }}
+        >
           {loading ? (
             <div className="p-4 text-center text-purple-200">
               Loading conversations...
@@ -319,7 +322,7 @@ export default function ConversationSidebar({
               No conversations yet
             </div>
           ) : (
-            <div className="p-2 text-gray-700">
+            <div className="p-2 text-white">
               {conversations.map((conversation) => (
                 <div
                   key={conversation.conversationId}
@@ -403,18 +406,11 @@ export default function ConversationSidebar({
 
         {/* Footer */}
         <div className="p-4 border-t border-black/20 relative z-10">
-          <div className="text-xs text-purple-800 text-center">
+          <div className="text-xs text-white text-center">
             Romance Canvas © 2026
           </div>
         </div>
-      </div>
-
-      <style jsx>{`
-        .box-shadow-inset {
-          box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.75),
-            inset 0 0 5px rgba(255, 255, 255, 0.75);
-        }
-      `}</style>
+      </GlassEffect>
     </>
   );
 }

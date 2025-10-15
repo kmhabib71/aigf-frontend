@@ -22,7 +22,7 @@ export default function Header() {
   const handleSignOut = async () => {
     await signOut();
     setMobileMenuOpen(false);
-    router.push('/');
+    router.push("/");
   };
 
   return (
@@ -58,14 +58,16 @@ export default function Header() {
                 <>
                   <a
                     href="#features"
-                    className="text-gray-700 hover:text-purple-600 transition-colors font-semibold relative group"
+                    className="text-white hover:text-purple-300 transition-colors font-semibold relative group drop-shadow-lg"
+                    style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
                   >
                     Features
                     <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-full transition-all duration-300"></span>
                   </a>
                   <a
                     href="#how-it-works"
-                    className="text-gray-700 hover:text-purple-600 transition-colors font-semibold relative group"
+                    className="text-white hover:text-purple-300 transition-colors font-semibold relative group drop-shadow-lg"
+                    style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
                   >
                     How It Works
                     <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-full transition-all duration-300"></span>
@@ -74,7 +76,8 @@ export default function Header() {
               )}
               <button
                 onClick={() => router.push("/pricing")}
-                className="text-gray-700 hover:text-purple-600 transition-colors font-semibold relative group"
+                className="text-white hover:text-purple-300 transition-colors font-semibold relative group drop-shadow-lg"
+                style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
               >
                 Pricing
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-full transition-all duration-300"></span>
@@ -83,14 +86,16 @@ export default function Header() {
                 <>
                   <button
                     onClick={() => router.push("/dashboard")}
-                    className="text-gray-700 hover:text-purple-600 transition-colors font-semibold relative group"
+                    className="text-white hover:text-purple-300 transition-colors font-semibold relative group drop-shadow-lg"
+                    style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
                   >
                     Dashboard
                     <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-full transition-all duration-300"></span>
                   </button>
                   <button
                     onClick={() => router.push("/")}
-                    className="text-gray-700 hover:text-purple-600 transition-colors font-semibold relative group"
+                    className="text-white hover:text-purple-300 transition-colors font-semibold relative group drop-shadow-lg"
+                    style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
                   >
                     Chat
                     <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-full transition-all duration-300"></span>
@@ -102,21 +107,24 @@ export default function Header() {
             {/* Right Side - Credit Balance & Auth */}
             <div className="hidden md:flex items-center gap-4">
               {/* Credit Balance for Plus/Pro users */}
-              {isAuthenticated && userProfile?.useCreditSystem && userProfile?.creditBalance !== undefined && (
-                <CreditBalance
-                  credits={userProfile.creditBalance}
-                  plan={userProfile.plan}
-                  variant="compact"
-                  showWarning={true}
-                />
-              )}
+              {isAuthenticated &&
+                userProfile?.useCreditSystem &&
+                userProfile?.creditBalance !== undefined && (
+                  <CreditBalance
+                    credits={userProfile.creditBalance}
+                    plan={userProfile.plan}
+                    variant="compact"
+                    showWarning={true}
+                  />
+                )}
 
               {/* Auth Buttons */}
               {!isAuthenticated ? (
                 <>
                   <button
                     onClick={() => router.push("/login")}
-                    className="px-6 py-2.5 text-gray-700 hover:text-purple-600 font-semibold transition-colors rounded-xl hover:bg-purple-50"
+                    className="px-6 py-2.5 text-white hover:text-purple-300 font-semibold transition-colors rounded-xl hover:bg-purple-50 drop-shadow-lg"
+                    style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
                   >
                     Login
                   </button>
@@ -137,19 +145,21 @@ export default function Header() {
                       {userProfile?.photoURL ? (
                         <img
                           src={userProfile.photoURL}
-                          alt={userProfile.displayName || 'User'}
+                          alt={userProfile.displayName || "User"}
                           className="w-full h-full rounded-full object-cover"
                         />
                       ) : (
-                        userProfile?.displayName?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || '👤'
+                        userProfile?.displayName?.[0]?.toUpperCase() ||
+                        user?.email?.[0]?.toUpperCase() ||
+                        "👤"
                       )}
                     </div>
                     <div className="flex flex-col">
                       <span className="text-xs font-semibold text-gray-900">
-                        {userProfile?.displayName || user?.email?.split('@')[0]}
+                        {userProfile?.displayName || user?.email?.split("@")[0]}
                       </span>
                       <span className="text-xs text-gray-500 capitalize">
-                        {userProfile?.plan || 'free'} Plan
+                        {userProfile?.plan || "free"} Plan
                       </span>
                     </div>
                   </div>
@@ -157,7 +167,8 @@ export default function Header() {
                   {/* Sign Out Button */}
                   <button
                     onClick={handleSignOut}
-                    className="px-4 py-2 text-gray-700 hover:text-red-600 font-semibold transition-colors rounded-xl hover:bg-red-50"
+                    className="px-4 py-2 text-white hover:text-red-300 font-semibold transition-colors rounded-xl hover:bg-red-50 drop-shadow-lg"
+                    style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
                   >
                     Sign Out
                   </button>
@@ -171,7 +182,8 @@ export default function Header() {
               className="md:hidden p-2 rounded-lg hover:bg-purple-50 transition-colors"
             >
               <svg
-                className="w-6 h-6 text-gray-700"
+                className="w-6 h-6 text-white drop-shadow-lg"
+                style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -214,30 +226,34 @@ export default function Header() {
         >
           <div className="flex flex-col gap-4">
             {/* Credit Balance in Mobile Menu */}
-            {isAuthenticated && userProfile?.useCreditSystem && userProfile?.creditBalance !== undefined && (
-              <div className="pb-4 border-b border-purple-100">
-                <CreditBalance
-                  credits={userProfile.creditBalance}
-                  plan={userProfile.plan}
-                  variant="compact"
-                  showWarning={true}
-                />
-              </div>
-            )}
+            {isAuthenticated &&
+              userProfile?.useCreditSystem &&
+              userProfile?.creditBalance !== undefined && (
+                <div className="pb-4 border-b border-purple-100">
+                  <CreditBalance
+                    credits={userProfile.creditBalance}
+                    plan={userProfile.plan}
+                    variant="compact"
+                    showWarning={true}
+                  />
+                </div>
+              )}
 
             {/* Navigation Links */}
             {!isAuthenticated && (
               <>
                 <a
                   href="#features"
-                  className="text-gray-700 hover:text-purple-600 transition-colors font-semibold py-3 px-4 hover:bg-purple-50 rounded-xl"
+                  className="text-white hover:text-purple-300 transition-colors font-semibold py-3 px-4 hover:bg-purple-50 rounded-xl drop-shadow-lg"
+                  style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Features
                 </a>
                 <a
                   href="#how-it-works"
-                  className="text-gray-700 hover:text-purple-600 transition-colors font-semibold py-3 px-4 hover:bg-purple-50 rounded-xl"
+                  className="text-white hover:text-purple-300 transition-colors font-semibold py-3 px-4 hover:bg-purple-50 rounded-xl drop-shadow-lg"
+                  style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   How It Works
@@ -250,7 +266,8 @@ export default function Header() {
                 router.push("/pricing");
                 setMobileMenuOpen(false);
               }}
-              className="text-gray-700 hover:text-purple-600 transition-colors font-semibold py-3 px-4 hover:bg-purple-50 rounded-xl text-left"
+              className="text-white hover:text-purple-300 transition-colors font-semibold py-3 px-4 hover:bg-purple-50 rounded-xl text-left drop-shadow-lg"
+              style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
             >
               Pricing
             </button>
@@ -262,7 +279,8 @@ export default function Header() {
                     router.push("/dashboard");
                     setMobileMenuOpen(false);
                   }}
-                  className="text-gray-700 hover:text-purple-600 transition-colors font-semibold py-3 px-4 hover:bg-purple-50 rounded-xl text-left"
+                  className="text-white hover:text-purple-300 transition-colors font-semibold py-3 px-4 hover:bg-purple-50 rounded-xl text-left drop-shadow-lg"
+                  style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
                 >
                   Dashboard
                 </button>
@@ -271,7 +289,8 @@ export default function Header() {
                     router.push("/");
                     setMobileMenuOpen(false);
                   }}
-                  className="text-gray-700 hover:text-purple-600 transition-colors font-semibold py-3 px-4 hover:bg-purple-50 rounded-xl text-left"
+                  className="text-white hover:text-purple-300 transition-colors font-semibold py-3 px-4 hover:bg-purple-50 rounded-xl text-left drop-shadow-lg"
+                  style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
                 >
                   Chat
                 </button>
@@ -288,7 +307,8 @@ export default function Header() {
                     router.push("/login");
                     setMobileMenuOpen(false);
                   }}
-                  className="text-gray-700 hover:text-purple-600 font-semibold py-3 px-4 hover:bg-purple-50 rounded-xl text-left"
+                  className="text-white hover:text-purple-300 font-semibold py-3 px-4 hover:bg-purple-50 rounded-xl text-left drop-shadow-lg"
+                  style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
                 >
                   Login
                 </button>
@@ -310,19 +330,21 @@ export default function Header() {
                     {userProfile?.photoURL ? (
                       <img
                         src={userProfile.photoURL}
-                        alt={userProfile.displayName || 'User'}
+                        alt={userProfile.displayName || "User"}
                         className="w-full h-full rounded-full object-cover"
                       />
                     ) : (
-                      userProfile?.displayName?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || '👤'
+                      userProfile?.displayName?.[0]?.toUpperCase() ||
+                      user?.email?.[0]?.toUpperCase() ||
+                      "👤"
                     )}
                   </div>
                   <div className="flex flex-col">
                     <span className="text-sm font-semibold text-gray-900">
-                      {userProfile?.displayName || user?.email?.split('@')[0]}
+                      {userProfile?.displayName || user?.email?.split("@")[0]}
                     </span>
                     <span className="text-xs text-gray-500 capitalize">
-                      {userProfile?.plan || 'free'} Plan
+                      {userProfile?.plan || "free"} Plan
                     </span>
                   </div>
                 </div>

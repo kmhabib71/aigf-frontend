@@ -643,7 +643,7 @@ export default function ChatPage() {
     <div
       className="h-screen relative bg-gradient-to-br from-purple-50 via-pink-50 to-cyan-50 overflow-hidden"
       style={{
-        backgroundImage: 'url("/image.jpg")',
+        backgroundImage: 'url("/image.png")',
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -705,11 +705,11 @@ export default function ChatPage() {
           {/* Chat Container */}
           <div className="flex-1 flex items-center justify-center h-full">
             <div className="w-full max-w-6xl h-full bg-transparent rounded-[3rem] border border-black/20 shadow-2xl hover:shadow-purple-300/20 flex flex-col overflow-hidden relative">
-              <div className="absolute inset-0 glass-filter pointer-events-none"></div>
-              <div className="absolute inset-0 bg-black/20 rounded-[3rem] pointer-events-none"></div>
-              <div className="absolute inset-0 box-shadow-inset rounded-[3rem] pointer-events-none"></div>
+              <div className="absolute inset-0 glass-filter"></div>
+              <div className="absolute inset-0 bg-black/20 rounded-[3rem]"></div>
+              <div className="absolute inset-0 box-shadow-inset rounded-[3rem]"></div>
               {/* Top Left Controls */}
-              <div className="absolute top-4 left-4 z-30 flex gap-2">
+              <div className="absolute top-4 left-4 z-10 flex gap-2">
                 {/* Mobile Hamburger Menu for Sidebar */}
                 <button
                   onClick={() => setSidebarOpen(true)}
@@ -794,7 +794,7 @@ export default function ChatPage() {
 
               {/* Persona Panel - Collapsible at top */}
               {isPersonaExpanded && (
-                <div className="bg-gradient-to-r from-purple-50 to-pink-50 border-b border-purple-200 p-4 relative z-25">
+                <div className="bg-gradient-to-r from-purple-50 to-pink-50 border-b border-purple-200 p-4">
                   <div className="max-w-4xl mx-auto">
                     <div className="flex items-center justify-between mb-3">
                       <h3 className="text-lg font-semibold text-purple-800 flex items-center gap-2">
@@ -870,7 +870,7 @@ export default function ChatPage() {
               )}
 
               {/* Messages */}
-              <div className="flex-1 overflow-y-auto p-6 bg-gradient-to-b from-black/10 to-black/5 space-y-6 relative z-15 scrollbar-hide">
+              <div className="flex-1 overflow-y-auto p-6 bg-gradient-to-b from-black/10 to-black/5 space-y-6">
                 {/* Smart Greeting - only show if no messages or it's a new conversation */}
                 {/* {messages.length === 0 && <SmartGreeting />} */}
 
@@ -885,7 +885,7 @@ export default function ChatPage() {
                       className={`max-w-[70%] p-4 rounded-2xl ${
                         message.role === "user"
                           ? "bg-gradient-to-br from-purple-500 via-pink-500 to-cyan-500 text-white rounded-br-sm shadow-lg hover:shadow-purple-300/50"
-                          : "bg-black/20 backdrop-blur-sm text-white border border-black/20 rounded-bl-sm shadow-lg hover:shadow-cyan-300/30"
+                          : "bg-black/20 backdrop-blur-sm text-black border border-black/20 rounded-bl-sm shadow-lg hover:shadow-cyan-300/30"
                       }`}
                     >
                       {/* Message Images */}
@@ -964,7 +964,7 @@ export default function ChatPage() {
                           ) : streamingContent ? (
                             <div
                               key={streamingContent.length}
-                              className="whitespace-pre-wrap leading-relaxed text-white"
+                              className="whitespace-pre-wrap leading-relaxed text-gray-800"
                             >
                               {streamingContent}
                               <div className="inline-block w-2 h-4 bg-purple-500 animate-pulse ml-1"></div>
@@ -1044,7 +1044,7 @@ export default function ChatPage() {
               </div>
 
               {/* Input */}
-              <div className="p-6 bg-black/20 backdrop-blur-sm border-t border-black/20 relative z-15">
+              <div className="p-6 bg-black/20 backdrop-blur-sm border-t border-black/20">
                 <form onSubmit={sendMessage} className="flex gap-3">
                   <input
                     ref={messageInputRef}
