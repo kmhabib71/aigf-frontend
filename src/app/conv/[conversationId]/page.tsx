@@ -1,7 +1,7 @@
 "use client";
 
-import { useParams } from 'next/navigation';
-import ChatPage from '../../page';
+import { useParams } from "next/navigation";
+import ChatPage from "../../chat/page";
 
 interface ConversationPageProps {
   params: {
