@@ -43,15 +43,27 @@ export default function ConversationSidebar({
   }, [isOpen]);
 
   // Load conversations on component mount (for desktop where sidebar is always visible)
+  // Only load if user is authenticated
   useEffect(() => {
-    loadConversations();
-  }, []);
+    if (user || anonymousSession) {
+      loadConversations();
+    }
+  }, [user, anonymousSession]);
 
   const loadConversations = async () => {
     setLoading(true);
     try {
       // Get user ID for filtering conversations
       const userId = user?.uid || anonymousSession?.sessionId;
+      console.log(
+        "Loading conversations for userId:",
+        userId,
+        "user:",
+        !!user,
+        "anonymousSession:",
+        !!anonymousSession
+      );
+
       if (!userId) {
         console.warn("No user ID available for loading conversations");
         setConversations([]);
@@ -62,10 +74,24 @@ export default function ConversationSidebar({
       const response = await fetch(
         `${backendUrl}/api/conversations?userId=${encodeURIComponent(userId)}`
       );
+
+      if (!response.ok) {
+        console.error(
+          "API response error:",
+          response.status,
+          response.statusText
+        );
+        setConversations([]);
+        setLoading(false);
+        return;
+      }
+
       const data = await response.json();
+      console.log("Conversations loaded:", data.conversations?.length || 0);
       setConversations(data.conversations || []);
     } catch (error) {
       console.error("Failed to load conversations:", error);
+      setConversations([]);
     } finally {
       setLoading(false);
     }
@@ -194,16 +220,17 @@ export default function ConversationSidebar({
 
       {/* Sidebar */}
       <div
-        className={`fixed top-0 left-0 h-screen w-80 bg-gray-900 text-white transform transition-transform duration-300 ease-in-out z-50 flex flex-col ${
+        className={`fixed top-0 left-0 h-screen w-80 bg-purple-200 text-white transform transition-transform duration-300 ease-in-out z-50 flex flex-col ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         } lg:relative lg:translate-x-0 lg:h-full lg:flex-shrink-0`}
+        style={{ height: "calc(100vh - 80px)" }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-700">
+        <div className="flex items-center justify-between p-4 border-b border-purple-700/50">
           <h2 className="text-xl font-semibold">Conversations</h2>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg hover:bg-gray-700 transition-colors lg:hidden"
+            className="p-2 rounded-lg hover:bg-purple-700/50 transition-colors lg:hidden"
           >
             <svg
               className="w-6 h-6"
@@ -222,7 +249,7 @@ export default function ConversationSidebar({
         </div>
 
         {/* New Chat Button */}
-        <div className="p-4 border-b border-gray-700">
+        <div className="p-4 border-b border-purple-700/50">
           <button
             onClick={handleNewChat}
             disabled={newChatLoading}
@@ -279,11 +306,11 @@ export default function ConversationSidebar({
         {/* Conversations List */}
         <div className="flex-1 overflow-y-auto">
           {loading ? (
-            <div className="p-4 text-center text-gray-400">
+            <div className="p-4 text-center text-purple-200">
               Loading conversations...
             </div>
           ) : conversations.length === 0 ? (
-            <div className="p-4 text-center text-gray-400">
+            <div className="p-4 text-center text-purple-200">
               No conversations yet
             </div>
           ) : (
@@ -296,10 +323,10 @@ export default function ConversationSidebar({
                     onConversationSelect(conversation.conversationId);
                     onClose();
                   }}
-                  className={`p-3 rounded-lg mb-2 cursor-pointer transition-colors group hover:bg-gray-700 ${
+                  className={`p-3 rounded-lg mb-2 cursor-pointer transition-colors group hover:bg-purple-700/50 ${
                     conversation.conversationId === currentConversationId
-                      ? "bg-gray-700 border border-blue-500"
-                      : "hover:bg-gray-800"
+                      ? "bg-purple-700/70 border border-pink-400"
+                      : "hover:bg-purple-800/50"
                   }`}
                 >
                   <div className="flex items-start justify-between">
@@ -307,10 +334,10 @@ export default function ConversationSidebar({
                       <h3 className="font-medium text-sm truncate">
                         {conversation.title}
                       </h3>
-                      <p className="text-xs text-gray-400 mt-1">
+                      <p className="text-xs text-purple-300 mt-1">
                         {formatDate(conversation.lastActivity)}
                       </p>
-                      <div className="flex items-center gap-3 mt-2 text-xs text-gray-500">
+                      <div className="flex items-center gap-3 mt-2 text-xs text-purple-400">
                         <span className="flex items-center gap-1">
                           <svg
                             className="w-3 h-3"
@@ -331,8 +358,8 @@ export default function ConversationSidebar({
                           className={`px-2 py-1 rounded text-xs font-medium ${
                             conversation.conversationId ===
                             currentConversationId
-                              ? "bg-green-900 text-green-200"
-                              : "bg-gray-700 text-gray-300"
+                              ? "bg-pink-600 text-pink-100"
+                              : "bg-purple-700 text-purple-200"
                           }`}
                         >
                           {conversation.conversationId === currentConversationId
@@ -345,7 +372,7 @@ export default function ConversationSidebar({
                       onClick={(e) =>
                         handleDeleteConversation(conversation.conversationId, e)
                       }
-                      className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-gray-600 transition-all ml-2"
+                      className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-purple-600/50 transition-all ml-2"
                       title="Delete conversation"
                     >
                       <svg
@@ -370,8 +397,8 @@ export default function ConversationSidebar({
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-gray-700">
-          <div className="text-xs text-gray-400 text-center">
+        <div className="p-4 border-t border-purple-700/50">
+          <div className="text-xs text-purple-200 text-center">
             AI Girlfriend Chat
           </div>
         </div>

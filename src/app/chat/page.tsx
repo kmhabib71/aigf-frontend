@@ -50,6 +50,7 @@ export default function ChatPage() {
   const { user, anonymousSession } = useAuth(); // Get user ID for token tracking
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   // Auto-minimize persona when user starts typing
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -117,6 +118,14 @@ export default function ChatPage() {
   const socketRef = useRef<Socket | null>(null);
   const streamingChatRef = useRef<any>(null);
   const messageInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
 
   useEffect(() => {
     // Load conversation ID from URL parameters
@@ -630,12 +639,49 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden">
+    <div className="h-screen relative bg-gradient-to-br from-purple-50 via-pink-50 to-cyan-50 overflow-hidden">
+      {/* Animated Background Orbs */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div
+          className="absolute w-[800px] h-[800px] rounded-full opacity-20 animate-float-slow"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(216, 180, 254, 0.4) 0%, rgba(233, 213, 255, 0.2) 50%, transparent 100%)",
+            top: "-20%",
+            right: "-10%",
+          }}
+        ></div>
+        <div
+          className="absolute w-[700px] h-[700px] rounded-full opacity-20 animate-float-slow animation-delay-2000"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(251, 207, 232, 0.4) 0%, rgba(252, 231, 243, 0.2) 50%, transparent 100%)",
+            bottom: "-15%",
+            left: "-10%",
+          }}
+        ></div>
+      </div>
+
+      {/* Mouse Follow Glow */}
+      <div
+        className="fixed w-[400px] h-[400px] rounded-full pointer-events-none z-10 transition-all duration-300"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(251, 207, 232, 0.1) 0%, transparent 70%)",
+          left: `${mousePosition.x}px`,
+          top: `${mousePosition.y}px`,
+          transform: "translate(-50%, -50%)",
+        }}
+      />
+
       {/* Header */}
       <Header />
 
       {/* Main Content Area with Sidebar and Chat */}
-      <div className="flex flex-1 overflow-hidden pt-20">
+      <div
+        className="relative z-20 flex"
+        style={{ height: "calc(100vh - 80px)", marginTop: "80px" }}
+      >
         {/* Conversation Sidebar */}
         <ConversationSidebar
           isOpen={sidebarOpen}
@@ -648,14 +694,14 @@ export default function ChatPage() {
         {/* Main Chat Area */}
         <div className="flex-1 flex p-4 min-w-0">
           {/* Chat Container */}
-          <div className="flex-1 flex items-center justify-center">
-            <div className="w-full max-w-6xl h-full bg-white rounded-3xl shadow-2xl flex flex-col overflow-hidden relative">
+          <div className="flex-1 flex items-center justify-center h-full">
+            <div className="w-full max-w-6xl h-full bg-white/80 backdrop-blur-2xl rounded-[3rem] border border-white/60 shadow-2xl hover:shadow-purple-300/20 flex flex-col overflow-hidden relative">
               {/* Top Left Controls */}
               <div className="absolute top-4 left-4 z-10 flex gap-2">
                 {/* Mobile Hamburger Menu for Sidebar */}
                 <button
                   onClick={() => setSidebarOpen(true)}
-                  className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 md:hidden"
+                  className="bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 text-white p-3 rounded-full shadow-lg hover:shadow-xl hover:shadow-purple-300/60 transition-all duration-300 hover:scale-110 md:hidden"
                   title="Open Conversations"
                 >
                   <svg
@@ -686,9 +732,9 @@ export default function ChatPage() {
                   }}
                   className={`${
                     isPersonaExpanded
-                      ? "bg-gradient-to-r from-purple-500 to-pink-500"
-                      : "bg-gradient-to-r from-purple-400 to-pink-400"
-                  } text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 ${
+                      ? "bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500"
+                      : "bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400"
+                  } text-white p-3 rounded-full shadow-lg hover:shadow-xl hover:shadow-purple-300/60 transition-all duration-300 hover:scale-110 ${
                     persona ? "ring-2 ring-white/50" : ""
                   }`}
                   title="Toggle Persona Settings"
@@ -812,7 +858,7 @@ export default function ChatPage() {
               )}
 
               {/* Messages */}
-              <div className="flex-1 overflow-y-auto p-6 bg-gray-50 space-y-6">
+              <div className="flex-1 overflow-y-auto p-6 bg-gradient-to-b from-white/50 to-purple-50/30 space-y-6">
                 {/* Smart Greeting - only show if no messages or it's a new conversation */}
                 {/* {messages.length === 0 && <SmartGreeting />} */}
 
@@ -826,8 +872,8 @@ export default function ChatPage() {
                     <div
                       className={`max-w-[70%] p-4 rounded-2xl ${
                         message.role === "user"
-                          ? "bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-br-sm"
-                          : "bg-white text-gray-800 border border-gray-200 rounded-bl-sm shadow-md"
+                          ? "bg-gradient-to-br from-purple-500 via-pink-500 to-cyan-500 text-white rounded-br-sm shadow-lg hover:shadow-purple-300/50"
+                          : "bg-white/90 backdrop-blur-sm text-gray-800 border border-white/60 rounded-bl-sm shadow-lg hover:shadow-cyan-300/30"
                       }`}
                     >
                       {/* Message Images */}
@@ -872,7 +918,13 @@ export default function ChatPage() {
                       <div className="whitespace-pre-wrap leading-relaxed">
                         {message.content}
                       </div>
-                      <div className="text-xs mt-2 opacity-60">
+                      <div
+                        className={`text-xs mt-2 ${
+                          message.role === "user"
+                            ? "text-white/80"
+                            : "text-gray-500"
+                        }`}
+                      >
                         {formatTime(message.timestamp)}
                       </div>
                     </div>
@@ -889,7 +941,7 @@ export default function ChatPage() {
                     );
                     return (
                       <div className="flex justify-start">
-                        <div className="bg-white border border-gray-200 rounded-2xl rounded-bl-sm p-4 shadow-md max-w-[70%]">
+                        <div className="bg-white/90 backdrop-blur-sm border border-white/60 rounded-2xl rounded-bl-sm p-4 shadow-lg hover:shadow-cyan-300/30 max-w-[70%]">
                           {toolProcessingMessage ? (
                             <div className="flex items-center gap-2 text-blue-600">
                               <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
@@ -980,7 +1032,7 @@ export default function ChatPage() {
               </div>
 
               {/* Input */}
-              <div className="p-6 bg-white border-t border-gray-200">
+              <div className="p-6 bg-white/80 backdrop-blur-sm border-t border-white/60">
                 <form onSubmit={sendMessage} className="flex gap-3">
                   <input
                     ref={messageInputRef}
@@ -989,13 +1041,13 @@ export default function ChatPage() {
                     onChange={handleInputChange}
                     placeholder="Type your message..."
                     disabled={isStreamingInProgress}
-                    className="flex-1 px-6 py-4 border-2 border-gray-200 rounded-full text-lg text-gray-900 placeholder-gray-500 outline-none focus:border-indigo-500 transition-colors disabled:opacity-50"
+                    className="flex-1 px-6 py-4 border-2 border-white/60 rounded-full text-lg text-gray-900 placeholder-gray-500 outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-200/50 transition-all disabled:opacity-50 bg-white/70 backdrop-blur-sm"
                     required
                   />
                   <button
                     type="submit"
                     disabled={isStreamingInProgress || !inputValue.trim()}
-                    className="bg-gradient-to-br from-indigo-500 to-purple-600 text-white px-8 py-4 rounded-full font-semibold hover:from-indigo-600 hover:to-purple-700 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                    className="bg-gradient-to-br from-purple-500 via-pink-500 to-cyan-500 text-white px-8 py-4 rounded-full font-semibold hover:shadow-lg hover:shadow-purple-300/60 transform hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                   >
                     Send
                   </button>
@@ -1012,6 +1064,27 @@ export default function ChatPage() {
           type="chat"
           messagesUsed={anonymousMessagesUsed}
         />
+
+        {/* Animations */}
+        <style jsx>{`
+          @keyframes float-slow {
+            0%,
+            100% {
+              transform: translate(0, 0) scale(1);
+            }
+            50% {
+              transform: translate(30px, -30px) scale(1.05);
+            }
+          }
+
+          .animate-float-slow {
+            animation: float-slow 20s ease-in-out infinite;
+          }
+
+          .animation-delay-2000 {
+            animation-delay: 2s;
+          }
+        `}</style>
       </div>
     </div>
   );
