@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "../contexts/AuthContext";
 import { authService } from "../lib/auth/authService";
 import Header from "../components/layout/Header";
+import GlassEffect from "../components/GlassEffect";
 import { backendUrl } from "../lib/config";
 interface TrendingStory {
   id: string;
@@ -92,35 +93,44 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-purple-50 via-pink-50 to-cyan-50">
+    <div
+      className="min-h-screen relative overflow-hidden bg-gradient-to-br from-purple-50 via-pink-50 to-cyan-50"
+      style={{
+        backgroundImage: 'url("/image.jpg")',
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed",
+      }}
+    >
       {/* Animated Background Orbs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div
-          className="absolute w-[800px] h-[800px] rounded-full opacity-30 animate-float-slow"
+          className="absolute w-[300px] sm:w-[500px] lg:w-[800px] h-[300px] sm:h-[500px] lg:h-[800px] rounded-full opacity-10 sm:opacity-15 lg:opacity-20 animate-float-slow"
           style={{
             background:
-              "radial-gradient(circle, rgba(216, 180, 254, 0.6) 0%, rgba(233, 213, 255, 0.3) 50%, transparent 100%)",
+              "radial-gradient(circle, rgba(216, 180, 254, 0.4) 0%, rgba(233, 213, 255, 0.2) 50%, transparent 100%)",
             top: "-20%",
             right: "-10%",
           }}
-        ></div>
+        />
         <div
-          className="absolute w-[700px] h-[700px] rounded-full opacity-30 animate-float-slow animation-delay-2000"
+          className="absolute w-[250px] sm:w-[400px] lg:w-[700px] h-[250px] sm:h-[400px] lg:h-[700px] rounded-full opacity-10 sm:opacity-15 lg:opacity-20 animate-float-slow animation-delay-2000"
           style={{
             background:
-              "radial-gradient(circle, rgba(251, 207, 232, 0.6) 0%, rgba(252, 231, 243, 0.3) 50%, transparent 100%)",
+              "radial-gradient(circle, rgba(251, 207, 232, 0.4) 0%, rgba(252, 231, 243, 0.2) 50%, transparent 100%)",
             bottom: "-15%",
             left: "-10%",
           }}
-        ></div>
+        />
       </div>
 
-      {/* Mouse Follow Glow */}
+      {/* Mouse Follow Glow - Desktop only */}
       <div
-        className="fixed w-[400px] h-[400px] rounded-full pointer-events-none z-10 transition-all duration-300"
+        className="hidden lg:block fixed w-[400px] h-[400px] rounded-full pointer-events-none z-10 transition-all duration-300"
         style={{
           background:
-            "radial-gradient(circle, rgba(251, 207, 232, 0.15) 0%, transparent 70%)",
+            "radial-gradient(circle, rgba(251, 207, 232, 0.1) 0%, transparent 70%)",
           left: `${mousePosition.x}px`,
           top: `${mousePosition.y}px`,
           transform: "translate(-50%, -50%)",
@@ -135,12 +145,12 @@ export default function LandingPage() {
           <div className="max-w-6xl mx-auto w-full">
             {/* Centered Badge */}
             <div className="flex justify-center mb-8 animate-fade-in-up">
-              <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/60 backdrop-blur-xl border border-purple-200/50 shadow-lg shadow-purple-100/50">
+              <div className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white/90 backdrop-blur-xl border border-white/60 shadow-lg shadow-purple-500/30">
                 <span className="relative flex h-3 w-3">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-3 w-3 bg-purple-500"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-500 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-purple-600"></span>
                 </span>
-                <span className="text-sm font-semibold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                <span className="text-sm font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent drop-shadow-sm">
                   Start Instantly — No Signup Required
                 </span>
               </div>
@@ -153,8 +163,24 @@ export default function LandingPage() {
                 onClick={() => router.push("/chat")}
                 className="group cursor-pointer relative"
               >
-                <div className="absolute -inset-4 bg-gradient-to-r from-purple-200 via-pink-200 to-purple-200 rounded-[3rem] blur-2xl opacity-30 group-hover:opacity-50 transition-opacity duration-700"></div>
-                <div className="relative bg-white/70 backdrop-blur-2xl rounded-[2.5rem] p-10 border border-white/60 shadow-2xl hover:shadow-purple-300/50 transform hover:scale-105 hover:-translate-y-2 transition-all duration-500">
+                <div className="absolute -inset-4 bg-gradient-to-r from-purple-300 via-pink-300 to-purple-300 rounded-[3rem] blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-700"></div>
+                <GlassEffect
+                  className="relative transform hover:scale-105 hover:-translate-y-2 transition-all duration-500"
+                  borderRadius="2.5rem"
+                  backgroundOpacity={15}
+                  intensity={{
+                    blur: 12,
+                    saturation: 130,
+                    brightness: 90,
+                    displacement: 60,
+                  }}
+                >
+                  <div className="p-8 lg:p-10">
+                  {/* Dark glossy overlay for glass morphism effect */}
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/60 rounded-[2.5rem] pointer-events-none"></div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[2.5rem] pointer-events-none"></div>
+
+                  <div className="relative z-10">
                   {/* Icon */}
                   <div className="flex justify-center mb-6">
                     <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center text-5xl shadow-xl transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
@@ -163,43 +189,45 @@ export default function LandingPage() {
                   </div>
 
                   {/* Title */}
-                  <h2 className="text-4xl font-black text-center mb-4 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                  <h2 className="text-3xl lg:text-4xl font-black text-center mb-4 text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
                     Romantic Chat
                   </h2>
 
                   {/* Description */}
-                  <p className="text-center text-gray-600 text-lg mb-6">
+                  <p className="text-center text-white text-base lg:text-lg mb-6 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
                     Talk with your AI lover — free 3 messages.
                   </p>
 
                   {/* Features */}
                   <div className="space-y-3 mb-6">
-                    <div className="flex items-center gap-2 text-sm text-gray-700">
-                      <span className="text-green-500">✓</span>
-                      <span>Instant AI responses</span>
+                    <div className="flex items-center gap-2 text-sm lg:text-base text-white">
+                      <span className="text-green-400 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">✓</span>
+                      <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">Instant AI responses</span>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-700">
-                      <span className="text-green-500">✓</span>
-                      <span>Uncensored conversations</span>
+                    <div className="flex items-center gap-2 text-sm lg:text-base text-white">
+                      <span className="text-green-400 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">✓</span>
+                      <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">Uncensored conversations</span>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-700">
-                      <span className="text-green-500">✓</span>
-                      <span>Memory across chats</span>
+                    <div className="flex items-center gap-2 text-sm lg:text-base text-white">
+                      <span className="text-green-400 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">✓</span>
+                      <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">Memory across chats</span>
                     </div>
                   </div>
 
                   {/* CTA Button */}
-                  <button className="w-full px-6 py-4 rounded-2xl font-bold text-lg bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+                  <button className="w-full px-6 py-3 lg:py-4 rounded-2xl font-bold text-base lg:text-lg bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/30 hover:shadow-xl hover:shadow-purple-500/40 transform hover:scale-105 transition-all duration-300">
                     Start Chatting →
                   </button>
 
                   {/* Free Badge */}
                   <div className="mt-4 text-center">
-                    <span className="inline-block px-4 py-1.5 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
+                    <span className="inline-block px-4 py-1.5 bg-gradient-to-r from-green-400 to-emerald-500 text-white text-xs font-semibold rounded-full shadow-sm">
                       First 3 messages FREE
                     </span>
                   </div>
-                </div>
+                  </div>
+                  </div>
+                </GlassEffect>
               </div>
 
               {/* STORY CARD */}
@@ -207,8 +235,24 @@ export default function LandingPage() {
                 onClick={() => router.push("/romance/create")}
                 className="group cursor-pointer relative"
               >
-                <div className="absolute -inset-4 bg-gradient-to-r from-cyan-200 via-purple-200 to-pink-200 rounded-[3rem] blur-2xl opacity-30 group-hover:opacity-50 transition-opacity duration-700"></div>
-                <div className="relative bg-white/70 backdrop-blur-2xl rounded-[2.5rem] p-10 border border-white/60 shadow-2xl hover:shadow-cyan-300/50 transform hover:scale-105 hover:-translate-y-2 transition-all duration-500">
+                <div className="absolute -inset-4 bg-gradient-to-r from-cyan-300 via-purple-300 to-pink-300 rounded-[3rem] blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-700"></div>
+                <GlassEffect
+                  className="relative transform hover:scale-105 hover:-translate-y-2 transition-all duration-500"
+                  borderRadius="2.5rem"
+                  backgroundOpacity={15}
+                  intensity={{
+                    blur: 12,
+                    saturation: 130,
+                    brightness: 90,
+                    displacement: 60,
+                  }}
+                >
+                  <div className="p-8 lg:p-10">
+                  {/* Dark glossy overlay for glass morphism effect */}
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/60 rounded-[2.5rem] pointer-events-none"></div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[2.5rem] pointer-events-none"></div>
+
+                  <div className="relative z-10">
                   {/* Icon */}
                   <div className="flex justify-center mb-6">
                     <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-cyan-400 to-purple-500 flex items-center justify-center text-5xl shadow-xl transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
@@ -217,59 +261,61 @@ export default function LandingPage() {
                   </div>
 
                   {/* Title */}
-                  <h2 className="text-4xl font-black text-center mb-4 bg-gradient-to-r from-cyan-600 to-purple-600 bg-clip-text text-transparent">
+                  <h2 className="text-3xl lg:text-4xl font-black text-center mb-4 text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
                     Create a Story
                   </h2>
 
                   {/* Description */}
-                  <p className="text-center text-gray-600 text-lg mb-6">
+                  <p className="text-center text-white text-base lg:text-lg mb-6 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
                     Build your own romance — free 1 scene.
                   </p>
 
                   {/* Features */}
                   <div className="space-y-3 mb-6">
-                    <div className="flex items-center gap-2 text-sm text-gray-700">
-                      <span className="text-green-500">✓</span>
-                      <span>AI-generated scenes</span>
+                    <div className="flex items-center gap-2 text-sm lg:text-base text-white">
+                      <span className="text-green-400 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">✓</span>
+                      <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">AI-generated scenes</span>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-700">
-                      <span className="text-green-500">✓</span>
-                      <span>Beautiful illustrations</span>
+                    <div className="flex items-center gap-2 text-sm lg:text-base text-white">
+                      <span className="text-green-400 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">✓</span>
+                      <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">Beautiful illustrations</span>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-700">
-                      <span className="text-green-500">✓</span>
-                      <span>Chat with characters</span>
+                    <div className="flex items-center gap-2 text-sm lg:text-base text-white">
+                      <span className="text-green-400 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">✓</span>
+                      <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">Chat with characters</span>
                     </div>
                   </div>
 
                   {/* CTA Button */}
-                  <button className="w-full px-6 py-4 rounded-2xl font-bold text-lg bg-gradient-to-r from-cyan-500 to-purple-500 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+                  <button className="w-full px-6 py-3 lg:py-4 rounded-2xl font-bold text-base lg:text-lg bg-gradient-to-r from-cyan-500 to-purple-500 text-white shadow-lg shadow-cyan-500/30 hover:shadow-xl hover:shadow-cyan-500/40 transform hover:scale-105 transition-all duration-300">
                     Create Story →
                   </button>
 
                   {/* Free Badge */}
                   <div className="mt-4 text-center">
-                    <span className="inline-block px-4 py-1.5 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
+                    <span className="inline-block px-4 py-1.5 bg-gradient-to-r from-green-400 to-emerald-500 text-white text-xs font-semibold rounded-full shadow-sm">
                       First scene FREE
                     </span>
                   </div>
-                </div>
+                  </div>
+                  </div>
+                </GlassEffect>
               </div>
             </div>
           </div>
         </section>
 
         {/* ==================== SECTION 2: STORY HOOKS ==================== */}
-        <section className="py-24 px-6 bg-white/30 backdrop-blur-sm">
+        <section className="py-24 px-6 bg-black/20 backdrop-blur-sm">
           <div className="max-w-7xl mx-auto">
             {/* Personal Continuation (Logged-in Users Only) */}
             {user && continueStories.length > 0 && (
               <div className="mb-16 animate-fade-in-up">
                 <div className="text-center mb-10">
-                  <h2 className="text-4xl font-black text-gray-900 mb-2">
+                  <h2 className="text-4xl font-black text-white drop-shadow-lg mb-2">
                     💌 Continue Your Romance
                   </h2>
-                  <p className="text-lg text-gray-600">
+                  <p className="text-lg text-white drop-shadow-md">
                     Pick up where you left off
                   </p>
                 </div>
@@ -279,8 +325,25 @@ export default function LandingPage() {
                     <div
                       key={story.id}
                       onClick={() => router.push(`/romance/story/${story.id}`)}
-                      className="group cursor-pointer bg-white/80 backdrop-blur-xl rounded-2xl p-6 border border-purple-100 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300"
+                      className="group cursor-pointer"
                     >
+                      <GlassEffect
+                        className="h-full hover:shadow-2xl hover:-translate-y-2 transition-all duration-300"
+                        borderRadius="1.5rem"
+                        backgroundOpacity={12}
+                        intensity={{
+                          blur: 10,
+                          saturation: 130,
+                          brightness: 90,
+                          displacement: 55,
+                        }}
+                      >
+                        <div className="p-6">
+                      {/* Dark glossy overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/60 rounded-[1.5rem] pointer-events-none"></div>
+                      <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[1.5rem] pointer-events-none"></div>
+
+                      <div className="relative z-10">
                       {story.coverImage && (
                         <div className="aspect-[16/9] mb-4 rounded-xl overflow-hidden bg-gradient-to-br from-purple-100 to-pink-100">
                           <img
@@ -290,23 +353,26 @@ export default function LandingPage() {
                           />
                         </div>
                       )}
-                      <h3 className="text-xl font-bold text-gray-800 mb-2">
+                      <h3 className="text-xl font-bold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mb-2">
                         {story.title}
                       </h3>
                       {story.characters.length > 0 && (
-                        <p className="text-sm text-gray-600 mb-3">
+                        <p className="text-sm text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mb-3">
                           Chat with:{" "}
-                          <span className="font-semibold text-purple-600">
+                          <span className="font-semibold text-purple-300">
                             {story.characters[0].name}
                           </span>
                         </p>
                       )}
-                      <div className="flex items-center justify-between text-xs text-gray-500">
+                      <div className="flex items-center justify-between text-xs text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
                         <span>{story.sceneCount} scenes</span>
-                        <button className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full font-semibold hover:bg-purple-200 transition-colors">
+                        <button className="px-3 py-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full font-semibold hover:shadow-lg hover:shadow-purple-500/30 transition-all">
                           Resume →
                         </button>
                       </div>
+                      </div>
+                        </div>
+                      </GlassEffect>
                     </div>
                   ))}
                 </div>
@@ -317,10 +383,10 @@ export default function LandingPage() {
             {trendingStories.length > 0 && (
               <div className="animate-fade-in-up animation-delay-300">
                 <div className="text-center mb-10">
-                  <h2 className="text-4xl font-black text-gray-900 mb-2">
+                  <h2 className="text-4xl font-black text-white drop-shadow-lg mb-2">
                     ✨ Love Lives Here
                   </h2>
-                  <p className="text-lg text-gray-600">
+                  <p className="text-lg text-white drop-shadow-md">
                     Trending romance stories from our community
                   </p>
                 </div>
@@ -329,12 +395,27 @@ export default function LandingPage() {
                   {trendingStories.map((story, idx) => (
                     <div
                       key={story.id}
-                      className="group animate-fade-in-up"
+                      className="group animate-fade-in-up relative"
                       style={{ animationDelay: `${idx * 0.1}s` }}
                     >
-                      <div className="relative h-full">
-                        <div className="absolute -inset-1 bg-gradient-to-r from-purple-200 to-pink-200 rounded-3xl blur-xl opacity-0 group-hover:opacity-60 transition-all duration-500"></div>
-                        <div className="relative h-full bg-white/80 backdrop-blur-xl rounded-3xl p-6 border border-white/60 shadow-xl hover:shadow-2xl transition-all duration-500">
+                      <div className="absolute -inset-1 bg-gradient-to-r from-purple-300 to-pink-300 rounded-3xl blur-2xl opacity-10 group-hover:opacity-30 transition-all duration-500"></div>
+                      <GlassEffect
+                        className="relative h-full hover:shadow-2xl hover:-translate-y-1 transition-all duration-500"
+                        borderRadius="1.5rem"
+                        backgroundOpacity={12}
+                        intensity={{
+                          blur: 10,
+                          saturation: 130,
+                          brightness: 90,
+                          displacement: 55,
+                        }}
+                      >
+                        <div className="p-6">
+                          {/* Dark glossy overlay */}
+                          <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/60 rounded-[1.5rem] pointer-events-none"></div>
+                          <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[1.5rem] pointer-events-none"></div>
+
+                          <div className="relative z-10">
                           {/* Cover Image */}
                           {story.coverImage && (
                             <div className="aspect-[4/3] mb-4 rounded-2xl overflow-hidden bg-gradient-to-br from-purple-100 to-pink-100">
@@ -356,19 +437,19 @@ export default function LandingPage() {
                                 {trope}
                               </span>
                             ))}
-                            <div className="flex items-center gap-1 text-xs text-gray-500">
+                            <div className="flex items-center gap-1 text-xs text-white">
                               <span>❤️</span>
                               <span>{story.heartScore || 0}</span>
                             </div>
                           </div>
 
                           {/* Title */}
-                          <h3 className="text-2xl font-bold text-gray-800 mb-3">
+                          <h3 className="text-2xl font-bold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mb-3">
                             {story.title}
                           </h3>
 
                           {/* Description */}
-                          <p className="text-gray-600 leading-relaxed mb-4 line-clamp-3">
+                          <p className="text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] leading-relaxed mb-4 line-clamp-3">
                             {story.description}
                           </p>
 
@@ -378,7 +459,7 @@ export default function LandingPage() {
                               onClick={() =>
                                 router.push(`/romance/story/${story.id}`)
                               }
-                              className="flex-1 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300"
+                              className="flex-1 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold hover:shadow-lg shadow-purple-500/30 hover:shadow-purple-500/40 transform hover:scale-105 transition-all duration-300"
                             >
                               Read Story
                             </button>
@@ -389,15 +470,16 @@ export default function LandingPage() {
                                     `/romance/story/${story.id}?chat=${story.characters[0].name}`
                                   )
                                 }
-                                className="px-4 py-2 bg-white border-2 border-purple-300 text-purple-700 rounded-xl font-semibold hover:bg-purple-50 transition-colors"
+                                className="px-4 py-2 bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white rounded-xl font-semibold hover:bg-white/30 transition-all"
                                 title={`Chat with ${story.characters[0].name}`}
                               >
                                 💬
                               </button>
                             )}
                           </div>
+                          </div>
                         </div>
-                      </div>
+                      </GlassEffect>
                     </div>
                   ))}
                 </div>
@@ -410,8 +492,24 @@ export default function LandingPage() {
         <section className="py-24 px-6">
           <div className="max-w-4xl mx-auto">
             <div className="relative group">
-              <div className="absolute -inset-4 bg-gradient-to-r from-purple-200 via-pink-200 to-cyan-200 rounded-[3rem] blur-3xl opacity-40 group-hover:opacity-60 transition-opacity duration-700"></div>
-              <div className="relative bg-white/80 backdrop-blur-2xl rounded-[3rem] p-12 border border-white/60 shadow-2xl text-center">
+              <div className="absolute -inset-4 bg-gradient-to-r from-purple-300 via-pink-300 to-cyan-300 rounded-[3rem] blur-3xl opacity-30 group-hover:opacity-50 transition-opacity duration-700"></div>
+              <GlassEffect
+                className="relative text-center"
+                borderRadius="3rem"
+                backgroundOpacity={15}
+                intensity={{
+                  blur: 12,
+                  saturation: 130,
+                  brightness: 90,
+                  displacement: 60,
+                }}
+              >
+                <div className="p-10 lg:p-12">
+                {/* Dark glossy overlay */}
+                <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/60 rounded-[3rem] pointer-events-none"></div>
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[3rem] pointer-events-none"></div>
+
+                <div className="relative z-10">
                 {/* Animated Hearts */}
                 <div className="mb-6 flex justify-center gap-4">
                   <span className="text-5xl animate-bounce">💕</span>
@@ -430,12 +528,12 @@ export default function LandingPage() {
                 </div>
 
                 {/* Headline */}
-                <h2 className="text-5xl font-black text-gray-900 mb-4">
+                <h2 className="text-4xl lg:text-5xl font-black text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] mb-4">
                   Every love story deserves to be finished
                 </h2>
 
                 {/* Subtext */}
-                <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
+                <p className="text-lg lg:text-xl text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mb-10 max-w-2xl mx-auto">
                   Start for free. Continue with signup. Unlock unlimited romance
                   with Pro.
                 </p>
@@ -444,7 +542,7 @@ export default function LandingPage() {
                 <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                   <button
                     onClick={() => router.push("/signup")}
-                    className="group relative px-10 py-5 rounded-2xl font-bold text-lg overflow-hidden shadow-2xl hover:shadow-purple-400/60 transform hover:scale-105 hover:-translate-y-1 transition-all duration-300"
+                    className="group relative px-8 lg:px-10 py-4 lg:py-5 rounded-2xl font-bold text-base lg:text-lg overflow-hidden shadow-2xl shadow-purple-500/40 hover:shadow-purple-400/60 transform hover:scale-105 hover:-translate-y-1 transition-all duration-300"
                   >
                     <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500"></div>
                     <div className="absolute inset-0 bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -455,17 +553,19 @@ export default function LandingPage() {
 
                   <button
                     onClick={() => router.push("/pricing")}
-                    className="px-10 py-5 rounded-2xl font-bold text-lg bg-white border-2 border-purple-300 text-purple-700 hover:bg-purple-50 hover:border-purple-400 transform hover:scale-105 transition-all duration-300"
+                    className="px-8 lg:px-10 py-4 lg:py-5 rounded-2xl font-bold text-base lg:text-lg bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white/30 hover:border-white/40 transform hover:scale-105 transition-all duration-300"
                   >
                     ✨ Romance Pro — $9.99/mo
                   </button>
                 </div>
 
                 {/* Fine Print */}
-                <p className="text-sm text-gray-500 mt-6">
+                <p className="text-sm text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mt-6">
                   No credit card required for signup • Cancel anytime
                 </p>
-              </div>
+                </div>
+                </div>
+              </GlassEffect>
             </div>
           </div>
         </section>
