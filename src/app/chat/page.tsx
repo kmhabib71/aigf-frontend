@@ -558,9 +558,9 @@ export default function ChatPage() {
         />
 
         {/* Chat Area - Full width on mobile */}
-        <div className="flex-1 w-full min-w-0 p-2 sm:p-4 lg:p-6 flex flex-col overflow-hidden">
+        <div className="flex-1 w-full min-w-0 flex flex-col overflow-hidden">
           <GlassEffect
-            className="flex-1 flex flex-col min-h-0 overflow-hidden"
+            className="flex-1 flex flex-col min-h-0 overflow-hidden m-2 sm:m-4 lg:m-6"
             borderRadius="0.75rem"
             intensity={{
               blur: 4,
