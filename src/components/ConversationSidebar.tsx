@@ -214,21 +214,30 @@ export default function ConversationSidebar({
       {/* Backdrop */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 lg:hidden"
           onClick={onClose}
         />
       )}
 
       {/* Sidebar */}
       <GlassEffect
-        className={`fixed top-20 left-0 h-[calc(100vh-80px)] w-72 sm:w-80 text-white transform transition-transform duration-300 ease-in-out z-50 flex-col overflow-hidden ${
+        className={`fixed top-10 left-0 h-[calc(100vh-64px)] w-72 sm:w-80 text-white transform transition-transform duration-300 ease-in-out z-50 flex-col overflow-hidden ${
           isOpen ? "flex translate-x-0" : "hidden -translate-x-full"
         } lg:flex lg:static lg:translate-x-0 lg:h-auto lg:my-6 lg:ml-6 lg:w-80 lg:self-stretch`}
         borderRadius="1rem"
+        backgroundOpacity={40}
+        intensity={{
+          blur: 8,
+          saturation: 120,
+          brightness: 115,
+          displacement: 50,
+        }}
       >
         {/* Header */}
         <div className="flex items-center justify-between p-3 sm:p-4 border-b border-white/20 relative z-10">
-          <h2 className="text-lg sm:text-xl font-semibold text-white drop-shadow-lg">Conversations</h2>
+          <h2 className="text-lg sm:text-xl font-semibold text-white drop-shadow-lg">
+            Conversations
+          </h2>
           <button
             onClick={onClose}
             className="p-2 rounded-lg hover:bg-purple-700/50 transition-colors lg:hidden"
@@ -305,9 +314,7 @@ export default function ConversationSidebar({
         </div>
 
         {/* Conversations List */}
-        <div
-          className="flex-1 min-h-0 overflow-y-auto overscroll-contain relative z-10 scrollbar-thin"
-        >
+        <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain relative z-10 scrollbar-thin">
           {loading ? (
             <div className="p-3 sm:p-4 text-center text-white/80 text-sm sm:text-base">
               Loading conversations...

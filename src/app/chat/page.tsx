@@ -68,15 +68,25 @@ export default function ChatPage() {
     promptUsagePercentage: 0,
   });
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [tokenLimitNotification, setTokenLimitNotification] = useState<string | null>(null);
+  const [tokenLimitNotification, setTokenLimitNotification] = useState<
+    string | null
+  >(null);
 
   // STREAMING STATE
   const [streamingContent, setStreamingContent] = useState("");
   const [isStreamingInProgress, setIsStreamingInProgress] = useState(false);
   const streamingRenderTrigger = useRef(0);
-  const [toolProcessingMessage, setToolProcessingMessage] = useState<string | null>(null);
+  const [toolProcessingMessage, setToolProcessingMessage] = useState<
+    string | null
+  >(null);
   const [loadingState, setLoadingState] = useState<{
-    phase: "idle" | "connecting" | "sending" | "processing" | "tool_execution" | "generating";
+    phase:
+      | "idle"
+      | "connecting"
+      | "sending"
+      | "processing"
+      | "tool_execution"
+      | "generating";
     message: string;
     detail?: string;
   }>({
@@ -198,7 +208,11 @@ export default function ChatPage() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(`✅ Loaded conversation ${id}:`, data.messages?.length || 0, "messages");
+        console.log(
+          `✅ Loaded conversation ${id}:`,
+          data.messages?.length || 0,
+          "messages"
+        );
         setMessages(data.messages || []);
 
         if (data.stats) {
@@ -293,7 +307,10 @@ export default function ChatPage() {
     }
   };
 
-  const handleStreamingMessage = (userMessage: string, currentConversationId?: string) => {
+  const handleStreamingMessage = (
+    userMessage: string,
+    currentConversationId?: string
+  ) => {
     setIsStreamingInProgress(true);
     setStreamingContent("");
     streamingContentRef.current = "";
@@ -305,7 +322,9 @@ export default function ChatPage() {
     });
 
     const targetConversationId = currentConversationId || conversationId;
-    console.log(`🌊 Sending streaming message for conversation: ${targetConversationId}`);
+    console.log(
+      `🌊 Sending streaming message for conversation: ${targetConversationId}`
+    );
 
     if (streamingChatRef.current && socketRef.current) {
       if (socketRef.current.connected) {
@@ -314,7 +333,10 @@ export default function ChatPage() {
           phase: "sending",
           message: "Sending your message...",
         });
-        streamingChatRef.current.sendStreamingMessage(userMessage, targetConversationId);
+        streamingChatRef.current.sendStreamingMessage(
+          userMessage,
+          targetConversationId
+        );
       } else {
         console.log(`🔄 Socket not connected, waiting...`);
         socketRef.current.on("connect", () => {
@@ -323,7 +345,10 @@ export default function ChatPage() {
             phase: "sending",
             message: "Sending your message...",
           });
-          streamingChatRef.current?.sendStreamingMessage(userMessage, targetConversationId);
+          streamingChatRef.current?.sendStreamingMessage(
+            userMessage,
+            targetConversationId
+          );
         });
       }
     }
@@ -452,17 +477,24 @@ export default function ChatPage() {
 
     const fetchNsfwMode = async () => {
       try {
-        const response = await fetch(`${backendUrl}/api/conversations/${conversationId}/nsfw-mode`);
+        const response = await fetch(
+          `${backendUrl}/api/conversations/${conversationId}/nsfw-mode`
+        );
         if (response.ok) {
           const data = await response.json();
-          console.log(`🔍 Backend NSFW mode: ${data.nsfwMode ? "ENABLED" : "DISABLED"}`);
+          console.log(
+            `🔍 Backend NSFW mode: ${data.nsfwMode ? "ENABLED" : "DISABLED"}`
+          );
           if (!data.nsfwMode) {
             console.log(`🔥 Enabling romantic mode`);
-            fetch(`${backendUrl}/api/conversations/${conversationId}/nsfw-mode`, {
-              method: "PATCH",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ enable: true }),
-            });
+            fetch(
+              `${backendUrl}/api/conversations/${conversationId}/nsfw-mode`,
+              {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ enable: true }),
+              }
+            );
           }
         }
       } catch (error) {
@@ -476,7 +508,9 @@ export default function ChatPage() {
 
   const loadPersona = async (convId: string) => {
     try {
-      const response = await fetch(`${backendUrl}/api/conversations/${convId}/persona`);
+      const response = await fetch(
+        `${backendUrl}/api/conversations/${convId}/persona`
+      );
       const data = await response.json();
       setPersona(data.persona || "");
     } catch (error) {
@@ -536,7 +570,8 @@ export default function ChatPage() {
       <div
         className="hidden lg:block fixed w-[400px] h-[400px] rounded-full pointer-events-none z-10 transition-all duration-300"
         style={{
-          background: "radial-gradient(circle, rgba(251, 207, 232, 0.1) 0%, transparent 70%)",
+          background:
+            "radial-gradient(circle, rgba(251, 207, 232, 0.1) 0%, transparent 70%)",
           left: `${mousePosition.x}px`,
           top: `${mousePosition.y}px`,
           transform: "translate(-50%, -50%)",
@@ -579,8 +614,18 @@ export default function ChatPage() {
                   className="lg:hidden bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 text-white p-2 rounded-full shadow-lg active:scale-95 transition-all"
                   title="Menu"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 6h16M4 12h16M4 18h16"
+                    />
                   </svg>
                 </button>
 
@@ -604,8 +649,18 @@ export default function ChatPage() {
                   }`}
                   title="Persona"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                    />
                   </svg>
                 </button>
               </div>
@@ -616,8 +671,18 @@ export default function ChatPage() {
               <div className="bg-gradient-to-r from-purple-50/50 to-pink-50/50 border-b border-white/10 p-3 sm:p-4 shrink-0">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-sm sm:text-base font-semibold text-purple-800 flex items-center gap-2">
-                    <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    <svg
+                      className="w-4 h-4 sm:w-5 sm:h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                      />
                     </svg>
                     <span className="hidden sm:inline">Custom Persona</span>
                     <span className="sm:hidden">Persona</span>
@@ -629,8 +694,18 @@ export default function ChatPage() {
                     }}
                     className="text-purple-600 hover:text-purple-800 p-1"
                   >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
                     </svg>
                   </button>
                 </div>
@@ -648,7 +723,9 @@ export default function ChatPage() {
                   style={{ fontSize: "16px" }}
                 />
                 <div className="flex justify-between items-center mt-2">
-                  <span className="text-xs text-purple-600">{persona.length} chars</span>
+                  <span className="text-xs text-purple-600">
+                    {persona.length} chars
+                  </span>
                   <button
                     onClick={() => {
                       setPersona("");
@@ -667,12 +744,14 @@ export default function ChatPage() {
               {messages.map((message, index) => (
                 <div
                   key={index}
-                  className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                  className={`flex ${
+                    message.role === "user" ? "justify-end" : "justify-start"
+                  }`}
                 >
                   <div
                     className={`max-w-[85%] sm:max-w-[75%] lg:max-w-[65%] p-3 sm:p-4 lg:p-5 rounded-xl sm:rounded-2xl ${
                       message.role === "user"
-                        ? "bg-gradient-to-br from-purple-500 via-pink-500 to-cyan-500 text-white shadow-lg shadow-purple-500/30"
+                        ? "bg-gradient-to-br from-purple-500 via-pink-500 to-cyan-500 text-white shadow-lg shadow-gray-500/30"
                         : "bg-white/15 backdrop-blur-md text-gray-100 border border-white/30 shadow-lg shadow-black/20"
                     }`}
                   >
@@ -694,14 +773,22 @@ export default function ChatPage() {
                       </div>
                     )}
 
-                    <div className={`whitespace-pre-wrap leading-relaxed text-sm sm:text-base lg:text-lg ${
-                      message.role === "user" ? "text-white drop-shadow-sm" : "text-gray-50"
-                    }`}>
+                    <div
+                      className={`whitespace-pre-wrap leading-relaxed text-sm sm:text-base lg:text-lg ${
+                        message.role === "user"
+                          ? "text-white drop-shadow-sm"
+                          : "text-gray-50"
+                      }`}
+                    >
                       {message.content}
                     </div>
-                    <div className={`text-xs sm:text-sm mt-2 ${
-                      message.role === "user" ? "text-white/90" : "text-gray-300"
-                    }`}>
+                    <div
+                      className={`text-xs sm:text-sm mt-2 ${
+                        message.role === "user"
+                          ? "text-white/90"
+                          : "text-gray-300"
+                      }`}
+                    >
                       {formatTime(message.timestamp)}
                     </div>
                   </div>
@@ -715,7 +802,9 @@ export default function ChatPage() {
                     {toolProcessingMessage ? (
                       <div className="flex items-center gap-2 text-blue-300">
                         <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" />
-                        <span className="text-sm sm:text-base lg:text-lg italic">{toolProcessingMessage}</span>
+                        <span className="text-sm sm:text-base lg:text-lg italic">
+                          {toolProcessingMessage}
+                        </span>
                       </div>
                     ) : streamingContent ? (
                       <div className="whitespace-pre-wrap leading-relaxed text-gray-50 text-sm sm:text-base lg:text-lg">
@@ -725,7 +814,9 @@ export default function ChatPage() {
                     ) : (
                       <div className="flex items-center gap-2">
                         <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse" />
-                        <span className="text-sm sm:text-base text-purple-300">{loadingState.message}</span>
+                        <span className="text-sm sm:text-base text-purple-300">
+                          {loadingState.message}
+                        </span>
                       </div>
                     )}
                   </div>
@@ -752,7 +843,7 @@ export default function ChatPage() {
                 <button
                   type="submit"
                   disabled={isStreamingInProgress || !inputValue.trim()}
-                  className="bg-gradient-to-br from-purple-500 via-pink-500 to-cyan-500 text-white px-5 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 rounded-full font-semibold text-sm sm:text-base lg:text-lg shadow-lg shadow-purple-500/30 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                  className="bg-gradient-to-br from-purple-500 via-pink-500 to-cyan-500 text-white px-5 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 rounded-full font-semibold text-sm sm:text-base lg:text-lg shadow-lg shadow-gray-500/30 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
                 >
                   Send
                 </button>
