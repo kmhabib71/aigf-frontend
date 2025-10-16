@@ -223,12 +223,12 @@ export default function ConversationSidebar({
       <GlassEffect
         className={`fixed top-20 left-0 h-[calc(100vh-80px)] w-72 sm:w-80 text-white transform transition-transform duration-300 ease-in-out z-50 flex-col overflow-hidden ${
           isOpen ? "flex translate-x-0" : "hidden -translate-x-full"
-        } lg:flex lg:relative lg:top-0 lg:translate-x-0 lg:h-full lg:w-80`}
+        } lg:flex lg:relative lg:top-0 lg:mt-0 lg:translate-x-0 lg:h-[calc(100vh-60px)] lg:w-80`}
         borderRadius="1rem"
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-3 sm:p-4 border-b border-black/20 relative z-10">
-          <h2 className="text-lg sm:text-xl font-semibold text-white">Conversations</h2>
+        <div className="flex items-center justify-between p-3 sm:p-4 border-b border-white/20 relative z-10">
+          <h2 className="text-lg sm:text-xl font-semibold text-white drop-shadow-lg">Conversations</h2>
           <button
             onClick={onClose}
             className="p-2 rounded-lg hover:bg-purple-700/50 transition-colors lg:hidden"
@@ -250,14 +250,14 @@ export default function ConversationSidebar({
         </div>
 
         {/* New Chat Button */}
-        <div className="p-3 sm:p-4 border-b border-black/20 relative z-10">
+        <div className="p-3 sm:p-4 border-b border-white/20 relative z-10">
           <button
             onClick={handleNewChat}
             disabled={newChatLoading}
-            className={`w-full font-medium py-2.5 sm:py-3 px-3 sm:px-4 text-sm sm:text-base rounded-lg transition-all flex items-center justify-center gap-2 ${
+            className={`w-full font-semibold py-2.5 sm:py-3 px-3 sm:px-4 text-sm sm:text-base rounded-lg transition-all flex items-center justify-center gap-2 shadow-lg ${
               newChatLoading
-                ? "bg-cyan-500 cursor-wait text-white opacity-75"
-                : "bg-cyan-600 hover:bg-cyan-700 text-white cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+                ? "bg-gradient-to-r from-cyan-500 to-blue-500 cursor-wait text-white opacity-75"
+                : "bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white cursor-pointer hover:scale-[1.02] active:scale-[0.98] shadow-cyan-500/30"
             }`}
           >
             {newChatLoading ? (
@@ -309,15 +309,15 @@ export default function ConversationSidebar({
           className="flex-1 min-h-0 overflow-y-auto overscroll-contain relative z-10 scrollbar-thin"
         >
           {loading ? (
-            <div className="p-3 sm:p-4 text-center text-purple-200 text-sm sm:text-base">
+            <div className="p-3 sm:p-4 text-center text-white/80 text-sm sm:text-base">
               Loading conversations...
             </div>
           ) : conversations.length === 0 ? (
-            <div className="p-3 sm:p-4 text-center text-purple-200 text-sm sm:text-base">
+            <div className="p-3 sm:p-4 text-center text-white/80 text-sm sm:text-base">
               No conversations yet
             </div>
           ) : (
-            <div className="p-2 text-white">
+            <div className="p-2 text-white drop-shadow">
               {conversations.map((conversation) => (
                 <div
                   key={conversation.conversationId}
@@ -326,21 +326,21 @@ export default function ConversationSidebar({
                     onConversationSelect(conversation.conversationId);
                     onClose();
                   }}
-                  className={`p-2.5 sm:p-3 rounded-lg mb-2 cursor-pointer transition-colors group hover:bg-black/20 ${
+                  className={`p-2.5 sm:p-3 rounded-lg mb-2 cursor-pointer transition-all group ${
                     conversation.conversationId === currentConversationId
-                      ? "bg-black/30 border border-pink-400"
-                      : "hover:bg-black/10"
+                      ? "bg-gradient-to-r from-purple-500/30 to-pink-500/30 border border-pink-400 shadow-lg"
+                      : "bg-white/5 hover:bg-white/10 backdrop-blur-sm"
                   }`}
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-medium text-xs sm:text-sm truncate">
+                      <h3 className="font-semibold text-xs sm:text-sm truncate text-white drop-shadow">
                         {conversation.title}
                       </h3>
-                      <p className="text-xs text-purple-900 mt-0.5 sm:mt-1">
+                      <p className="text-xs text-gray-300 mt-0.5 sm:mt-1">
                         {formatDate(conversation.lastActivity)}
                       </p>
-                      <div className="flex items-center gap-3 mt-2 text-xs text-purple-800">
+                      <div className="flex items-center gap-3 mt-2 text-xs text-gray-400">
                         <span className="flex items-center gap-1">
                           <svg
                             className="w-3 h-3"
@@ -358,11 +358,11 @@ export default function ConversationSidebar({
                           {formatMessages(conversation.messageCount)} messages
                         </span>
                         <span
-                          className={`px-2 py-1 rounded text-xs font-medium ${
+                          className={`px-2 py-1 rounded text-xs font-semibold ${
                             conversation.conversationId ===
                             currentConversationId
-                              ? "bg-pink-600 text-pink-100"
-                              : "bg-black/20 text-black"
+                              ? "bg-gradient-to-r from-pink-500 to-purple-500 text-white shadow-sm"
+                              : "bg-white/10 text-gray-300"
                           }`}
                         >
                           {conversation.conversationId === currentConversationId
@@ -400,8 +400,8 @@ export default function ConversationSidebar({
         </div>
 
         {/* Footer */}
-        <div className="p-3 sm:p-4 border-t border-black/20 relative z-10">
-          <div className="text-xs text-white text-center">
+        <div className="p-3 sm:p-4 border-t border-white/20 relative z-10">
+          <div className="text-xs text-white/70 text-center drop-shadow">
             Romance Canvas © 2026
           </div>
         </div>

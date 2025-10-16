@@ -547,7 +547,7 @@ export default function ChatPage() {
       <Header />
 
       {/* Main Container - Mobile First */}
-      <div className="flex h-[calc(100vh-80px)] mt-20 overflow-hidden">
+      <div className="flex h-[calc(100vh-80px)] lg:h-[calc(100vh-60px)] mt-20 lg:mt-16 overflow-hidden">
         {/* Sidebar - Hidden on mobile, shown on desktop */}
         <ConversationSidebar
           isOpen={sidebarOpen}
@@ -663,17 +663,17 @@ export default function ChatPage() {
             )}
 
             {/* Messages Area */}
-            <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-3 sm:p-4 lg:p-6 space-y-3 sm:space-y-4 scrollbar-thin">
+            <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-3 sm:p-4 lg:p-8 space-y-3 sm:space-y-4 lg:space-y-5 scrollbar-thin">
               {messages.map((message, index) => (
                 <div
                   key={index}
                   className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
                 >
                   <div
-                    className={`max-w-[85%] sm:max-w-[75%] lg:max-w-[65%] p-3 sm:p-4 rounded-xl sm:rounded-2xl ${
+                    className={`max-w-[85%] sm:max-w-[75%] lg:max-w-[65%] p-3 sm:p-4 lg:p-5 rounded-xl sm:rounded-2xl ${
                       message.role === "user"
-                        ? "bg-gradient-to-br from-purple-500 via-pink-500 to-cyan-500 text-white shadow-lg"
-                        : "bg-white/10 backdrop-blur-sm text-white border border-white/20 shadow-lg"
+                        ? "bg-gradient-to-br from-purple-500 via-pink-500 to-cyan-500 text-white shadow-lg shadow-purple-500/30"
+                        : "bg-white/15 backdrop-blur-md text-gray-100 border border-white/30 shadow-lg shadow-black/20"
                     }`}
                   >
                     {/* Images */}
@@ -694,10 +694,14 @@ export default function ChatPage() {
                       </div>
                     )}
 
-                    <div className="whitespace-pre-wrap leading-relaxed text-sm sm:text-base">
+                    <div className={`whitespace-pre-wrap leading-relaxed text-sm sm:text-base lg:text-lg ${
+                      message.role === "user" ? "text-white drop-shadow-sm" : "text-gray-50"
+                    }`}>
                       {message.content}
                     </div>
-                    <div className={`text-xs mt-2 ${message.role === "user" ? "text-white/80" : "text-gray-300"}`}>
+                    <div className={`text-xs sm:text-sm mt-2 ${
+                      message.role === "user" ? "text-white/90" : "text-gray-300"
+                    }`}>
                       {formatTime(message.timestamp)}
                     </div>
                   </div>
@@ -707,21 +711,21 @@ export default function ChatPage() {
               {/* Streaming Display */}
               {isStreamingInProgress && (
                 <div className="flex justify-start">
-                  <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl sm:rounded-2xl p-3 sm:p-4 shadow-lg max-w-[85%] sm:max-w-[75%] lg:max-w-[65%]">
+                  <div className="bg-white/15 backdrop-blur-md border border-white/30 rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-5 shadow-lg shadow-black/20 max-w-[85%] sm:max-w-[75%] lg:max-w-[65%]">
                     {toolProcessingMessage ? (
-                      <div className="flex items-center gap-2 text-blue-400">
-                        <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
-                        <span className="text-sm italic">{toolProcessingMessage}</span>
+                      <div className="flex items-center gap-2 text-blue-300">
+                        <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" />
+                        <span className="text-sm sm:text-base lg:text-lg italic">{toolProcessingMessage}</span>
                       </div>
                     ) : streamingContent ? (
-                      <div className="whitespace-pre-wrap leading-relaxed text-white text-sm sm:text-base">
+                      <div className="whitespace-pre-wrap leading-relaxed text-gray-50 text-sm sm:text-base lg:text-lg">
                         {streamingContent}
-                        <div className="inline-block w-2 h-4 bg-purple-500 animate-pulse ml-1" />
+                        <div className="inline-block w-2 h-5 bg-purple-400 animate-pulse ml-1" />
                       </div>
                     ) : (
                       <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse" />
-                        <span className="text-sm text-purple-400">{loadingState.message}</span>
+                        <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse" />
+                        <span className="text-sm sm:text-base text-purple-300">{loadingState.message}</span>
                       </div>
                     )}
                   </div>
@@ -732,8 +736,8 @@ export default function ChatPage() {
             </div>
 
             {/* Input Area */}
-            <div className="p-3 sm:p-4 border-t border-white/10 shrink-0">
-              <form onSubmit={sendMessage} className="flex gap-2">
+            <div className="p-3 sm:p-4 lg:p-6 border-t border-white/10 shrink-0">
+              <form onSubmit={sendMessage} className="flex gap-2 lg:gap-3">
                 <input
                   ref={messageInputRef}
                   type="text"
@@ -741,14 +745,14 @@ export default function ChatPage() {
                   onChange={handleInputChange}
                   placeholder="Type your message..."
                   disabled={isStreamingInProgress}
-                  className="flex-1 px-4 py-2 sm:py-3 border-2 border-white/20 rounded-full text-black placeholder-gray-500 outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-200/50 transition-all disabled:opacity-50 bg-white/80 backdrop-blur-sm"
+                  className="flex-1 px-4 py-2 sm:py-3 lg:py-4 border-2 border-white/20 rounded-full text-black placeholder-gray-500 outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-200/50 transition-all disabled:opacity-50 bg-white/90 backdrop-blur-sm text-base lg:text-lg"
                   style={{ fontSize: "16px" }}
                   required
                 />
                 <button
                   type="submit"
                   disabled={isStreamingInProgress || !inputValue.trim()}
-                  className="bg-gradient-to-br from-purple-500 via-pink-500 to-cyan-500 text-white px-5 sm:px-6 py-2 sm:py-3 rounded-full font-semibold text-sm sm:text-base shadow-lg active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                  className="bg-gradient-to-br from-purple-500 via-pink-500 to-cyan-500 text-white px-5 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 rounded-full font-semibold text-sm sm:text-base lg:text-lg shadow-lg shadow-purple-500/30 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
                 >
                   Send
                 </button>
