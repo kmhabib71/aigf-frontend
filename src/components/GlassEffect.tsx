@@ -25,13 +25,13 @@ const GlassEffect: React.FC<GlassEffectProps> = ({
     displacement: 50,
   },
   backgroundOpacity = 20,
-  borderRadius = "3rem",
+  borderRadius = "1rem",
 }) => {
   const filterId = `lensFilter-${Math.random().toString(36).substr(2, 9)}`;
 
   return (
     <div
-      className={`relative bg-transparent border border-black/${backgroundOpacity} shadow-2xl ${className}`}
+      className={`relative bg-transparent border border-white/20 shadow-2xl overflow-hidden ${className}`}
       style={{ borderRadius, ...style }}
     >
       {/* Glass effect layers */}
@@ -59,7 +59,7 @@ const GlassEffect: React.FC<GlassEffectProps> = ({
       ></div>
 
       {/* Content */}
-      <div className="relative z-10">{children}</div>
+      <div className="relative z-10 flex flex-col h-full w-full min-h-0">{children}</div>
 
       {/* SVG Filter Definition */}
       <svg xmlns="http://www.w3.org/2000/svg" style={{ display: "none" }}>

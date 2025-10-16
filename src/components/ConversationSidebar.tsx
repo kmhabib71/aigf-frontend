@@ -221,24 +221,20 @@ export default function ConversationSidebar({
 
       {/* Sidebar */}
       <GlassEffect
-        className={`fixed top-0 left-0 h-screen w-80 text-white transform transition-transform duration-300 ease-in-out z-50 flex flex-col overflow-hidden ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        } lg:relative lg:translate-x-0 lg:h-full lg:flex-shrink-0`}
-        style={{
-          height: "calc(100vh - 80px)",
-          marginTop: isOpen ? "80px" : "0",
-        }}
-        borderRadius="3rem"
+        className={`fixed top-20 left-0 h-[calc(100vh-80px)] w-72 sm:w-80 text-white transform transition-transform duration-300 ease-in-out z-50 flex-col overflow-hidden ${
+          isOpen ? "flex translate-x-0" : "hidden -translate-x-full"
+        } lg:flex lg:relative lg:top-0 lg:translate-x-0 lg:h-full lg:w-80`}
+        borderRadius="1rem"
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-black/20 relative z-10">
-          <h2 className="text-xl font-semibold text-white">Conversations</h2>
+        <div className="flex items-center justify-between p-3 sm:p-4 border-b border-black/20 relative z-10">
+          <h2 className="text-lg sm:text-xl font-semibold text-white">Conversations</h2>
           <button
             onClick={onClose}
             className="p-2 rounded-lg hover:bg-purple-700/50 transition-colors lg:hidden"
           >
             <svg
-              className="w-6 h-6"
+              className="w-5 h-5 sm:w-6 sm:h-6"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -254,11 +250,11 @@ export default function ConversationSidebar({
         </div>
 
         {/* New Chat Button */}
-        <div className="p-4 border-b border-black/20 relative z-10">
+        <div className="p-3 sm:p-4 border-b border-black/20 relative z-10">
           <button
             onClick={handleNewChat}
             disabled={newChatLoading}
-            className={`w-full font-medium py-3 px-4 rounded-lg transition-all flex items-center justify-center gap-2 ${
+            className={`w-full font-medium py-2.5 sm:py-3 px-3 sm:px-4 text-sm sm:text-base rounded-lg transition-all flex items-center justify-center gap-2 ${
               newChatLoading
                 ? "bg-cyan-500 cursor-wait text-white opacity-75"
                 : "bg-cyan-600 hover:bg-cyan-700 text-white cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
@@ -310,15 +306,14 @@ export default function ConversationSidebar({
 
         {/* Conversations List */}
         <div
-          className="flex-1 overflow-y-auto relative z-10 scrollbar-hide"
-          style={{ maxHeight: "calc(100vh - 300px)" }}
+          className="flex-1 min-h-0 overflow-y-auto overscroll-contain relative z-10 scrollbar-thin"
         >
           {loading ? (
-            <div className="p-4 text-center text-purple-200">
+            <div className="p-3 sm:p-4 text-center text-purple-200 text-sm sm:text-base">
               Loading conversations...
             </div>
           ) : conversations.length === 0 ? (
-            <div className="p-4 text-center text-purple-200">
+            <div className="p-3 sm:p-4 text-center text-purple-200 text-sm sm:text-base">
               No conversations yet
             </div>
           ) : (
@@ -331,7 +326,7 @@ export default function ConversationSidebar({
                     onConversationSelect(conversation.conversationId);
                     onClose();
                   }}
-                  className={`p-3 rounded-lg mb-2 cursor-pointer transition-colors group hover:bg-black/20 ${
+                  className={`p-2.5 sm:p-3 rounded-lg mb-2 cursor-pointer transition-colors group hover:bg-black/20 ${
                     conversation.conversationId === currentConversationId
                       ? "bg-black/30 border border-pink-400"
                       : "hover:bg-black/10"
@@ -339,10 +334,10 @@ export default function ConversationSidebar({
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-medium text-sm truncate">
+                      <h3 className="font-medium text-xs sm:text-sm truncate">
                         {conversation.title}
                       </h3>
-                      <p className="text-xs text-purple-900 mt-1">
+                      <p className="text-xs text-purple-900 mt-0.5 sm:mt-1">
                         {formatDate(conversation.lastActivity)}
                       </p>
                       <div className="flex items-center gap-3 mt-2 text-xs text-purple-800">
@@ -405,7 +400,7 @@ export default function ConversationSidebar({
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-black/20 relative z-10">
+        <div className="p-3 sm:p-4 border-t border-black/20 relative z-10">
           <div className="text-xs text-white text-center">
             Romance Canvas © 2026
           </div>
