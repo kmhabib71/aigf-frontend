@@ -9,6 +9,8 @@ import { authService } from "@/lib/auth/authService";
 import TropeSelector from "@/components/RomanceCanvas/TropeSelector";
 import StreamingStoryCreation from "@/components/RomanceCanvas/StreamingStoryCreation";
 import SoftGateModal from "@/components/SoftGateModal";
+import GlassEffect from "@/components/GlassEffect";
+import Header from "@/components/layout/Header";
 import { backendUrl } from "@/lib/config";
 export default function CreateStoryPage() {
   const router = useRouter();
@@ -166,16 +168,87 @@ export default function CreateStoryPage() {
     setIsGenerating(false);
   };
 
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white dark:from-gray-900 dark:to-gray-800 py-12 px-4">
+    <div
+      className="min-h-screen relative overflow-hidden"
+      style={{
+        backgroundImage: 'url("/image.jpg")',
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed",
+      }}
+    >
+      {/* Animated Background Orbs */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div
+          className="absolute w-[300px] sm:w-[500px] lg:w-[800px] h-[300px] sm:h-[500px] lg:h-[800px] rounded-full opacity-10 sm:opacity-15 lg:opacity-20 animate-float-slow"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(216, 180, 254, 0.4) 0%, rgba(233, 213, 255, 0.2) 50%, transparent 100%)",
+            top: "-20%",
+            right: "-10%",
+          }}
+        />
+        <div
+          className="absolute w-[250px] sm:w-[400px] lg:w-[700px] h-[250px] sm:h-[400px] lg:h-[700px] rounded-full opacity-10 sm:opacity-15 lg:opacity-20 animate-float-slow animation-delay-2000"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(251, 207, 232, 0.4) 0%, rgba(252, 231, 243, 0.2) 50%, transparent 100%)",
+            bottom: "-15%",
+            left: "-10%",
+          }}
+        />
+      </div>
+
+      {/* Mouse Follow Glow - Desktop only */}
+      <div
+        className="hidden lg:block fixed w-[400px] h-[400px] rounded-full pointer-events-none z-10 transition-all duration-300"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(251, 207, 232, 0.1) 0%, transparent 70%)",
+          left: `${mousePosition.x}px`,
+          top: `${mousePosition.y}px`,
+          transform: "translate(-50%, -50%)",
+        }}
+      />
+
+      <Header />
+
+      <div className="relative z-20 pt-24 pb-12 px-4">
       <div className="max-w-4xl mx-auto">
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+        <GlassEffect
+          borderRadius="2rem"
+          backgroundOpacity={15}
+          intensity={{
+            blur: 12,
+            saturation: 130,
+            brightness: 90,
+            displacement: 60,
+          }}
+        >
+          <div className="p-8 lg:p-10">
+          {/* Dark glossy overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/60 rounded-[2rem] pointer-events-none"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[2rem] pointer-events-none"></div>
+
+          <div className="relative z-10">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
+            <h1 className="text-4xl font-bold text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] mb-2">
               Create Your Romance Canvas 💕
             </h1>
-            <p className="text-gray-600 dark:text-gray-400">
+            <p className="text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
               Describe your dream romance story and watch AI bring it to life
               with stunning visuals
             </p>
@@ -183,14 +256,14 @@ export default function CreateStoryPage() {
 
           {/* Error Message */}
           {error && (
-            <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-              <p className="text-red-600 dark:text-red-400">{error}</p>
+            <div className="mb-6 p-4 bg-red-900/40 backdrop-blur-sm border border-red-500/50 rounded-lg">
+              <p className="text-red-200 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">{error}</p>
             </div>
           )}
 
           {/* Story Title (Optional) */}
           <div className="mb-6">
-            <label className="block text-lg font-semibold mb-2 text-gray-900 dark:text-white">
+            <label className="block text-lg font-semibold mb-2 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
               Story Title (Optional)
             </label>
             <input
@@ -198,25 +271,25 @@ export default function CreateStoryPage() {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g., Forbidden Office Romance"
-              className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              className="w-full px-4 py-3 border border-white/20 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-black/30 backdrop-blur-sm text-white placeholder-white/60"
               disabled={isGenerating}
             />
           </div>
 
           {/* Story Prompt */}
           <div className="mb-6">
-            <label className="block text-lg font-semibold mb-2 text-gray-900 dark:text-white">
-              Story Prompt <span className="text-red-500">*</span>
+            <label className="block text-lg font-semibold mb-2 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+              Story Prompt <span className="text-red-400">*</span>
             </label>
             <textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               placeholder="Example: A forbidden office romance between a CEO and their new intern, filled with tension and secret glances across the boardroom..."
               rows={5}
-              className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent resize-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              className="w-full px-4 py-3 border border-white/20 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 resize-none bg-black/30 backdrop-blur-sm text-white placeholder-white/60"
               disabled={isGenerating}
             />
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+            <p className="text-sm text-white/80 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mt-2">
               {prompt.length} characters (minimum 10 required)
             </p>
           </div>
@@ -228,7 +301,7 @@ export default function CreateStoryPage() {
 
           {/* Spice Level Slider */}
           <div className="mb-6">
-            <label className="block text-lg font-semibold mb-3 text-gray-900 dark:text-white">
+            <label className="block text-lg font-semibold mb-3 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
               Intimacy Level
             </label>
             <div className="flex items-center gap-4">
@@ -247,16 +320,16 @@ export default function CreateStoryPage() {
                   ];
                   setSpiceLevel(levels[parseInt(e.target.value)]);
                 }}
-                className="flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-pink-500"
+                className="flex-1 h-2 bg-white/20 rounded-lg appearance-none cursor-pointer accent-pink-500"
                 disabled={isGenerating}
               />
-              <span className="min-w-[100px] px-4 py-2 bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 rounded-lg font-medium text-center">
+              <span className="min-w-[100px] px-4 py-2 bg-pink-500/30 backdrop-blur-sm border border-pink-400/30 text-white rounded-lg font-medium text-center drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
                 {spiceLevel === "soft" && "😊 Sweet"}
                 {spiceLevel === "medium" && "🔥 Passionate"}
                 {spiceLevel === "explicit" && "🌶️ Explicit"}
               </span>
             </div>
-            <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-2">
+            <div className="flex justify-between text-xs text-white/80 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mt-2">
               <span>Sweet & Tender</span>
               <span>Passionate & Sensual</span>
               <span>Mature & Explicit</span>
@@ -265,10 +338,10 @@ export default function CreateStoryPage() {
 
           {/* Character Reference (Coming Soon) */}
           <div className="mb-6">
-            <label className="block text-lg font-semibold mb-2 text-gray-900 dark:text-white">
+            <label className="block text-lg font-semibold mb-2 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
               Character Reference (Optional - Coming Soon)
             </label>
-            <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center">
+            <div className="border-2 border-dashed border-white/30 rounded-lg p-6 text-center bg-black/20 backdrop-blur-sm">
               <input
                 type="file"
                 accept="image/*"
@@ -282,10 +355,10 @@ export default function CreateStoryPage() {
                 className="cursor-not-allowed opacity-50"
               >
                 <div className="text-4xl mb-2">📷</div>
-                <p className="text-gray-600 dark:text-gray-400">
+                <p className="text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
                   Upload a character photo for consistent visuals
                 </p>
-                <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
+                <p className="text-sm text-white/60 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mt-1">
                   (Feature coming in Phase 2)
                 </p>
               </label>
@@ -295,7 +368,7 @@ export default function CreateStoryPage() {
           {/* Generation Options */}
           <div className="mb-8 space-y-4">
             {/* Streaming Toggle */}
-            <div className="flex items-center justify-between p-4 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-200 dark:border-purple-800 rounded-lg">
+            <div className="flex items-center justify-between p-4 bg-purple-500/20 backdrop-blur-sm border border-purple-400/30 rounded-lg">
               <div className="flex-1">
                 <label className="flex items-center gap-3 cursor-pointer">
                   <input
@@ -303,13 +376,13 @@ export default function CreateStoryPage() {
                     checked={useStreaming}
                     onChange={(e) => setUseStreaming(e.target.checked)}
                     disabled={isGenerating}
-                    className="w-5 h-5 text-pink-500 bg-gray-100 border-gray-300 rounded focus:ring-pink-500 focus:ring-2"
+                    className="w-5 h-5 text-pink-500 bg-black/30 border-white/30 rounded focus:ring-pink-500 focus:ring-2"
                   />
                   <div>
-                    <span className="text-base font-semibold text-gray-900 dark:text-white">
+                    <span className="text-base font-semibold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
                       Real-Time Story Streaming ✨
                     </span>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                    <p className="text-sm text-white/80 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mt-1">
                       {useStreaming
                         ? "Watch your story come to life in real-time with progressive text generation"
                         : "Generate the complete story at once (faster but no preview)"}
@@ -318,14 +391,14 @@ export default function CreateStoryPage() {
                 </label>
               </div>
               {!isConnected && useStreaming && (
-                <div className="ml-4 px-3 py-1 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 text-xs rounded-full">
+                <div className="ml-4 px-3 py-1 bg-yellow-500/30 backdrop-blur-sm border border-yellow-400/30 text-yellow-200 text-xs rounded-full">
                   Connecting...
                 </div>
               )}
             </div>
 
             {/* Image Generation Toggle */}
-            <div className="flex items-center justify-between p-4 bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 border border-orange-200 dark:border-orange-800 rounded-lg">
+            <div className="flex items-center justify-between p-4 bg-orange-500/20 backdrop-blur-sm border border-orange-400/30 rounded-lg">
               <div className="flex-1">
                 <label className="flex items-center gap-3 cursor-pointer">
                   <input
@@ -333,16 +406,16 @@ export default function CreateStoryPage() {
                     checked={generateImages}
                     onChange={(e) => setGenerateImages(e.target.checked)}
                     disabled={isGenerating}
-                    className="w-5 h-5 text-orange-500 bg-gray-100 border-gray-300 rounded focus:ring-orange-500 focus:ring-2"
+                    className="w-5 h-5 text-orange-500 bg-black/30 border-white/30 rounded focus:ring-orange-500 focus:ring-2"
                   />
                   <div>
-                    <span className="text-base font-semibold text-gray-900 dark:text-white">
+                    <span className="text-base font-semibold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
                       Generate Scene Images 🎨
-                      <span className="ml-2 px-2 py-0.5 bg-orange-200 dark:bg-orange-900/50 text-orange-800 dark:text-orange-300 text-xs rounded-full">
+                      <span className="ml-2 px-2 py-0.5 bg-orange-400/30 backdrop-blur-sm border border-orange-300/30 text-white text-xs rounded-full">
                         {generateImages ? "COSTS TOKENS" : "TESTING MODE"}
                       </span>
                     </span>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                    <p className="text-sm text-white/80 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mt-1">
                       {generateImages
                         ? "⚠️ Will generate images for each scene (~$0.10-0.20 per story). Only enable after text streaming works!"
                         : "✅ Text-only generation for testing (saves money). Enable images once streaming is confirmed working."}
@@ -358,11 +431,11 @@ export default function CreateStoryPage() {
             onClick={handleCreate}
             disabled={isGenerating || !prompt.trim() || prompt.length < 10}
             className={`
-              w-full py-4 px-6 rounded-lg font-semibold text-lg transition-all
+              w-full py-4 px-6 rounded-xl font-bold text-lg transition-all transform hover:scale-105
               ${
                 isGenerating || !prompt.trim() || prompt.length < 10
-                  ? "bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed"
-                  : "bg-gradient-to-r from-pink-500 to-purple-600 text-white hover:from-pink-600 hover:to-purple-700 shadow-lg hover:shadow-xl"
+                  ? "bg-gray-600/30 backdrop-blur-sm text-gray-400 cursor-not-allowed"
+                  : "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/30 hover:shadow-xl hover:shadow-purple-500/40"
               }
             `}
           >
@@ -392,14 +465,16 @@ export default function CreateStoryPage() {
           </button>
 
           {/* Info Box */}
-          <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-            <p className="text-sm text-blue-700 dark:text-blue-300">
+          <div className="mt-6 p-4 bg-blue-500/20 backdrop-blur-sm border border-blue-400/30 rounded-lg">
+            <p className="text-sm text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
               <strong>💡 Tip:</strong> The AI will generate a 5-8 scene story
               (800-1500 words) with automatic visual moments. You can add more
               images and edit text in the canvas view!
             </p>
           </div>
-        </div>
+          </div>
+          </div>
+        </GlassEffect>
 
         {/* Streaming Story Generation (shown below the form) */}
         {isGenerating && useStreaming && isConnected && socket && user && (
@@ -418,6 +493,7 @@ export default function CreateStoryPage() {
           </div>
         )}
       </div>
+      </div>
 
       {/* Soft Gate Modal */}
       <SoftGateModal
@@ -426,6 +502,27 @@ export default function CreateStoryPage() {
         type="story"
         storyScenesCreated={storyScenesCreated}
       />
+
+      {/* Animations */}
+      <style jsx>{`
+        @keyframes float-slow {
+          0%,
+          100% {
+            transform: translate(0, 0) scale(1);
+          }
+          50% {
+            transform: translate(30px, -30px) scale(1.05);
+          }
+        }
+
+        .animate-float-slow {
+          animation: float-slow 20s ease-in-out infinite;
+        }
+
+        .animation-delay-2000 {
+          animation-delay: 2s;
+        }
+      `}</style>
     </div>
   );
 }
