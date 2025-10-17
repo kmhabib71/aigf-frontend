@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../../contexts/AuthContext";
 import CreditBalance from "../../components/CreditBalance";
+import { auth } from "@/lib/firebase";
 import { backendUrl } from "@/lib/config";
 export default function DashboardPage() {
   const router = useRouter();
@@ -17,6 +18,8 @@ export default function DashboardPage() {
   } = useAuth();
   const [portalLoading, setPortalLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [monthlyUsage, setMonthlyUsage] = useState<any>(null);
+  const [usageLoading, setUsageLoading] = useState(true);
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
@@ -27,8 +30,43 @@ export default function DashboardPage() {
   useEffect(() => {
     if (isAuthenticated) {
       refreshUserProfile();
+      fetchMonthlyUsage();
     }
   }, [isAuthenticated]);
+
+  const fetchMonthlyUsage = async () => {
+    try {
+      setUsageLoading(true);
+
+      // Get token from Firebase auth
+      const currentUser = auth.currentUser;
+      if (!currentUser) {
+        console.error("No authenticated user");
+        setUsageLoading(false);
+        return;
+      }
+
+      const token = await currentUser.getIdToken();
+
+      const response = await fetch(`${backendUrl}/api/token-usage/my/monthly`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Usage data:", data);
+        setMonthlyUsage(data.usage);
+      } else {
+        console.error("Failed to fetch usage:", response.statusText);
+      }
+    } catch (err) {
+      console.error("Failed to fetch usage:", err);
+    } finally {
+      setUsageLoading(false);
+    }
+  };
 
   const handleManageSubscription = async () => {
     try {
@@ -66,17 +104,6 @@ export default function DashboardPage() {
     );
   }
 
-  const getUsagePercentage = (used: number, limit: number) => {
-    if (limit === 0) return 0;
-    return Math.min((used / limit) * 100, 100);
-  };
-
-  const getUsageColor = (percentage: number) => {
-    if (percentage >= 90) return "bg-red-500";
-    if (percentage >= 75) return "bg-yellow-500";
-    return "bg-green-500";
-  };
-
   const formatDate = (date: Date | null) => {
     if (!date) return "N/A";
     return new Date(date).toLocaleDateString("en-US", {
@@ -86,18 +113,45 @@ export default function DashboardPage() {
     });
   };
 
-  const messagePercentage = getUsagePercentage(
-    userProfile.messagesUsed,
-    userProfile.messageLimit
-  );
-  const imagePercentage = getUsagePercentage(
-    userProfile.imagesUsed,
-    userProfile.imageLimit
-  );
-  const voicePercentage = getUsagePercentage(
-    userProfile.voiceCharsUsed,
-    userProfile.voiceCharLimit
-  );
+  // Calculate credits from cost (3x markup)
+  const calculateCreditsFromCost = (cost: number) => {
+    // cost is already in USD, 1 credit = $0.01
+    // We charge 3x the API cost
+    return Math.ceil(cost * 3 * 100); // Convert to credits (multiply by 100 to convert dollars to cents/credits)
+  };
+
+  // Calculate total credits consumed this month
+  const getTotalCreditsConsumed = () => {
+    if (!monthlyUsage) return 0;
+    // Total cost includes both token usage and image generation
+    return calculateCreditsFromCost(monthlyUsage.totalCost || 0);
+  };
+
+  // Calculate AI conversation credits (excluding images)
+  const getAIConversationCredits = () => {
+    if (!monthlyUsage) return 0;
+    // Image cost: $0.01 per image, we charge 3 credits per image = $0.03 per image
+    const imageCost = (monthlyUsage.imagesGenerated || 0) * 0.01;
+    const conversationCost = (monthlyUsage.totalCost || 0) - imageCost;
+    return calculateCreditsFromCost(conversationCost);
+  };
+
+  // Get plan's total allocated credits
+  const getPlanCredits = () => {
+    if (userProfile.plan === "plus") return 999;
+    if (userProfile.plan === "pro") return 1999;
+    return 0;
+  };
+
+  // Calculate remaining credits (allocated - used)
+  const getRemainingCredits = () => {
+    // If creditBalance is properly set, use it
+    if (userProfile.creditBalance > 0) {
+      return userProfile.creditBalance;
+    }
+    // Otherwise calculate it: plan allocation - used
+    return Math.max(0, getPlanCredits() - getTotalCreditsConsumed());
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-purple-700">
@@ -210,11 +264,26 @@ export default function DashboardPage() {
                   </span>
                   {userProfile.plan !== "free" && (
                     <span className="text-sm">
-                      ${userProfile.plan === "plus" ? "9.99" : "29.99"}/mo
+                      ${userProfile.plan === "plus" ? "9.99" : "19.99"}/mo
                     </span>
                   )}
                 </div>
               </div>
+
+              {/* Credit System Info for Plus/Pro */}
+              {userProfile.plan !== "free" && (
+                <div className="mb-4 p-3 bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-lg">
+                  <div className="text-sm text-gray-900">
+                    <div className="font-semibold mb-1">💳 Credit-Based Plan</div>
+                    <div className="text-xs text-gray-700">
+                      {userProfile.plan === "plus"
+                        ? "999 monthly credits"
+                        : "1999 monthly credits"}{" "}
+                      • 50% rollover • Pay-as-you-go billing
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {userProfile.subscriptionStatus && (
                 <div className="space-y-2 text-sm text-gray-600 mb-4">
@@ -269,7 +338,7 @@ export default function DashboardPage() {
           {/* Right Column - Usage Stats */}
           <div className="lg:col-span-2 space-y-6">
             {/* Credit Balance Card (Plus/Pro users) */}
-            {userProfile.useCreditSystem &&
+            {(userProfile.plan === "plus" || userProfile.plan === "pro") &&
               userProfile.creditBalance !== undefined && (
                 <div className="bg-white rounded-3xl shadow-2xl p-6">
                   <div className="flex items-center justify-between mb-4">
@@ -277,7 +346,10 @@ export default function DashboardPage() {
                       Credit Balance
                     </h3>
                     <button
-                      onClick={refreshUserProfile}
+                      onClick={() => {
+                        refreshUserProfile();
+                        fetchMonthlyUsage();
+                      }}
                       className="text-indigo-600 hover:text-indigo-700 text-sm font-semibold"
                     >
                       Refresh
@@ -294,150 +366,206 @@ export default function DashboardPage() {
                 </div>
               )}
 
-            {/* Usage Overview */}
+            {/* Usage Overview - Credit Consumption */}
             <div className="bg-white rounded-3xl shadow-2xl p-6">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-2xl font-bold text-gray-900">
-                  {userProfile.useCreditSystem
-                    ? "Usage Limits (Fallback)"
-                    : "Usage This Month"}
+                  Usage This Month
                 </h3>
                 <button
-                  onClick={refreshUserProfile}
+                  onClick={() => {
+                    refreshUserProfile();
+                    fetchMonthlyUsage();
+                  }}
                   className="text-indigo-600 hover:text-indigo-700 text-sm font-semibold"
+                  disabled={usageLoading}
                 >
-                  Refresh
+                  {usageLoading ? "Loading..." : "Refresh"}
                 </button>
               </div>
 
-              {/* Info message for credit users */}
-              {userProfile.useCreditSystem && (
-                <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                  <div className="flex items-start gap-2">
-                    <span className="text-lg">ℹ️</span>
-                    <div className="text-sm text-blue-900">
-                      <div className="font-semibold">
-                        Credit-Based System Active
-                      </div>
-                      <div className="text-xs text-blue-700 mt-1">
-                        Your usage is tracked via credits. The limits below only
-                        apply if your credits are depleted.
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
               <div className="space-y-6">
-                {/* Messages */}
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <span className="text-2xl">💬</span>
-                      <span className="font-semibold text-gray-900">
-                        Messages
-                      </span>
-                    </div>
-                    <span className="text-sm font-semibold text-gray-600">
-                      {userProfile.messagesUsed} / {userProfile.messageLimit}
-                    </span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-                    <div
-                      className={`h-full transition-all ${getUsageColor(
-                        messagePercentage
-                      )}`}
-                      style={{ width: `${messagePercentage}%` }}
-                    />
-                  </div>
-                  <p className="text-xs text-gray-500 mt-1">
-                    {userProfile.messageLimit - userProfile.messagesUsed}{" "}
-                    messages remaining
-                  </p>
-                </div>
+                {/* Plus/Pro Users - Credit Consumption */}
+                {(userProfile.plan === "plus" || userProfile.plan === "pro") && (
+                  <>
+                    {/* Total Credits Progress */}
+                    <div className="p-5 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border-2 border-purple-200">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                          <span className="text-2xl">💳</span>
+                          <span className="font-bold text-gray-900 text-lg">
+                            Credit Balance
+                          </span>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-2xl font-bold text-purple-600">
+                            {getRemainingCredits()}
+                          </div>
+                          <div className="text-xs text-gray-700">
+                            of {getPlanCredits()} credits
+                          </div>
+                        </div>
+                      </div>
 
-                {/* Images */}
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <span className="text-2xl">🖼️</span>
-                      <span className="font-semibold text-gray-900">
-                        Image Generation
-                      </span>
-                      {userProfile.imageLimit === 0 && (
-                        <span className="text-xs bg-gray-200 text-gray-600 px-2 py-1 rounded-full">
-                          Upgrade Required
-                        </span>
-                      )}
-                    </div>
-                    <span className="text-sm font-semibold text-gray-600">
-                      {userProfile.imagesUsed} / {userProfile.imageLimit || "0"}
-                    </span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-                    <div
-                      className={`h-full transition-all ${getUsageColor(
-                        imagePercentage
-                      )}`}
-                      style={{ width: `${imagePercentage}%` }}
-                    />
-                  </div>
-                  {userProfile.imageLimit > 0 && (
-                    <p className="text-xs text-gray-500 mt-1">
-                      {userProfile.imageLimit - userProfile.imagesUsed} images
-                      remaining
-                    </p>
-                  )}
-                </div>
+                      {/* Progress Bar */}
+                      <div className="w-full bg-white rounded-full h-4 overflow-hidden border border-purple-200">
+                        <div
+                          className="h-full transition-all bg-gradient-to-r from-purple-500 to-pink-500"
+                          style={{
+                            width: `${Math.min((getRemainingCredits() / getPlanCredits()) * 100, 100)}%`
+                          }}
+                        />
+                      </div>
 
-                {/* Voice */}
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <span className="text-2xl">🎤</span>
-                      <span className="font-semibold text-gray-900">
-                        Voice Messages
-                      </span>
-                      {userProfile.voiceCharLimit === 0 && (
-                        <span className="text-xs bg-gray-200 text-gray-600 px-2 py-1 rounded-full">
-                          Upgrade Required
+                      <div className="flex justify-between mt-2 text-xs text-gray-700">
+                        <span>
+                          {usageLoading ? "..." : getTotalCreditsConsumed()} credits used this month
                         </span>
-                      )}
+                        <span>
+                          {Math.round((getRemainingCredits() / getPlanCredits()) * 100)}% remaining
+                        </span>
+                      </div>
                     </div>
-                    <span className="text-sm font-semibold text-gray-600">
-                      {(userProfile.voiceCharsUsed / 1000).toFixed(1)}K /{" "}
-                      {userProfile.voiceCharLimit / 1000}K chars
-                    </span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-                    <div
-                      className={`h-full transition-all ${getUsageColor(
-                        voicePercentage
-                      )}`}
-                      style={{ width: `${voicePercentage}%` }}
-                    />
-                  </div>
-                  {userProfile.voiceCharLimit > 0 && (
-                    <p className="text-xs text-gray-500 mt-1">
-                      {(
-                        (userProfile.voiceCharLimit -
-                          userProfile.voiceCharsUsed) /
-                        1000
-                      ).toFixed(1)}
-                      K characters remaining
-                    </p>
-                  )}
-                </div>
+
+                    {/* AI Conversations */}
+                    <div className="p-4 bg-gray-50 rounded-xl">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                          <span className="text-2xl">💬</span>
+                          <span className="font-semibold text-gray-900">
+                            AI Conversations
+                          </span>
+                        </div>
+                        <span className="text-sm font-bold text-gray-700">
+                          {usageLoading ? "..." : getAIConversationCredits()} credits
+                        </span>
+                      </div>
+                      <div className="text-xs text-gray-600">
+                        <div className="flex justify-between mb-1">
+                          <span>Total tokens:</span>
+                          <span className="font-semibold text-gray-900">
+                            {usageLoading ? "..." : monthlyUsage ? ((monthlyUsage.totalTokens || 0) / 1000).toFixed(1) + "K" : "0"}
+                          </span>
+                        </div>
+                        <div className="text-gray-500">
+                          Chat messages, story creation, and AI responses
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Images Generated */}
+                    <div className="p-4 bg-gray-50 rounded-xl">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                          <span className="text-2xl">🖼️</span>
+                          <span className="font-semibold text-gray-900">
+                            Images Generated
+                          </span>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-sm font-bold text-gray-700">
+                            {usageLoading ? "..." : monthlyUsage?.imagesGenerated || 0} images
+                          </div>
+                          <div className="text-xs text-gray-600">
+                            {usageLoading ? "..." : (monthlyUsage?.imagesGenerated || 0) * 3} credits used
+                          </div>
+                        </div>
+                      </div>
+                      <div className="text-xs text-gray-600">
+                        3 credits per image • Scene and character illustrations
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {/* Free Users - Traditional Limits */}
+                {userProfile.plan === "free" && (
+                  <>
+                    {/* Messages (Free tier tracking only) */}
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <span className="text-2xl">💬</span>
+                          <span className="font-semibold text-gray-900">
+                            Free Messages
+                          </span>
+                        </div>
+                        <span className="text-sm font-semibold text-gray-600">
+                          {userProfile.messagesUsed || 0} / 3
+                        </span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                        <div
+                          className="h-full transition-all bg-blue-500"
+                          style={{ width: `${((userProfile.messagesUsed || 0) / 3) * 100}%` }}
+                        />
+                      </div>
+                      <p className="text-xs text-gray-600 mt-1">
+                        {3 - (userProfile.messagesUsed || 0)} free messages remaining
+                      </p>
+                    </div>
+
+                    {/* Story Scenes (Free tier tracking only) */}
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <span className="text-2xl">📖</span>
+                          <span className="font-semibold text-gray-900">
+                            Free Story Scene
+                          </span>
+                        </div>
+                        <span className="text-sm font-semibold text-gray-600">
+                          {userProfile.storyScenesCreated || 0} / 1
+                        </span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                        <div
+                          className="h-full transition-all bg-purple-500"
+                          style={{ width: `${((userProfile.storyScenesCreated || 0) / 1) * 100}%` }}
+                        />
+                      </div>
+                      <p className="text-xs text-gray-600 mt-1">
+                        {1 - (userProfile.storyScenesCreated || 0)} free scene remaining
+                      </p>
+                    </div>
+
+                    {/* Upgrade CTA for Free Users */}
+                    <div className="p-4 bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-300 rounded-xl">
+                      <div className="flex items-start gap-3">
+                        <span className="text-2xl">⭐</span>
+                        <div>
+                          <div className="font-bold text-gray-900 mb-1">
+                            Upgrade for Unlimited Access
+                          </div>
+                          <div className="text-xs text-gray-700 mb-3">
+                            Get 999+ credits for unlimited chat, stories, and image generation
+                          </div>
+                          <button
+                            onClick={() => router.push("/pricing")}
+                            className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:from-indigo-600 hover:to-purple-700 transition-all"
+                          >
+                            View Plans
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
 
               {/* Usage Reset Date */}
               <div className="mt-6 pt-6 border-t border-gray-200">
-                <p className="text-sm text-gray-600">
-                  Usage resets on:{" "}
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-gray-600">Monthly cycle resets:</span>
                   <span className="font-semibold text-gray-900">
                     {formatDate(userProfile.usageResetAt || null)}
                   </span>
-                </p>
+                </div>
+                {(userProfile.plan === "plus" || userProfile.plan === "pro") && (
+                  <p className="text-xs text-gray-500 mt-2">
+                    💡 50% of unused credits roll over to next month
+                  </p>
+                )}
               </div>
             </div>
 

@@ -5,6 +5,7 @@ import { Socket } from "socket.io-client";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import CommentsThread from "./CommentsThread";
+import { backendUrl } from "@/lib/config";
 import "./StoryLine.css";
 
 interface VisualMoment {

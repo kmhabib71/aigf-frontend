@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Socket } from "socket.io-client";
 import SceneBlock from "./SceneBlock";
+import { backendUrl } from "@/lib/config";
 import "./StoryCanvas.css";
 
 interface VisualMoment {
