@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../../contexts/AuthContext";
 import CreditBalance from "../../components/CreditBalance";
+import GlassEffect from "../../components/GlassEffect";
+import Header from "../../components/layout/Header";
 import { auth } from "@/lib/firebase";
 import { backendUrl } from "@/lib/config";
 export default function DashboardPage() {
@@ -98,8 +100,15 @@ export default function DashboardPage() {
 
   if (loading || !userProfile) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-purple-700 flex items-center justify-center">
-        <div className="text-white text-xl">Loading...</div>
+      <div
+        className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 via-pink-50 to-cyan-50"
+        style={{
+          backgroundImage: 'url("/image.jpg")',
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        <div className="text-white text-xl drop-shadow-lg">Loading...</div>
       </div>
     );
   }
@@ -154,50 +163,49 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-purple-700">
+    <div
+      className="min-h-screen relative overflow-hidden bg-gradient-to-br from-purple-50 via-pink-50 to-cyan-50"
+      style={{
+        backgroundImage: 'url("/image.jpg")',
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed",
+      }}
+    >
+      {/* Animated Background Orbs */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div
+          className="absolute w-[800px] h-[800px] rounded-full opacity-20 animate-float-slow"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(216, 180, 254, 0.4) 0%, rgba(233, 213, 255, 0.2) 50%, transparent 100%)",
+            top: "-20%",
+            right: "-10%",
+          }}
+        />
+        <div
+          className="absolute w-[700px] h-[700px] rounded-full opacity-20 animate-float-slow animation-delay-2000"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(251, 207, 232, 0.4) 0%, rgba(252, 231, 243, 0.2) 50%, transparent 100%)",
+            bottom: "-15%",
+            left: "-10%",
+          }}
+        />
+      </div>
+
       {/* Header */}
-      <header className="bg-white/10 backdrop-blur-md border-b border-white/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <button
-              onClick={() => router.push("/")}
-              className="text-white text-xl font-bold flex items-center gap-2 hover:opacity-80 transition-opacity"
-            >
-              <span>💬</span>
-              <span>AI Companion</span>
-            </button>
-
-            <div className="flex items-center gap-4">
-              {/* Credit Balance (compact for header) */}
-              {userProfile.useCreditSystem &&
-                userProfile.creditBalance !== undefined && (
-                  <CreditBalance
-                    credits={userProfile.creditBalance}
-                    plan={userProfile.plan}
-                    variant="compact"
-                    showWarning={true}
-                  />
-                )}
-
-              <button
-                onClick={handleSignOut}
-                className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-full transition-colors"
-              >
-                Sign Out
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-24">
         {/* Welcome Section */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">
-            Welcome back, {userProfile.displayName}!
+          <h1 className="text-4xl font-black text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] mb-2">
+            Welcome back, {userProfile.displayName}! 💕
           </h1>
-          <p className="text-white/80">
+          <p className="text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] text-lg">
             Manage your subscription and track your usage
           </p>
         </div>
@@ -598,6 +606,27 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
+
+      {/* Animations */}
+      <style jsx>{`
+        @keyframes float-slow {
+          0%,
+          100% {
+            transform: translate(0, 0) scale(1);
+          }
+          50% {
+            transform: translate(30px, -30px) scale(1.05);
+          }
+        }
+
+        .animate-float-slow {
+          animation: float-slow 20s ease-in-out infinite;
+        }
+
+        .animation-delay-2000 {
+          animation-delay: 2s;
+        }
+      `}</style>
     </div>
   );
 }

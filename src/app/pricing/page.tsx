@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../../contexts/AuthContext";
+import Header from "../../components/layout/Header";
 import { backendUrl } from "@/lib/config";
 interface PlanFeature {
   name: string;
@@ -167,49 +168,53 @@ export default function PricingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-purple-700">
+    <div
+      className="min-h-screen relative overflow-hidden bg-gradient-to-br from-purple-50 via-pink-50 to-cyan-50"
+      style={{
+        backgroundImage: 'url("/image.jpg")',
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed",
+      }}
+    >
+      {/* Animated Background Orbs */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div
+          className="absolute w-[800px] h-[800px] rounded-full opacity-20 animate-float-slow"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(216, 180, 254, 0.4) 0%, rgba(233, 213, 255, 0.2) 50%, transparent 100%)",
+            top: "-20%",
+            right: "-10%",
+          }}
+        />
+        <div
+          className="absolute w-[700px] h-[700px] rounded-full opacity-20 animate-float-slow animation-delay-2000"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(251, 207, 232, 0.4) 0%, rgba(252, 231, 243, 0.2) 50%, transparent 100%)",
+            bottom: "-15%",
+            left: "-10%",
+          }}
+        />
+      </div>
+
       {/* Header */}
-      <header className="bg-white/10 backdrop-blur-md border-b border-white/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <button
-              onClick={() => router.push("/")}
-              className="text-white text-xl font-bold flex items-center gap-2 hover:opacity-80 transition-opacity"
-            >
-              <span>💬</span>
-              <span>AI Companion</span>
-            </button>
-            {isAuthenticated ? (
-              <button
-                onClick={() => router.push("/dashboard")}
-                className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-full transition-colors"
-              >
-                Dashboard
-              </button>
-            ) : (
-              <button
-                onClick={() => router.push("/login")}
-                className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-full transition-colors"
-              >
-                Sign In
-              </button>
-            )}
-          </div>
-        </div>
-      </header>
+      <Header />
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 pt-24">
         {/* Title */}
         <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold text-white mb-4">
-            Choose Your Plan
+          <h1 className="text-5xl font-black text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] mb-4">
+            Choose Your Plan 💕
           </h1>
-          <p className="text-xl text-white/90 max-w-2xl mx-auto">
+          <p className="text-xl text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] max-w-2xl mx-auto">
             Find the perfect plan for your AI companionship journey
           </p>
           {userProfile && (
-            <div className="mt-4 inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-white">
+            <div className="mt-4 inline-flex items-center gap-2 bg-white/30 backdrop-blur-md px-6 py-3 rounded-full text-white drop-shadow-lg border border-white/20">
               <span>Current Plan:</span>
               <span className="font-semibold capitalize">
                 {userProfile.plan}
@@ -355,10 +360,10 @@ export default function PricingPage() {
         </div>
 
         {/* Credit System Explanation */}
-        <div className="mt-20 max-w-5xl mx-auto bg-white/10 backdrop-blur-md rounded-3xl p-8 text-white">
+        <div className="mt-20 max-w-5xl mx-auto bg-white/10 backdrop-blur-md rounded-3xl p-8 text-white border border-white/20 shadow-2xl">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold mb-3">How Credits Work</h2>
-            <p className="text-white/80 text-lg">
+            <h2 className="text-3xl font-black drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mb-3">How Credits Work</h2>
+            <p className="text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)] text-lg">
               Transparent, usage-based pricing that gives you control
             </p>
           </div>
@@ -432,8 +437,8 @@ export default function PricingPage() {
         </div>
 
         {/* FAQ */}
-        <div className="mt-12 max-w-4xl mx-auto bg-white/10 backdrop-blur-md rounded-3xl p-8 text-white">
-          <h2 className="text-2xl font-bold mb-6">
+        <div className="mt-12 max-w-4xl mx-auto bg-white/10 backdrop-blur-md rounded-3xl p-8 text-white border border-white/20 shadow-2xl">
+          <h2 className="text-2xl font-black drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mb-6">
             Frequently Asked Questions
           </h2>
           <div className="space-y-4">
@@ -479,6 +484,27 @@ export default function PricingPage() {
           </div>
         </div>
       </div>
+
+      {/* Animations */}
+      <style jsx>{`
+        @keyframes float-slow {
+          0%,
+          100% {
+            transform: translate(0, 0) scale(1);
+          }
+          50% {
+            transform: translate(30px, -30px) scale(1.05);
+          }
+        }
+
+        .animate-float-slow {
+          animation: float-slow 20s ease-in-out infinite;
+        }
+
+        .animation-delay-2000 {
+          animation-delay: 2s;
+        }
+      `}</style>
     </div>
   );
 }
