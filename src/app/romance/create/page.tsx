@@ -22,6 +22,7 @@ export default function CreateStoryPage() {
   );
   const [title, setTitle] = useState("Forbidden Office Romance");
   const [tropes, setTropes] = useState<string[]>(["slow-burn"]);
+  const [narrativeStyle, setNarrativeStyle] = useState<"third-person" | "first-person">("third-person");
   const [spiceLevel, setSpiceLevel] = useState<"soft" | "medium" | "explicit">(
     "soft"
   );
@@ -123,6 +124,7 @@ export default function CreateStoryPage() {
           prompt: prompt.trim(),
           title: title.trim() || undefined,
           tropes,
+          narrativeStyle,
           spiceLevel,
           characterRef: characterRefUrl,
           sessionId: sessionId || undefined,
@@ -297,6 +299,47 @@ export default function CreateStoryPage() {
           {/* Trope Selector */}
           <div className="mb-6">
             <TropeSelector selected={tropes} onChange={setTropes} />
+          </div>
+
+          {/* Narrative Style Toggle */}
+          <div className="mb-6">
+            <label className="block text-lg font-semibold mb-3 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+              Narrative Style
+            </label>
+            <div className="flex gap-4">
+              <button
+                type="button"
+                onClick={() => setNarrativeStyle("third-person")}
+                disabled={isGenerating}
+                className={`flex-1 px-4 py-3 rounded-lg font-semibold transition-all ${
+                  narrativeStyle === "third-person"
+                    ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg"
+                    : "bg-white/10 text-white/70 hover:bg-white/20 border border-white/20"
+                } disabled:opacity-50`}
+              >
+                <div className="text-left">
+                  <div className="font-bold">📖 Third Person</div>
+                  <div className="text-sm opacity-80">Cinematic storytelling</div>
+                  <div className="text-xs opacity-60 mt-1">"He nervously waited..."</div>
+                </div>
+              </button>
+              <button
+                type="button"
+                onClick={() => setNarrativeStyle("first-person")}
+                disabled={isGenerating}
+                className={`flex-1 px-4 py-3 rounded-lg font-semibold transition-all ${
+                  narrativeStyle === "first-person"
+                    ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg"
+                    : "bg-white/10 text-white/70 hover:bg-white/20 border border-white/20"
+                } disabled:opacity-50`}
+              >
+                <div className="text-left">
+                  <div className="font-bold">✍️ First Person</div>
+                  <div className="text-sm opacity-80">Personal diary style</div>
+                  <div className="text-xs opacity-60 mt-1">"I nervously waited..."</div>
+                </div>
+              </button>
+            </div>
           </div>
 
           {/* Spice Level Slider */}
@@ -483,6 +526,7 @@ export default function CreateStoryPage() {
               prompt={prompt.trim()}
               title={title.trim() || "Untitled Romance"}
               tropes={tropes}
+              narrativeStyle={narrativeStyle}
               spiceLevel={spiceLevel}
               userId={user.uid}
               socket={socket}

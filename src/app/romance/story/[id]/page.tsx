@@ -107,6 +107,18 @@ export default function StoryViewPage() {
     }
 
     loadStory();
+
+    // Refresh token every 50 minutes (tokens expire after 60 minutes)
+    const tokenRefreshInterval = setInterval(async () => {
+      const currentUser = auth.currentUser;
+      if (currentUser) {
+        const freshToken = await currentUser.getIdToken(true); // force refresh
+        setIdToken(freshToken);
+        console.log("🔄 Token refreshed");
+      }
+    }, 50 * 60 * 1000); // 50 minutes
+
+    return () => clearInterval(tokenRefreshInterval);
   }, [isAuthenticated, storyId]);
 
   const loadStory = async () => {

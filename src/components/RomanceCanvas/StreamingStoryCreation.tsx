@@ -10,6 +10,7 @@ interface StreamingStoryCreationProps {
   prompt: string;
   title: string;
   tropes: string[];
+  narrativeStyle: 'third-person' | 'first-person';
   spiceLevel: 'soft' | 'medium' | 'explicit';
   userId: string;
   socket: Socket | null;
@@ -30,6 +31,7 @@ export default function StreamingStoryCreation({
   prompt,
   title,
   tropes,
+  narrativeStyle,
   spiceLevel,
   userId,
   socket,
@@ -196,6 +198,7 @@ export default function StreamingStoryCreation({
         characterRef: null,
         title,
         tropes,
+        narrativeStyle,
         spiceLevel,
         userId,
         sessionId: sessionId.current,
