@@ -728,31 +728,37 @@ export default function ChatPage() {
 
             {/* Persona Panel */}
             {isPersonaExpanded && (
-              <div className="bg-gradient-to-r from-purple-50/50 to-pink-50/50 border-b border-white/10 p-3 sm:p-4 shrink-0">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-sm sm:text-base font-semibold text-purple-800 flex items-center gap-2">
-                    <svg
-                      className="w-4 h-4 sm:w-5 sm:h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                      />
-                    </svg>
-                    <span className="hidden sm:inline">Custom Persona</span>
-                    <span className="sm:hidden">Persona</span>
-                  </h3>
+              <div className="grid grid-cols-1 gap-3 sm:gap-4 border-b border-white/10 p-3 sm:p-4 lg:p-5 shrink-0 bg-white/40 backdrop-blur-xl rounded-t-2xl sm:rounded-t-3xl">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <div className="flex items-center gap-2 text-purple-900">
+                      <svg
+                        className="w-4 h-4 sm:w-5 sm:h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                        />
+                      </svg>
+                      <span className="text-sm sm:text-base font-semibold">
+                        Custom Persona
+                      </span>
+                    </div>
+                    <p className="mt-1 text-xs sm:text-sm text-purple-700/80">
+                      Describe Tina's vibe so she stays in character for this chat.
+                    </p>
+                  </div>
                   <button
                     onClick={() => {
                       setIsPersonaExpanded(false);
                       setIsPersonaMinimized(true);
                     }}
-                    className="text-purple-600 hover:text-purple-800 p-1"
+                    className="text-purple-600 hover:text-purple-800 transition-colors"
                   >
                     <svg
                       className="w-5 h-5"
@@ -769,36 +775,31 @@ export default function ChatPage() {
                     </svg>
                   </button>
                 </div>
-                <p className="text-xs text-purple-700 mb-2 hidden sm:block">
-                  Define a custom character or persona for AI to role-play.
-                </p>
                 <textarea
                   value={persona}
                   onChange={(e) => {
                     handlePersonaUpdate(e.target.value);
                   }}
-                  placeholder="Example: You are a wise mentor..."
-                  className="w-full h-20 sm:h-24 p-2 sm:p-3 border border-purple-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-purple-500 text-gray-900 text-sm"
-                  style={{ fontSize: "16px" }}
+                  placeholder="Example: You are my confident, flirty girlfriend named Tina..."
+                  className="w-full min-h-[3.75rem] sm:min-h-[4.75rem] p-3 sm:p-4 border border-purple-200/60 rounded-2xl bg-white/85 focus:outline-none focus:ring-2 focus:ring-purple-400 text-gray-900 text-sm sm:text-base"
+                  style={{ fontSize: "15px" }}
                 />
-                <div className="flex justify-between items-center mt-2">
-                  <span className="text-xs text-purple-600">
-                    {persona.length} chars
-                  </span>
+                <div className="flex items-center justify-between text-xs sm:text-sm text-purple-700/80">
+                  <span>{persona.length} characters</span>
                   <button
                     onClick={() => {
                       handlePersonaUpdate("");
                     }}
-                    className="text-xs text-red-500 hover:text-red-700"
+                    className="text-red-500 hover:text-red-600 transition-colors"
                   >
-                    Clear
+                    Clear persona
                   </button>
                 </div>
               </div>
             )}
 
             {/* Messages Area */}
-            <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-3 sm:p-4 lg:p-8 space-y-3 sm:space-y-4 lg:space-y-5 scrollbar-thin">
+            <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-3 sm:px-6 lg:px-10 py-4 sm:py-6 lg:py-8 space-y-4 sm:space-y-5 lg:space-y-6 scrollbar-thin">
               {messages.map((message, index) => (
                 <div
                   key={index}
@@ -809,8 +810,8 @@ export default function ChatPage() {
                   <div
                     className={`max-w-[85%] sm:max-w-[75%] lg:max-w-[65%] p-3 sm:p-4 lg:p-5 rounded-xl sm:rounded-2xl ${
                       message.role === "user"
-                        ? "bg-gradient-to-br from-purple-500 via-pink-500 to-cyan-500 text-white shadow-lg shadow-gray-500/30"
-                        : "bg-slate-900/40 backdrop-blur-md text-gray-100 border border-white/15 shadow-lg shadow-black/30"
+                        ? "bg-gradient-to-br from-[#ff6cab] via-[#ff8780] to-[#ffb36c] text-white shadow-lg shadow-pink-900/20"
+                        : "bg-gradient-to-br from-[#ae1e75]/90 via-[#c93387]/85 to-[#f06aa6]/80 backdrop-blur-lg text-gray-100 border border-[#ffb1ec]/40 shadow-lg shadow-black/25"
                     }`}
                   >
                     {/* Images */}
@@ -856,7 +857,7 @@ export default function ChatPage() {
               {/* Streaming Display */}
               {isStreamingInProgress && (
                 <div className="flex justify-start">
-                  <div className="bg-slate-900/40 backdrop-blur-md border border-white/15 rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-5 shadow-lg shadow-black/30 max-w-[85%] sm:max-w-[75%] lg:max-w-[65%]">
+                  <div className="bg-gradient-to-br from-[#ae1e75]/90 via-[#c93387]/85 to-[#f06aa6]/80 backdrop-blur-lg border border-[#ffb1ec]/40 rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-5 shadow-lg shadow-black/25 max-w-[85%] sm:max-w-[75%] lg:max-w-[65%]">
                     {toolProcessingMessage ? (
                       <div className="flex items-center gap-2 text-blue-200">
                         <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" />
@@ -886,32 +887,29 @@ export default function ChatPage() {
 
             {/* Input Area */}
             <div className="p-3 sm:p-4 lg:p-6 border-t border-white/10 shrink-0">
+              <div className="mb-2 text-xs sm:text-sm text-white/80 text-center sm:text-left">
+                Use <span className="font-semibold">/show</span> or <span className="font-semibold">/see</span> in your sentence to generate an image.
+              </div>
               <form onSubmit={sendMessage} className="flex gap-2 lg:gap-3">
                 <input
                   ref={messageInputRef}
                   type="text"
                   value={inputValue}
                   onChange={handleInputChange}
-                  placeholder="Type your message... (Use /show or /see to request an image)"
+                  placeholder="Type your message..."
                   disabled={isStreamingInProgress}
-                  className="flex-1 px-4 py-2 sm:py-3 lg:py-4 border-2 border-white/20 rounded-full text-black placeholder-gray-500 outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-200/50 transition-all disabled:opacity-50 bg-white/90 backdrop-blur-sm text-base lg:text-lg"
-                  style={{ fontSize: "16px" }}
+                  className="flex-1 px-4 py-2 sm:py-2.5 lg:py-3 border-2 border-white/20 rounded-full text-black placeholder-gray-500 outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-200/50 transition-all disabled:opacity-50 bg-white/90 backdrop-blur-sm text-sm sm:text-base"
+                  style={{ fontSize: "15px" }}
                   required
                 />
                 <button
                   type="submit"
                   disabled={isStreamingInProgress || !inputValue.trim()}
-                  className="bg-gradient-to-br from-purple-500 via-pink-500 to-cyan-500 text-white px-5 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 rounded-full font-semibold text-sm sm:text-base lg:text-lg shadow-lg shadow-gray-500/30 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                  className="bg-gradient-to-br from-[#6f5dfa] via-[#8f6cff] to-[#c178ff] text-white px-5 sm:px-6 lg:px-7 py-2 sm:py-2.5 lg:py-3 rounded-full font-semibold text-sm sm:text-base shadow-xl shadow-purple-900/25 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
                 >
                   Send
                 </button>
               </form>
-              <p className="hidden mt-2 text-xs sm:text-sm text-white/80 text-center sm:text-left">
-                Tip: Start your request with{" "}
-                <span className="font-semibold">/show</span> or{" "}
-                <span className="font-semibold">/see</span> whenever you want
-                Tina to generate an image.
-              </p>
             </div>
           </GlassEffect>
         </div>
