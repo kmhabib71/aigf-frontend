@@ -112,6 +112,11 @@ export default function ChatPage() {
   const streamingChatRef = useRef<any>(null);
   const messageInputRef = useRef<HTMLInputElement>(null);
   const pendingPersonaRef = useRef<string | null>(null);
+  const [imagePreview, setImagePreview] = useState<{
+    url: string;
+    alt?: string;
+  } | null>(null);
+  const personaPanelRef = useRef<HTMLDivElement | null>(null);
 
   // Mouse tracking effect
   useEffect(() => {
@@ -583,6 +588,31 @@ export default function ChatPage() {
     }
   };
 
+  useEffect(() => {
+    if (!imagePreview) return;
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setImagePreview(null);
+      }
+    };
+
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [imagePreview]);
+
+  const handleImagePreviewClose = () => {
+    setImagePreview(null);
+  };
+
+  const handleImagePreviewOverlayClick = (
+    event: React.MouseEvent<HTMLDivElement>
+  ) => {
+    if (event.target === event.currentTarget) {
+      handleImagePreviewClose();
+    }
+  };
+
   const handlePersonaUpdate = (value: string) => {
     setPersona(value);
     if (conversationId) {
@@ -592,6 +622,23 @@ export default function ChatPage() {
       pendingPersonaRef.current = value;
     }
   };
+
+  useEffect(() => {
+    if (!isPersonaExpanded) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        personaPanelRef.current &&
+        !personaPanelRef.current.contains(event.target as Node)
+      ) {
+        setIsPersonaExpanded(false);
+        setIsPersonaMinimized(true);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isPersonaExpanded]);
 
   return (
     <div
@@ -728,10 +775,13 @@ export default function ChatPage() {
 
             {/* Persona Panel */}
             {isPersonaExpanded && (
-              <div className="grid grid-cols-1 gap-3 sm:gap-4 border-b border-white/10 p-3 sm:p-4 lg:p-5 shrink-0 bg-white/40 backdrop-blur-xl rounded-t-2xl sm:rounded-t-3xl">
+              <div
+                ref={personaPanelRef}
+                className="grid grid-cols-1 gap-3 sm:gap-4 border-b border-white/10 p-3 sm:p-4 lg:p-5 shrink-0 bg-white/40 backdrop-blur-xl rounded-t-2xl sm:rounded-t-3xl"
+              >
                 <div className="flex items-start justify-between">
                   <div>
-                    <div className="flex items-center gap-2 text-purple-900">
+                    <div className="flex items-center gap-2 text-gray-900/40">
                       <svg
                         className="w-4 h-4 sm:w-5 sm:h-5"
                         fill="none"
@@ -749,8 +799,9 @@ export default function ChatPage() {
                         Custom Persona
                       </span>
                     </div>
-                    <p className="mt-1 text-xs sm:text-sm text-purple-700/80">
-                      Describe Tina's vibe so she stays in character for this chat.
+                    <p className="mt-1 text-xs sm:text-sm text-gray-700/80">
+                      Describe the persona so the AI stays in character for this
+                      chat.
                     </p>
                   </div>
                   <button
@@ -758,7 +809,7 @@ export default function ChatPage() {
                       setIsPersonaExpanded(false);
                       setIsPersonaMinimized(true);
                     }}
-                    className="text-purple-600 hover:text-purple-800 transition-colors"
+                    className="text-gray-900 hover:text-gray-800 transition-colors"
                   >
                     <svg
                       className="w-5 h-5"
@@ -780,11 +831,11 @@ export default function ChatPage() {
                   onChange={(e) => {
                     handlePersonaUpdate(e.target.value);
                   }}
-                  placeholder="Example: You are my confident, flirty girlfriend named Tina..."
+                  placeholder="Example: You are a confident, flirty partner who adores romantic adventures..."
                   className="w-full min-h-[3.75rem] sm:min-h-[4.75rem] p-3 sm:p-4 border border-purple-200/60 rounded-2xl bg-white/85 focus:outline-none focus:ring-2 focus:ring-purple-400 text-gray-900 text-sm sm:text-base"
                   style={{ fontSize: "15px" }}
                 />
-                <div className="flex items-center justify-between text-xs sm:text-sm text-purple-700/80">
+                <div className="flex items-center justify-between text-xs sm:text-sm text-gray-700/80">
                   <span>{persona.length} characters</span>
                   <button
                     onClick={() => {
@@ -823,7 +874,12 @@ export default function ChatPage() {
                             src={imageUrl}
                             alt={`Image ${imgIndex + 1}`}
                             className="max-w-full max-h-[60vh] w-auto h-auto object-contain rounded-lg cursor-pointer"
-                            onClick={() => window.open(imageUrl, "_blank")}
+                            onClick={() =>
+                              setImagePreview({
+                                url: imageUrl,
+                                alt: `Image ${imgIndex + 1}`,
+                              })
+                            }
                             onError={(e) => {
                               e.currentTarget.style.display = "none";
                             }}
@@ -886,9 +942,11 @@ export default function ChatPage() {
             </div>
 
             {/* Input Area */}
-            <div className="p-3 sm:p-4 lg:p-6 border-t border-white/10 shrink-0">
+            <div className="p-3 sm:p-4 lg:p-4 border-t border-white/10 shrink-0">
               <div className="mb-2 text-xs sm:text-sm text-white/80 text-center sm:text-left">
-                Use <span className="font-semibold">/show</span> or <span className="font-semibold">/see</span> in your sentence to generate an image.
+                Use <span className="font-semibold">/show</span> or{" "}
+                <span className="font-semibold">/see</span> in your sentence to
+                generate an image.
               </div>
               <form onSubmit={sendMessage} className="flex gap-2 lg:gap-3">
                 <input
@@ -914,6 +972,44 @@ export default function ChatPage() {
           </GlassEffect>
         </div>
       </div>
+
+      {imagePreview && (
+        <div
+          className="fixed inset-0 z-[999] flex items-center justify-center bg-black/75 backdrop-blur-sm px-4"
+          onMouseDown={handleImagePreviewOverlayClick}
+        >
+          <div className="relative max-w-5xl w-auto flex flex-col items-center gap-3">
+            <button
+              onClick={handleImagePreviewClose}
+              className="self-end text-white/80 hover:text-white transition-colors"
+              aria-label="Close image preview"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-7 w-7"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+            <img
+              src={imagePreview.url}
+              alt={imagePreview.alt || "Preview"}
+              className="max-h-[80vh] max-w-[90vw] w-auto rounded-3xl border border-white/20 shadow-2xl shadow-black/40"
+            />
+            {imagePreview.alt && (
+              <p className="text-sm text-white/80">{imagePreview.alt}</p>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Streaming Chat Component */}
       <StreamingChat
