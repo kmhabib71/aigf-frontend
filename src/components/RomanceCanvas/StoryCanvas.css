@@ -112,6 +112,7 @@
   cursor: pointer;
   box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);
   transition: transform 0.2s, box-shadow 0.2s;
+  white-space: nowrap;
 }
 
 .continue-button:hover:not(:disabled) {
@@ -128,6 +129,7 @@
 @media (max-width: 768px) {
   .story-canvas-container {
     padding: 15px;
+    padding-bottom: 150px; /* More space for stacked buttons */
   }
 
   .story-header h1 {
@@ -138,9 +140,25 @@
     left: 50%;
     transform: translateX(-50%);
     bottom: 15px;
+    flex-direction: column;
+    gap: 10px;
+    width: calc(100% - 30px);
+    max-width: 400px;
+  }
+
+  .continue-button {
+    width: 100%;
+    padding: 14px 24px;
+    font-size: 0.95rem;
+    white-space: normal;
+    text-align: center;
   }
 
   .guidance-input-container {
-    max-width: calc(100vw - 80px);
+    max-width: calc(100vw - 40px);
+    width: calc(100% - 30px);
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 145px;
   }
 }

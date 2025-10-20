@@ -232,9 +232,7 @@ export default function CreateStoryPage() {
       <Header />
 
       <div className="relative z-20 pt-24 pb-12 px-4">
-        <div className="max-w-4xl mx-auto space-y-6">
-
-          {/* Header Section */}
+        <div className="max-w-4xl mx-auto">
           <GlassEffect
             borderRadius="2rem"
             backgroundOpacity={15}
@@ -245,63 +243,31 @@ export default function CreateStoryPage() {
               displacement: 60,
             }}
           >
-            <div className="p-6 lg:p-8">
-              <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/60 rounded-[2rem] pointer-events-none"></div>
-              <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[2rem] pointer-events-none"></div>
-
-              <div className="relative z-10 text-center">
-                <h1 className="text-4xl font-bold text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] mb-2">
-                  Create Your Romance Canvas 💕
-                </h1>
-                <p className="text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-                  Describe your dream romance story and watch AI bring it to life with stunning visuals
-                </p>
-              </div>
-            </div>
-          </GlassEffect>
-
-          {/* Error Message */}
-          {error && (
-            <GlassEffect
-              borderRadius="2rem"
-              backgroundOpacity={15}
-              intensity={{
-                blur: 12,
-                saturation: 130,
-                brightness: 90,
-                displacement: 60,
-              }}
-            >
-              <div className="p-4">
-                <div className="absolute inset-0 bg-gradient-to-b from-red-900/40 to-red-900/50 rounded-[2rem] pointer-events-none"></div>
-                <div className="relative z-10">
-                  <p className="text-red-200 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-                    {error}
-                  </p>
-                </div>
-              </div>
-            </GlassEffect>
-          )}
-
-          {/* Story Details Section */}
-          <GlassEffect
-            borderRadius="2rem"
-            backgroundOpacity={15}
-            intensity={{
-              blur: 12,
-              saturation: 130,
-              brightness: 90,
-              displacement: 60,
-            }}
-          >
-            <div className="p-6 lg:p-8">
+            <div className="p-8 lg:p-10">
+              {/* Dark glossy overlay */}
               <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/60 rounded-[2rem] pointer-events-none"></div>
               <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[2rem] pointer-events-none"></div>
 
               <div className="relative z-10">
-                <h2 className="text-2xl font-bold text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] mb-6">
-                  Story Details
-                </h2>
+                {/* Header */}
+                <div className="mb-8">
+                  <h1 className="text-4xl font-bold text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] mb-2">
+                    Create Your Romance Canvas 💕
+                  </h1>
+                  <p className="text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                    Describe your dream romance story and watch AI bring it to
+                    life with stunning visuals
+                  </p>
+                </div>
+
+                {/* Error Message */}
+                {error && (
+                  <div className="mb-6 p-4 bg-red-900/40 backdrop-blur-sm border border-red-500/50 rounded-lg">
+                    <p className="text-red-200 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                      {error}
+                    </p>
+                  </div>
+                )}
 
                 {/* Story Title (Optional) */}
                 <div className="mb-6">
@@ -335,50 +301,11 @@ export default function CreateStoryPage() {
                     {prompt.length} characters (minimum 10 required)
                   </p>
                 </div>
-              </div>
-            </div>
-          </GlassEffect>
 
-          {/* Romance Tropes Section */}
-          <GlassEffect
-            borderRadius="2rem"
-            backgroundOpacity={15}
-            intensity={{
-              blur: 12,
-              saturation: 130,
-              brightness: 90,
-              displacement: 60,
-            }}
-          >
-            <div className="p-6 lg:p-8">
-              <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/60 rounded-[2rem] pointer-events-none"></div>
-              <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[2rem] pointer-events-none"></div>
-
-              <div className="relative z-10">
-                <TropeSelector selected={tropes} onChange={setTropes} />
-              </div>
-            </div>
-          </GlassEffect>
-
-          {/* Story Settings Section */}
-          <GlassEffect
-            borderRadius="2rem"
-            backgroundOpacity={15}
-            intensity={{
-              blur: 12,
-              saturation: 130,
-              brightness: 90,
-              displacement: 60,
-            }}
-          >
-            <div className="p-6 lg:p-8">
-              <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/60 rounded-[2rem] pointer-events-none"></div>
-              <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[2rem] pointer-events-none"></div>
-
-              <div className="relative z-10">
-                <h2 className="text-2xl font-bold text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] mb-6">
-                  Story Settings
-                </h2>
+                {/* Trope Selector */}
+                <div className="mb-6">
+                  <TropeSelector selected={tropes} onChange={setTropes} />
+                </div>
 
                 {/* Narrative Style Toggle */}
                 <div className="mb-6">
@@ -520,30 +447,13 @@ export default function CreateStoryPage() {
                     Choose the level of romance and intimacy for your story
                   </p>
                 </div>
-              </div>
-            </div>
-          </GlassEffect>
 
-          {/* Character Reference Section (Coming Soon) */}
-          <GlassEffect
-            borderRadius="2rem"
-            backgroundOpacity={15}
-            intensity={{
-              blur: 12,
-              saturation: 130,
-              brightness: 90,
-              displacement: 60,
-            }}
-          >
-            <div className="p-6 lg:p-8">
-              <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/60 rounded-[2rem] pointer-events-none"></div>
-              <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[2rem] pointer-events-none"></div>
-
-              <div className="relative z-10">
-                <label className="block text-lg font-semibold mb-2 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-                  Character Reference (Optional - Coming Soon)
-                </label>
-                <div className="border-2 border-dashed border-white/30 rounded-lg p-6 text-center bg-black/20 backdrop-blur-sm">
+                {/* Character Reference (Coming Soon) */}
+                <div className="mb-6">
+                  <label className="block text-lg font-semibold mb-2 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                    Character Reference (Optional - Coming Soon)
+                  </label>
+                  <div className="border-2 border-dashed border-white/30 rounded-lg p-6 text-center bg-black/20 backdrop-blur-sm">
                     <input
                       type="file"
                       accept="image/*"
@@ -565,31 +475,10 @@ export default function CreateStoryPage() {
                       </p>
                     </label>
                   </div>
-              </div>
-            </div>
-          </GlassEffect>
+                </div>
 
-          {/* Generation Options Section */}
-          <GlassEffect
-            borderRadius="2rem"
-            backgroundOpacity={15}
-            intensity={{
-              blur: 12,
-              saturation: 130,
-              brightness: 90,
-              displacement: 60,
-            }}
-          >
-            <div className="p-6 lg:p-8">
-              <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/60 rounded-[2rem] pointer-events-none"></div>
-              <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[2rem] pointer-events-none"></div>
-
-              <div className="relative z-10">
-                <h2 className="text-2xl font-bold text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] mb-6">
-                  Generation Options
-                </h2>
-
-                <div className="space-y-4">
+                {/* Generation Options */}
+                <div className="mb-8 space-y-4">
                   {/* Streaming Toggle */}
                   <div className=" hidden  items-center justify-between p-4 bg-purple-500/20 backdrop-blur-sm border border-purple-400/30 rounded-lg">
                     <div className="flex-1">
@@ -648,26 +537,7 @@ export default function CreateStoryPage() {
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          </GlassEffect>
 
-          {/* Generate Button Section */}
-          <GlassEffect
-            borderRadius="2rem"
-            backgroundOpacity={15}
-            intensity={{
-              blur: 12,
-              saturation: 130,
-              brightness: 90,
-              displacement: 60,
-            }}
-          >
-            <div className="p-0">
-              <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/60 rounded-[2rem] pointer-events-none"></div>
-              <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[2rem] pointer-events-none"></div>
-
-              <div className="relative z-10">
                 {/* Generate Button */}
                 <button
                   onClick={handleCreate}
@@ -675,7 +545,7 @@ export default function CreateStoryPage() {
                     isGenerating || !prompt.trim() || prompt.length < 10
                   }
                   className={`
-              w-full py-6 px-6 rounded-[2rem] font-bold text-lg transition-all transform hover:scale-[1.02]
+              w-full py-4 px-6 rounded-xl font-bold text-lg transition-all transform hover:scale-105
               ${
                 isGenerating || !prompt.trim() || prompt.length < 10
                   ? "bg-gray-600/30 backdrop-blur-sm text-gray-400 cursor-not-allowed"
@@ -709,10 +579,11 @@ export default function CreateStoryPage() {
                 </button>
 
                 {/* Info Box */}
-                <div className=" hidden p-5 bg-blue-500/10 backdrop-blur-sm border-t border-blue-400/20">
-                  <p className="text-sm text-white text-center drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                <div className=" hidden mt-6 p-4 bg-blue-500/20 backdrop-blur-sm border border-blue-400/30 rounded-lg">
+                  <p className="text-sm text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
                     <strong>💡 Tip:</strong> The AI will generate a 5-8 scene
-                    story with automatic visual moments
+                    story (800-1500 words) with automatic visual moments. You
+                    can add more images and edit text in the canvas view!
                   </p>
                 </div>
               </div>
