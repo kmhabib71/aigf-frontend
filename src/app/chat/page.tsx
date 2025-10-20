@@ -560,10 +560,11 @@ export default function ChatPage() {
       await fetch(
         `${backendUrl}/api/conversations/${activeConversationId}/persona`,
         {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ persona: personaText }),
-      });
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ persona: personaText }),
+        }
+      );
       console.log("🎭 Persona saved");
     } catch (error) {
       console.error("Error saving persona:", error);
@@ -809,7 +810,7 @@ export default function ChatPage() {
                     className={`max-w-[85%] sm:max-w-[75%] lg:max-w-[65%] p-3 sm:p-4 lg:p-5 rounded-xl sm:rounded-2xl ${
                       message.role === "user"
                         ? "bg-gradient-to-br from-purple-500 via-pink-500 to-cyan-500 text-white shadow-lg shadow-gray-500/30"
-                        : "bg-white/15 backdrop-blur-md text-gray-100 border border-white/30 shadow-lg shadow-black/20"
+                        : "bg-slate-900/40 backdrop-blur-md text-gray-100 border border-white/15 shadow-lg shadow-black/30"
                     }`}
                   >
                     {/* Images */}
@@ -831,7 +832,7 @@ export default function ChatPage() {
                     )}
 
                     <div
-                      className={`whitespace-pre-wrap leading-relaxed text-sm sm:text-base lg:text-lg ${
+                      className={`whitespace-pre-wrap leading-relaxed text-sm sm:text-base lg:text-base ${
                         message.role === "user"
                           ? "text-white drop-shadow-sm"
                           : "text-gray-50"
@@ -855,16 +856,16 @@ export default function ChatPage() {
               {/* Streaming Display */}
               {isStreamingInProgress && (
                 <div className="flex justify-start">
-                  <div className="bg-white/15 backdrop-blur-md border border-white/30 rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-5 shadow-lg shadow-black/20 max-w-[85%] sm:max-w-[75%] lg:max-w-[65%]">
+                  <div className="bg-slate-900/40 backdrop-blur-md border border-white/15 rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-5 shadow-lg shadow-black/30 max-w-[85%] sm:max-w-[75%] lg:max-w-[65%]">
                     {toolProcessingMessage ? (
-                      <div className="flex items-center gap-2 text-blue-300">
+                      <div className="flex items-center gap-2 text-blue-200">
                         <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" />
-                        <span className="text-sm sm:text-base lg:text-lg italic">
+                        <span className="text-sm sm:text-base lg:text-base italic">
                           {toolProcessingMessage}
                         </span>
                       </div>
                     ) : streamingContent ? (
-                      <div className="whitespace-pre-wrap leading-relaxed text-gray-50 text-sm sm:text-base lg:text-lg">
+                      <div className="whitespace-pre-wrap leading-relaxed text-gray-50 text-sm sm:text-base lg:text-base">
                         {streamingContent}
                         <div className="inline-block w-2 h-5 bg-purple-400 animate-pulse ml-1" />
                       </div>
@@ -891,7 +892,7 @@ export default function ChatPage() {
                   type="text"
                   value={inputValue}
                   onChange={handleInputChange}
-                  placeholder="Type your message..."
+                  placeholder="Type your message... (Use /show or /see to request an image)"
                   disabled={isStreamingInProgress}
                   className="flex-1 px-4 py-2 sm:py-3 lg:py-4 border-2 border-white/20 rounded-full text-black placeholder-gray-500 outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-200/50 transition-all disabled:opacity-50 bg-white/90 backdrop-blur-sm text-base lg:text-lg"
                   style={{ fontSize: "16px" }}
@@ -905,6 +906,12 @@ export default function ChatPage() {
                   Send
                 </button>
               </form>
+              <p className="hidden mt-2 text-xs sm:text-sm text-white/80 text-center sm:text-left">
+                Tip: Start your request with{" "}
+                <span className="font-semibold">/show</span> or{" "}
+                <span className="font-semibold">/see</span> whenever you want
+                Tina to generate an image.
+              </p>
             </div>
           </GlassEffect>
         </div>
