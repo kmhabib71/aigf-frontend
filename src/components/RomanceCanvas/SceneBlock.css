@@ -58,15 +58,20 @@
 .scene-image-container {
   position: relative;
   width: 100%;
-  max-height: 500px;
+  max-height: 600px;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f5f5f5;
 }
 
 .scene-image {
   width: 100%;
   height: auto;
+  max-height: 600px;
   display: block;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .scene-image-prompt-hint {

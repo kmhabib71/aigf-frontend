@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../../contexts/AuthContext";
 import CreditBalance from "../CreditBalance";
+import UserAvatar from "../UserAvatar";
 
 export default function Header() {
   const router = useRouter();
@@ -141,19 +142,11 @@ export default function Header() {
                 <div className="flex items-center gap-3">
                   {/* User Avatar */}
                   <div className="flex items-center gap-2 px-3 py-2 bg-purple-50 rounded-xl">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white text-sm font-semibold">
-                      {userProfile?.photoURL ? (
-                        <img
-                          src={userProfile.photoURL}
-                          alt={userProfile.displayName || "User"}
-                          className="w-full h-full rounded-full object-cover"
-                        />
-                      ) : (
-                        userProfile?.displayName?.[0]?.toUpperCase() ||
-                        user?.email?.[0]?.toUpperCase() ||
-                        "👤"
-                      )}
-                    </div>
+                    <UserAvatar
+                      photoURL={userProfile?.photoURL}
+                      displayName={userProfile?.displayName}
+                      size="sm"
+                    />
                     <div className="flex flex-col">
                       <span className="text-xs font-semibold text-gray-900">
                         {userProfile?.displayName || user?.email?.split("@")[0]}
@@ -326,19 +319,11 @@ export default function Header() {
               <>
                 {/* User Info in Mobile */}
                 <div className="flex items-center gap-3 py-3 px-4 bg-purple-50 rounded-xl">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white font-semibold">
-                    {userProfile?.photoURL ? (
-                      <img
-                        src={userProfile.photoURL}
-                        alt={userProfile.displayName || "User"}
-                        className="w-full h-full rounded-full object-cover"
-                      />
-                    ) : (
-                      userProfile?.displayName?.[0]?.toUpperCase() ||
-                      user?.email?.[0]?.toUpperCase() ||
-                      "👤"
-                    )}
-                  </div>
+                  <UserAvatar
+                    photoURL={userProfile?.photoURL}
+                    displayName={userProfile?.displayName}
+                    size="md"
+                  />
                   <div className="flex flex-col">
                     <span className="text-sm font-semibold text-gray-900">
                       {userProfile?.displayName || user?.email?.split("@")[0]}

@@ -23,6 +23,7 @@ export default function CreateStoryPage() {
   const [title, setTitle] = useState("Forbidden Office Romance");
   const [tropes, setTropes] = useState<string[]>(["slow-burn"]);
   const [narrativeStyle, setNarrativeStyle] = useState<"third-person" | "first-person">("third-person");
+  const [storyLength, setStoryLength] = useState(1500);
   const [spiceLevel, setSpiceLevel] = useState<"soft" | "medium" | "explicit">(
     "soft"
   );
@@ -125,6 +126,7 @@ export default function CreateStoryPage() {
           title: title.trim() || undefined,
           tropes,
           narrativeStyle,
+          storyLength,
           spiceLevel,
           characterRef: characterRefUrl,
           sessionId: sessionId || undefined,
@@ -342,6 +344,33 @@ export default function CreateStoryPage() {
             </div>
           </div>
 
+          {/* Story Length Slider */}
+          <div className="mb-6">
+            <label className="block text-lg font-semibold mb-3 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+              Story Length
+            </label>
+            <div className="flex items-center gap-4">
+              <input
+                type="range"
+                min="500"
+                max="5000"
+                step="100"
+                value={storyLength}
+                onChange={(e) => setStoryLength(parseInt(e.target.value))}
+                className="flex-1 h-2 bg-white/20 rounded-lg appearance-none cursor-pointer accent-purple-500"
+                disabled={isGenerating}
+              />
+              <span className="min-w-[120px] px-4 py-2 bg-purple-500/30 backdrop-blur-sm border border-purple-400/30 text-white rounded-lg font-medium text-center drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                {storyLength} words
+              </span>
+            </div>
+            <div className="flex justify-between text-xs text-white/80 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mt-2">
+              <span>Quick Read (500)</span>
+              <span>Standard (1500)</span>
+              <span>Epic (5000)</span>
+            </div>
+          </div>
+
           {/* Spice Level Slider */}
           <div className="mb-6">
             <label className="block text-lg font-semibold mb-3 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
@@ -527,6 +556,7 @@ export default function CreateStoryPage() {
               title={title.trim() || "Untitled Romance"}
               tropes={tropes}
               narrativeStyle={narrativeStyle}
+              storyLength={storyLength}
               spiceLevel={spiceLevel}
               userId={user.uid}
               socket={socket}

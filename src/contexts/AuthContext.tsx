@@ -63,9 +63,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(authUser);
 
       if (authUser) {
-        // Sync user to database first
-        await syncUserToDatabase(authUser);
-        // Then fetch their profile
+        // NOTE: Don't sync here - authService.signInWithGoogle() already synced
+        // Just fetch the profile
         await fetchUserProfile(authUser.uid);
         setAnonymousSession(null);
         setCanSendMessage(true);
@@ -82,12 +81,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   // Sync user to database (create or update)
+  // NOTE: Currently not called - authService.signInWithGoogle/Email already syncs
+  // Kept here as utility function for manual syncing if needed
   const syncUserToDatabase = async (authUser: AuthUser) => {
     try {
       const idToken = await authService.getIdToken();
-      if (!idToken) return;
+      if (!idToken) {
+        console.error("❌ [SYNC] No ID token available");
+        return;
+      }
 
-      await fetch(`${backendUrl}/api/auth/sync-user`, {
+      console.log(`🔄 [SYNC] Syncing user to backend: ${authUser.email}`);
+
+      const response = await fetch(`${backendUrl}/api/auth/sync-user`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -101,8 +107,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           emailVerified: authUser.emailVerified,
         }),
       });
-    } catch (error) {
-      console.error("Failed to sync user to database:", error);
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("❌ [SYNC] Backend sync failed:", errorData);
+        throw new Error(errorData.error || "Failed to sync user");
+      }
+
+      const data = await response.json();
+      console.log("✅ [SYNC] User synced successfully:", data);
+    } catch (error: any) {
+      console.error("❌ [SYNC] Failed to sync user to database:", error.message);
+      // Don't throw - allow auth to proceed even if sync fails
     }
   };
 

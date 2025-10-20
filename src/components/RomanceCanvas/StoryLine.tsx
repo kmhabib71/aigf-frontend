@@ -181,14 +181,14 @@ export default function StoryLine({
             className="action-button generate-image-button"
             title="Generate image for this line"
           >
-            {isGeneratingImage ? "⏳" : "🎨"} Generate Image
+            {isGeneratingImage ? "⏳" : "🎨"}
           </button>
           <button
             onClick={() => setShowComments(!showComments)}
             className="action-button comment-button"
             title="Add comment"
           >
-            💬 Comment
+            💬
           </button>
         </div>
       )}

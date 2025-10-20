@@ -131,6 +131,8 @@ class AuthService {
     try {
       const idToken = await user.getIdToken();
 
+      console.log(`🔄 [AUTH] Syncing user to backend: ${user.email}`);
+
       const response = await fetch(`${backendUrl}/api/auth/sync-user`, {
         method: "POST",
         headers: {
@@ -147,11 +149,17 @@ class AuthService {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to sync user to backend");
+        const errorData = await response.json();
+        console.error("❌ [AUTH] Backend sync failed:", errorData);
+        throw new Error(errorData.error || "Failed to sync user to backend");
       }
-    } catch (error) {
-      console.error("Backend sync error:", error);
-      // Don't throw - auth still works even if backend sync fails
+
+      const data = await response.json();
+      console.log("✅ [AUTH] User synced to backend successfully:", data);
+    } catch (error: any) {
+      console.error("❌ [AUTH] Backend sync error:", error.message);
+      // Re-throw the error so caller can handle it
+      throw error;
     }
   }
 

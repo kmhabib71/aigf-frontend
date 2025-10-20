@@ -763,7 +763,7 @@ export default function ChatPage() {
                             key={imgIndex}
                             src={imageUrl}
                             alt={`Image ${imgIndex + 1}`}
-                            className="max-w-full h-auto rounded-lg cursor-pointer"
+                            className="max-w-full max-h-[60vh] w-auto h-auto object-contain rounded-lg cursor-pointer"
                             onClick={() => window.open(imageUrl, "_blank")}
                             onError={(e) => {
                               e.currentTarget.style.display = "none";

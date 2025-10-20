@@ -22,6 +22,8 @@ export default function DashboardPage() {
   const [error, setError] = useState<string | null>(null);
   const [monthlyUsage, setMonthlyUsage] = useState<any>(null);
   const [usageLoading, setUsageLoading] = useState(true);
+  const [stories, setStories] = useState<any[]>([]);
+  const [storiesLoading, setStoriesLoading] = useState(true);
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
@@ -33,6 +35,7 @@ export default function DashboardPage() {
     if (isAuthenticated) {
       refreshUserProfile();
       fetchMonthlyUsage();
+      fetchUserStories();
     }
   }, [isAuthenticated]);
 
@@ -67,6 +70,39 @@ export default function DashboardPage() {
       console.error("Failed to fetch usage:", err);
     } finally {
       setUsageLoading(false);
+    }
+  };
+
+  const fetchUserStories = async () => {
+    try {
+      setStoriesLoading(true);
+
+      const currentUser = auth.currentUser;
+      if (!currentUser) {
+        console.error("No authenticated user");
+        setStoriesLoading(false);
+        return;
+      }
+
+      const token = await currentUser.getIdToken();
+
+      const response = await fetch(`${backendUrl}/api/romance/stories?limit=10`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Stories data:", data);
+        setStories(data.stories || []);
+      } else {
+        console.error("Failed to fetch stories:", response.statusText);
+      }
+    } catch (err) {
+      console.error("Failed to fetch stories:", err);
+    } finally {
+      setStoriesLoading(false);
     }
   };
 
@@ -594,14 +630,157 @@ export default function DashboardPage() {
                   </div>
                 </button>
                 <button
-                  onClick={() => router.push("/pricing")}
-                  className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white p-4 rounded-2xl hover:from-yellow-500 hover:to-orange-600 transition-all text-left"
+                  onClick={() => router.push("/romance/create")}
+                  className="bg-gradient-to-r from-pink-500 to-rose-600 text-white p-4 rounded-2xl hover:from-pink-600 hover:to-rose-700 transition-all text-left"
                 >
-                  <div className="text-2xl mb-2">⭐</div>
-                  <div className="font-semibold">View Plans</div>
-                  <div className="text-xs opacity-80">Compare features</div>
+                  <div className="text-2xl mb-2">✨</div>
+                  <div className="font-semibold">Create Story</div>
+                  <div className="text-xs opacity-80">New romance canvas</div>
                 </button>
               </div>
+            </div>
+
+            {/* User's Stories */}
+            <div className="bg-white rounded-3xl shadow-2xl p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-2xl font-bold text-gray-900">
+                  Your Romantic Stories 💕
+                </h3>
+                <button
+                  onClick={fetchUserStories}
+                  disabled={storiesLoading}
+                  className="text-indigo-600 hover:text-indigo-700 text-sm font-semibold disabled:opacity-50"
+                >
+                  {storiesLoading ? "Loading..." : "Refresh"}
+                </button>
+              </div>
+
+              {storiesLoading ? (
+                <div className="flex items-center justify-center py-12">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-4 border-purple-500"></div>
+                </div>
+              ) : stories.length === 0 ? (
+                <div className="text-center py-12">
+                  <div className="text-6xl mb-4">📖</div>
+                  <h4 className="text-xl font-bold text-gray-900 mb-2">
+                    No Stories Yet
+                  </h4>
+                  <p className="text-gray-600 mb-6">
+                    Start creating your first romantic story!
+                  </p>
+                  <button
+                    onClick={() => router.push("/romance/create")}
+                    className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-xl font-bold hover:shadow-xl hover:shadow-purple-500/40 transform hover:scale-105 transition-all"
+                  >
+                    ✨ Create Your First Story
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {stories.map((story) => {
+                    // Get first image from story scenes
+                    const storyImage = story.scenes?.[0]?.sceneImageUrl ||
+                                      story.scenes?.[0]?.visualMoments?.[0]?.imageUrl ||
+                                      '/image.jpg'; // Default fallback image
+
+                    return (
+                      <div
+                        key={story._id}
+                        onClick={() => router.push(`/romance/story/${story._id}`)}
+                        className="group cursor-pointer bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-purple-500/30 transition-all transform hover:scale-[1.02] border-2 border-purple-200/50"
+                      >
+                        {/* Story Image */}
+                        <div className="relative h-48 overflow-hidden">
+                          <img
+                            src={storyImage}
+                            alt={story.title}
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = '/image.jpg';
+                            }}
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+
+                          {/* Spice Level Badge */}
+                          {story.metadata?.spiceLevel && (
+                            <div className="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-bold text-white backdrop-blur-sm"
+                              style={{
+                                backgroundColor: story.metadata.spiceLevel === 'explicit' ? '#ef4444' :
+                                               story.metadata.spiceLevel === 'medium' ? '#f59e0b' :
+                                               '#10b981'
+                              }}
+                            >
+                              {story.metadata.spiceLevel === 'explicit' ? '🔥 Spicy' :
+                               story.metadata.spiceLevel === 'medium' ? '🌶️ Medium' :
+                               '💕 Soft'}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Story Info */}
+                        <div className="p-4">
+                          <h4 className="text-lg font-bold text-gray-900 mb-2 line-clamp-1 group-hover:text-purple-600 transition-colors">
+                            {story.title}
+                          </h4>
+
+                          <div className="flex items-center gap-3 text-sm text-gray-600 mb-3">
+                            <span className="flex items-center gap-1">
+                              <span>📖</span>
+                              {story.scenes?.length || 0} scenes
+                            </span>
+                            {story.metadata?.characters?.length > 0 && (
+                              <span className="flex items-center gap-1">
+                                <span>👥</span>
+                                {story.metadata.characters.length} characters
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Tropes */}
+                          {story.metadata?.tropes && story.metadata.tropes.length > 0 && (
+                            <div className="flex flex-wrap gap-2 mb-3">
+                              {story.metadata.tropes.slice(0, 2).map((trope: string, idx: number) => (
+                                <span
+                                  key={idx}
+                                  className="px-2 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-semibold"
+                                >
+                                  {trope}
+                                </span>
+                              ))}
+                              {story.metadata.tropes.length > 2 && (
+                                <span className="px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs">
+                                  +{story.metadata.tropes.length - 2} more
+                                </span>
+                              )}
+                            </div>
+                          )}
+
+                          {/* Date */}
+                          <div className="text-xs text-gray-500">
+                            Created {new Date(story.createdAt).toLocaleDateString('en-US', {
+                              month: 'short',
+                              day: 'numeric',
+                              year: 'numeric'
+                            })}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* View All Button */}
+              {stories.length > 0 && (
+                <div className="mt-6 text-center">
+                  <button
+                    onClick={() => router.push("/romance/stories")}
+                    className="text-purple-600 hover:text-purple-700 font-semibold text-sm"
+                  >
+                    View All Stories →
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>

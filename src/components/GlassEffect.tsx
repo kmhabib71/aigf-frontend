@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useId } from "react";
 
 interface GlassEffectProps {
   children: React.ReactNode;
@@ -27,7 +27,9 @@ const GlassEffect: React.FC<GlassEffectProps> = ({
   backgroundOpacity = 20,
   borderRadius = "1rem",
 }) => {
-  const filterId = `lensFilter-${Math.random().toString(36).substr(2, 9)}`;
+  // Use React's useId hook for stable SSR-safe IDs
+  const uniqueId = useId();
+  const filterId = `lensFilter-${uniqueId}`;
 
   return (
     <div
