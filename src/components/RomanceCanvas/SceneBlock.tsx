@@ -38,9 +38,19 @@ interface SceneBlockProps {
   storyId: string;
   idToken: string;
   socket: Socket | null;
+  allowInteractions: boolean;
+  onRequireAuth?: () => void;
 }
 
-export default function SceneBlock({ scene, sceneIdx, storyId, idToken, socket }: SceneBlockProps) {
+export default function SceneBlock({
+  scene,
+  sceneIdx,
+  storyId,
+  idToken,
+  socket,
+  allowInteractions,
+  onRequireAuth,
+}: SceneBlockProps) {
   const [expanded, setExpanded] = useState(true);
 
   // Parse scene content into lines
@@ -94,6 +104,8 @@ export default function SceneBlock({ scene, sceneIdx, storyId, idToken, socket }
               socket={socket}
               visualMoments={scene.visualMoments.filter(vm => vm.lineNumber === lineIdx)}
               comments={scene.comments.filter(c => c.lineNumber === lineIdx)}
+              allowInteractions={allowInteractions}
+              onRequireAuth={onRequireAuth}
             />
           ))}
         </div>

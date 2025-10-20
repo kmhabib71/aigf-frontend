@@ -22,6 +22,8 @@ interface CommentsThreadProps {
   idToken: string;
   socket: Socket | null;
   onClose: () => void;
+  canComment: boolean;
+  onRequireAuth?: () => void;
 }
 
 export default function CommentsThread({
@@ -32,11 +34,18 @@ export default function CommentsThread({
   idToken,
   socket,
   onClose,
+  canComment,
+  onRequireAuth,
 }: CommentsThreadProps) {
   const [newCommentText, setNewCommentText] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmitComment = async () => {
+    if (!canComment) {
+      onRequireAuth?.();
+      return;
+    }
+
     if (!newCommentText.trim() || isSubmitting) return;
 
     setIsSubmitting(true);
@@ -78,6 +87,11 @@ export default function CommentsThread({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (!canComment) {
+      onRequireAuth?.();
+      return;
+    }
+
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSubmitComment();
@@ -126,22 +140,31 @@ export default function CommentsThread({
       {/* New Comment Input */}
       <div className="new-comment-container">
         <textarea
-          placeholder="Add your comment..."
+          placeholder={canComment ? "Add your comment..." : "Sign in to comment"}
           value={newCommentText}
           onChange={(e) => setNewCommentText(e.target.value)}
           onKeyDown={handleKeyDown}
           maxLength={500}
           rows={2}
           className="new-comment-input text-gray-900"
-          disabled={isSubmitting}
+          disabled={isSubmitting || !canComment}
         />
         <button
-          onClick={handleSubmitComment}
-          disabled={!newCommentText.trim() || isSubmitting}
+          onClick={() => {
+            if (!canComment) {
+              onRequireAuth?.();
+              return;
+            }
+            handleSubmitComment();
+          }}
+          disabled={(canComment && !newCommentText.trim()) || isSubmitting}
           className="submit-comment-button"
         >
-          {isSubmitting ? "Posting..." : "Post"}
+          {!canComment ? "Sign in to Comment" : isSubmitting ? "Posting..." : "Post"}
         </button>
+        {!canComment && (
+          <p className="text-xs text-gray-500 mt-2">Sign in to leave a comment.</p>
+        )}
       </div>
     </div>
   );

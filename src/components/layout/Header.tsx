@@ -40,7 +40,7 @@ export default function Header() {
             {/* Logo */}
             <div
               className="flex items-center gap-3 cursor-pointer group"
-              onClick={() => router.push("/landing")}
+              onClick={() => router.push("/")}
             >
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-300 to-pink-300 rounded-2xl blur-md opacity-60 group-hover:opacity-100 transition-opacity"></div>

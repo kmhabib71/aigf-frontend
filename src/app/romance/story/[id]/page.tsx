@@ -12,6 +12,7 @@ import { auth } from "@/lib/firebase";
 import { backendUrl } from "@/lib/config";
 
 interface Story {
+  userId: string;
   _id: string;
   title: string;
   prompt: string;
@@ -61,11 +62,14 @@ export default function StoryViewPage() {
   const { user, isAuthenticated } = useAuth();
   const storyId = params.id as string;
 
-  const [story, setStory] = useState<Story | null>(null);
+  const [story, setStory] = useState<(Story & { isOwner?: boolean }) | null>(
+    null
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [socket, setSocket] = useState<Socket | null>(null);
   const [idToken, setIdToken] = useState<string>("");
+  const [visibilityUpdating, setVisibilityUpdating] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
@@ -101,55 +105,89 @@ export default function StoryViewPage() {
   }, [isAuthenticated]);
 
   useEffect(() => {
+    if (!storyId) return;
+    loadStory();
+  }, [storyId, isAuthenticated]);
+
+  useEffect(() => {
     if (!isAuthenticated) {
-      router.push("/login?redirect=/romance/story/" + storyId);
+      setIdToken("");
       return;
     }
 
-    loadStory();
+    let isMounted = true;
+
+    const refreshToken = async (force = false) => {
+      const currentUser = auth.currentUser;
+      if (!currentUser) return;
+      const freshToken = await currentUser.getIdToken(force);
+      if (isMounted) {
+        setIdToken(freshToken);
+      }
+    };
+
+    refreshToken(true);
 
     // Refresh token every 50 minutes (tokens expire after 60 minutes)
-    const tokenRefreshInterval = setInterval(async () => {
-      const currentUser = auth.currentUser;
-      if (currentUser) {
-        const freshToken = await currentUser.getIdToken(true); // force refresh
-        setIdToken(freshToken);
-        console.log("🔄 Token refreshed");
-      }
+    const tokenRefreshInterval = setInterval(() => {
+      refreshToken(true);
     }, 50 * 60 * 1000); // 50 minutes
 
-    return () => clearInterval(tokenRefreshInterval);
-  }, [isAuthenticated, storyId]);
+    return () => {
+      isMounted = false;
+      clearInterval(tokenRefreshInterval);
+    };
+  }, [isAuthenticated]);
 
   const loadStory = async () => {
-    try {
-      // Get token from Firebase auth.currentUser instead of the AuthUser object
-      const currentUser = auth.currentUser;
-      if (!currentUser) {
-        throw new Error("Authentication required");
-      }
+    setLoading(true);
+    setError("");
 
-      const token = await currentUser.getIdToken();
-      setIdToken(token);
+    try {
+      const currentUser = auth.currentUser;
+      let token = "";
+
+      if (currentUser) {
+        token = await currentUser.getIdToken();
+        setIdToken(token);
+      } else {
+        setIdToken("");
+      }
 
       const response = await fetch(
         `${backendUrl}/api/romance/story/${storyId}`,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: token
+            ? {
+                Authorization: `Bearer ${token}`,
+              }
+            : undefined,
         }
       );
 
       if (!response.ok) {
+        if (response.status === 401) {
+          setStory(null);
+          setError("Please sign in to view this story.");
+          return;
+        }
+
+        if (response.status === 403) {
+          setStory(null);
+          setError("This story is private or you do not have access.");
+          return;
+        }
+
         throw new Error("Failed to load story");
       }
 
       const data = await response.json();
       setStory(data);
+      setError("");
     } catch (err: any) {
       console.error("Load story error:", err);
-      setError(err.message);
+      setError(err?.message || "Failed to load story");
+      setStory(null);
     } finally {
       setLoading(false);
     }
@@ -159,24 +197,51 @@ export default function StoryViewPage() {
     setStory(updatedStory);
   };
 
-  if (!isAuthenticated) {
-    return (
-      <div
-        className="min-h-screen flex items-center justify-center relative overflow-hidden"
-        style={{
-          backgroundImage: 'url("/image.jpg")',
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          backgroundAttachment: "fixed",
-        }}
-      >
-        <p className="text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-          Redirecting to login...
-        </p>
-      </div>
-    );
-  }
+  const handleVisibilityToggle = async () => {
+    if (!story) return;
+
+    try {
+      const currentUser = auth.currentUser;
+      if (!currentUser) {
+        router.push(`/login?redirect=/romance/story/${storyId}`);
+        return;
+      }
+
+      setVisibilityUpdating(true);
+      const token = await currentUser.getIdToken();
+      const nextVisibility =
+        story.visibility === "public" ? "private" : "public";
+
+      const response = await fetch(
+        `${backendUrl}/api/romance/story/${storyId}/visibility`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ visibility: nextVisibility }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || "Failed to update visibility");
+      }
+
+      const data = await response.json();
+      setStory(data.story);
+    } catch (err: any) {
+      console.error("Update visibility error:", err);
+      alert(err?.message || "Failed to update story visibility");
+    } finally {
+      setVisibilityUpdating(false);
+    }
+  };
+
+  const requireAuth = () => {
+    router.push(`/login?redirect=/romance/story/${storyId}`);
+  };
 
   if (loading) {
     return (
@@ -190,7 +255,7 @@ export default function StoryViewPage() {
           backgroundAttachment: "fixed",
         }}
       >
-        {/* Animated Background Orbs */}
+            Back
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
           <div
             className="absolute w-[300px] sm:w-[500px] lg:w-[800px] h-[300px] sm:h-[500px] lg:h-[800px] rounded-full opacity-10 sm:opacity-15 lg:opacity-20 animate-float-slow"
@@ -224,7 +289,7 @@ export default function StoryViewPage() {
           backgroundAttachment: "fixed",
         }}
       >
-        {/* Animated Background Orbs */}
+            Back
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
           <div
             className="absolute w-[300px] sm:w-[500px] lg:w-[800px] h-[300px] sm:h-[500px] lg:h-[800px] rounded-full opacity-10 sm:opacity-15 lg:opacity-20 animate-float-slow"
@@ -267,7 +332,7 @@ export default function StoryViewPage() {
                     onClick={() => router.push("/romance/create")}
                     className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-bold hover:shadow-xl hover:shadow-purple-500/40 transform hover:scale-105 transition-all shadow-lg shadow-purple-500/30"
                   >
-                    ✨ Create New Story
+                    Create New Story
                   </button>
                   <button
                     onClick={() => router.push("/")}
@@ -284,6 +349,37 @@ export default function StoryViewPage() {
     );
   }
 
+  const isOwner =
+    story.isOwner !== undefined
+      ? story.isOwner
+      : !!(user?.uid && story.userId === user.uid);
+  const isStoryPublic = story.visibility === "public";
+  const canUseInteractiveFeatures = Boolean(idToken);
+  const visibilityBadgeClasses = isStoryPublic
+    ? "px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-100 border border-emerald-300/40"
+    : "px-3 py-1 rounded-full text-xs font-semibold bg-white/10 text-white border border-white/20";
+  const visibilityLabel = isStoryPublic ? "Public" : "Private";
+
+  const chatButtonNode =
+    story.metadata.characters && story.metadata.characters.length > 0
+      ? isAuthenticated
+        ? (
+            <ChatWithCharacter
+              storyId={storyId}
+              socket={socket}
+              characters={story.metadata.characters}
+            />
+          )
+        : (
+            <button
+              onClick={requireAuth}
+              className="px-6 py-3 bg-white/10 border border-white/25 text-white rounded-full font-semibold shadow-lg hover:bg-white/15 transition-all"
+            >
+              Sign in to Chat
+            </button>
+          )
+      : undefined;
+
   return (
     <div
       className="min-h-screen relative overflow-hidden"
@@ -295,7 +391,7 @@ export default function StoryViewPage() {
         backgroundAttachment: "fixed",
       }}
     >
-      {/* Animated Background Orbs */}
+            Back
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div
           className="absolute w-[300px] sm:w-[500px] lg:w-[800px] h-[300px] sm:h-[500px] lg:h-[800px] rounded-full opacity-10 sm:opacity-15 lg:opacity-20 animate-float-slow"
@@ -331,26 +427,43 @@ export default function StoryViewPage() {
 
       {/* Navigation Bar */}
       <div className="bg-black/40 backdrop-blur-2xl border-b border-white/10 sticky top-0 z-50 shadow-lg shadow-purple-500/20">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center gap-3">
           <button
             onClick={() => router.push("/")}
             className="text-white hover:text-purple-300 flex items-center gap-2 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] font-semibold transition-colors"
           >
-            ← Back
+            Back
           </button>
-          <h2 className="text-lg font-semibold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] truncate max-w-md">
+          <h2 className="text-lg font-semibold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] flex-1 text-center sm:text-left truncate">
             {story.title}
           </h2>
-          <button
-            onClick={() => router.push("/romance/create")}
-            className="px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl text-sm font-bold hover:shadow-lg hover:shadow-purple-500/40 transform hover:scale-105 transition-all shadow-md shadow-purple-500/30"
-          >
-            ✨ New Story
-          </button>
+          <div className="flex items-center gap-2">
+            <span className={visibilityBadgeClasses}>{visibilityLabel}</span>
+            {isOwner && (
+              <button
+                onClick={handleVisibilityToggle}
+                disabled={visibilityUpdating}
+                className="px-4 py-2 bg-white/10 border border-white/30 text-white rounded-xl text-sm font-semibold hover:bg-white/20 transition-all disabled:opacity-60"
+              >
+                {visibilityUpdating
+                  ? "Updating..."
+                  : isStoryPublic
+                  ? "Make Private"
+                  : "Make Public"}
+              </button>
+            )}
+            <button
+              onClick={() => router.push("/romance/create")}
+              className="px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl text-sm font-bold hover:shadow-lg hover:shadow-purple-500/40 transform hover:scale-105 transition-all shadow-md shadow-purple-500/30"
+            >
+              New Story
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Main Story Canvas */}
+
       <div className="py-8 relative z-20">
         <StoryCanvas
           story={story}
@@ -358,16 +471,10 @@ export default function StoryViewPage() {
           socket={socket}
           onStoryUpdate={handleStoryUpdate}
           idToken={idToken}
-          chatButton={
-            story.metadata.characters &&
-            story.metadata.characters.length > 0 ? (
-              <ChatWithCharacter
-                storyId={storyId}
-                socket={socket}
-                characters={story.metadata.characters}
-              />
-            ) : undefined
-          }
+          canContinue={isOwner}
+          allowInteractions={canUseInteractiveFeatures}
+          onRequireAuth={!canUseInteractiveFeatures ? requireAuth : undefined}
+          chatButton={chatButtonNode}
         />
       </div>
 

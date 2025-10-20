@@ -33,6 +33,8 @@ interface StoryLineProps {
   socket: Socket | null;
   visualMoments: VisualMoment[];
   comments: Comment[];
+  allowInteractions: boolean;
+  onRequireAuth?: () => void;
 }
 
 export default function StoryLine({
@@ -44,6 +46,8 @@ export default function StoryLine({
   socket,
   visualMoments,
   comments,
+  allowInteractions,
+  onRequireAuth,
 }: StoryLineProps) {
   const [showActions, setShowActions] = useState(false);
   const [showComments, setShowComments] = useState(false);
@@ -86,6 +90,11 @@ export default function StoryLine({
   }, [showActions]);
 
   const handleGenerateImage = async () => {
+    if (!allowInteractions) {
+      onRequireAuth?.();
+      return;
+    }
+
     if (isGeneratingImage) return;
 
     setIsGeneratingImage(true);
@@ -227,6 +236,8 @@ export default function StoryLine({
           storyId={storyId}
           idToken={idToken}
           socket={socket}
+          canComment={allowInteractions}
+          onRequireAuth={onRequireAuth}
           onClose={() => setShowComments(false)}
         />
       )}
@@ -248,6 +259,9 @@ export default function StoryLine({
           <button
             onClick={(e) => {
               e.stopPropagation();
+              if (!allowInteractions) {
+                onRequireAuth?.();
+              }
               setShowComments(!showComments);
             }}
             className="action-button comment-button"
