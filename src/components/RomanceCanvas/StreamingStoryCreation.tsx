@@ -57,6 +57,12 @@ export default function StreamingStoryCreation({
   const [storyTitle, setStoryTitle] = useState('');
   const [currentSceneIdx, setCurrentSceneIdx] = useState(-1);
   const [estimatedTimeRemaining, setEstimatedTimeRemaining] = useState(60);
+
+  // Streaming metrics for real-time feedback
+  const [streamingChars, setStreamingChars] = useState(0);
+  const [streamingWords, setStreamingWords] = useState(0);
+  const [streamingChunks, setStreamingChunks] = useState(0);
+
   const sessionId = useRef(`session-${Date.now()}-${Math.random().toString(36).substring(7)}`);
   const streamingTextRef = useRef('');
   const hasStartedRef = useRef(false);
@@ -215,6 +221,26 @@ export default function StreamingStoryCreation({
       console.log('📥 [CLIENT] *** handleTextChunk CALLED ***', data.chunk);
       streamingTextRef.current += data.chunk;
       setStreamingText(prevText => prevText + data.chunk);
+
+      // Track streaming metrics in real-time
+      const chunkLength = data.chunk.length;
+      const chunkWords = data.chunk.split(/\s+/).filter(w => w.length > 0).length;
+
+      setStreamingChars(prev => prev + chunkLength);
+      setStreamingWords(prev => prev + chunkWords);
+      setStreamingChunks(prev => prev + 1);
+
+      // Micro-progress during outline streaming (10% → 25%)
+      // Estimate: GPT-4o-mini and Venice both generate ~1000-2000 chars for outline
+      if (stage === 'outline') {
+        const estimatedTotalChars = 1800; // Works for both GPT and Venice
+        const currentChars = streamingTextRef.current.length;
+        const charsProgress = Math.min(15, (currentChars / estimatedTotalChars) * 15);
+        const newTarget = Math.min(25, 10 + charsProgress);
+
+        targetProgressRef.current = newTarget;
+        console.log(`📊 [STREAMING] ${currentChars} chars → ${newTarget.toFixed(1)}% progress`);
+      }
     };
 
     // Listen for generation updates
@@ -232,6 +258,14 @@ export default function StreamingStoryCreation({
         }
 
         switch (data.stage) {
+          case 'outline_complete':
+            console.log('📡 [CLIENT] Outline complete, resetting streaming metrics');
+            // Reset streaming metrics after outline completes
+            setStreamingChars(0);
+            setStreamingWords(0);
+            setStreamingChunks(0);
+            break;
+
           case 'scenes_parsed':
             console.log('📡 [CLIENT] Initializing scenes array with', data.sceneCount, 'scenes');
             setStoryTitle(data.title || title);
@@ -447,6 +481,33 @@ export default function StreamingStoryCreation({
             {message && message !== currentStageInfo.description && (
               <div className="text-sm pl-13 opacity-80 mt-1">
                 {message}
+              </div>
+            )}
+
+            {/* Streaming Metrics - Show during outline generation */}
+            {stage === 'outline' && streamingChars > 0 && (
+              <div className="mt-3 pt-3 border-t border-current/20">
+                <div className="flex items-center gap-4 text-sm font-mono">
+                  <div className="flex items-center gap-2">
+                    <span className="animate-pulse text-base">✍️</span>
+                    <span className="font-bold">{streamingChars.toLocaleString()}</span>
+                    <span className="opacity-70">characters</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span>•</span>
+                    <span className="font-bold">{streamingWords.toLocaleString()}</span>
+                    <span className="opacity-70">words</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span>•</span>
+                    <span className="font-bold">{streamingChunks}</span>
+                    <span className="opacity-70">chunks</span>
+                  </div>
+                  <div className="ml-auto flex items-center gap-1 text-xs opacity-60">
+                    <div className="w-2 h-2 bg-current rounded-full animate-pulse"></div>
+                    <span>streaming...</span>
+                  </div>
+                </div>
               </div>
             )}
           </div>
