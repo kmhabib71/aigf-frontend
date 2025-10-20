@@ -22,7 +22,9 @@ export default function CreateStoryPage() {
   );
   const [title, setTitle] = useState("Forbidden Office Romance");
   const [tropes, setTropes] = useState<string[]>(["slow-burn"]);
-  const [narrativeStyle, setNarrativeStyle] = useState<"third-person" | "first-person">("third-person");
+  const [narrativeStyle, setNarrativeStyle] = useState<
+    "third-person" | "first-person"
+  >("third-person");
   const [storyLength, setStoryLength] = useState(1500);
   const [spiceLevel, setSpiceLevel] = useState<"soft" | "medium" | "explicit">(
     "soft"
@@ -230,279 +232,319 @@ export default function CreateStoryPage() {
       <Header />
 
       <div className="relative z-20 pt-24 pb-12 px-4">
-      <div className="max-w-4xl mx-auto">
-        <GlassEffect
-          borderRadius="2rem"
-          backgroundOpacity={15}
-          intensity={{
-            blur: 12,
-            saturation: 130,
-            brightness: 90,
-            displacement: 60,
-          }}
-        >
-          <div className="p-8 lg:p-10">
-          {/* Dark glossy overlay */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/60 rounded-[2rem] pointer-events-none"></div>
-          <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[2rem] pointer-events-none"></div>
+        <div className="max-w-4xl mx-auto">
+          <GlassEffect
+            borderRadius="2rem"
+            backgroundOpacity={15}
+            intensity={{
+              blur: 12,
+              saturation: 130,
+              brightness: 90,
+              displacement: 60,
+            }}
+          >
+            <div className="p-8 lg:p-10">
+              {/* Dark glossy overlay */}
+              <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/60 rounded-[2rem] pointer-events-none"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[2rem] pointer-events-none"></div>
 
-          <div className="relative z-10">
-          {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] mb-2">
-              Create Your Romance Canvas 💕
-            </h1>
-            <p className="text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-              Describe your dream romance story and watch AI bring it to life
-              with stunning visuals
-            </p>
-          </div>
-
-          {/* Error Message */}
-          {error && (
-            <div className="mb-6 p-4 bg-red-900/40 backdrop-blur-sm border border-red-500/50 rounded-lg">
-              <p className="text-red-200 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">{error}</p>
-            </div>
-          )}
-
-          {/* Story Title (Optional) */}
-          <div className="mb-6">
-            <label className="block text-lg font-semibold mb-2 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-              Story Title (Optional)
-            </label>
-            <input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="e.g., Forbidden Office Romance"
-              className="w-full px-4 py-3 border border-white/20 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-black/30 backdrop-blur-sm text-white placeholder-white/60"
-              disabled={isGenerating}
-            />
-          </div>
-
-          {/* Story Prompt */}
-          <div className="mb-6">
-            <label className="block text-lg font-semibold mb-2 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-              Story Prompt <span className="text-red-400">*</span>
-            </label>
-            <textarea
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Example: A forbidden office romance between a CEO and their new intern, filled with tension and secret glances across the boardroom..."
-              rows={5}
-              className="w-full px-4 py-3 border border-white/20 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 resize-none bg-black/30 backdrop-blur-sm text-white placeholder-white/60"
-              disabled={isGenerating}
-            />
-            <p className="text-sm text-white/80 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mt-2">
-              {prompt.length} characters (minimum 10 required)
-            </p>
-          </div>
-
-          {/* Trope Selector */}
-          <div className="mb-6">
-            <TropeSelector selected={tropes} onChange={setTropes} />
-          </div>
-
-          {/* Narrative Style Toggle */}
-          <div className="mb-6">
-            <label className="block text-lg font-semibold mb-3 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-              Narrative Style
-            </label>
-            <div className="flex gap-4">
-              <button
-                type="button"
-                onClick={() => setNarrativeStyle("third-person")}
-                disabled={isGenerating}
-                className={`flex-1 px-4 py-3 rounded-lg font-semibold transition-all ${
-                  narrativeStyle === "third-person"
-                    ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg"
-                    : "bg-white/10 text-white/70 hover:bg-white/20 border border-white/20"
-                } disabled:opacity-50`}
-              >
-                <div className="text-left">
-                  <div className="font-bold">📖 Third Person</div>
-                  <div className="text-sm opacity-80">Cinematic storytelling</div>
-                  <div className="text-xs opacity-60 mt-1">"He nervously waited..."</div>
+              <div className="relative z-10">
+                {/* Header */}
+                <div className="mb-8">
+                  <h1 className="text-4xl font-bold text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] mb-2">
+                    Create Your Romance Canvas 💕
+                  </h1>
+                  <p className="text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                    Describe your dream romance story and watch AI bring it to
+                    life with stunning visuals
+                  </p>
                 </div>
-              </button>
-              <button
-                type="button"
-                onClick={() => setNarrativeStyle("first-person")}
-                disabled={isGenerating}
-                className={`flex-1 px-4 py-3 rounded-lg font-semibold transition-all ${
-                  narrativeStyle === "first-person"
-                    ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg"
-                    : "bg-white/10 text-white/70 hover:bg-white/20 border border-white/20"
-                } disabled:opacity-50`}
-              >
-                <div className="text-left">
-                  <div className="font-bold">✍️ First Person</div>
-                  <div className="text-sm opacity-80">Personal diary style</div>
-                  <div className="text-xs opacity-60 mt-1">"I nervously waited..."</div>
-                </div>
-              </button>
-            </div>
-          </div>
 
-          {/* Story Length Slider */}
-          <div className="mb-6">
-            <label className="block text-lg font-semibold mb-3 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-              Story Length
-            </label>
-            <div className="flex items-center gap-4">
-              <input
-                type="range"
-                min="500"
-                max="5000"
-                step="100"
-                value={storyLength}
-                onChange={(e) => setStoryLength(parseInt(e.target.value))}
-                className="flex-1 h-2 bg-white/20 rounded-lg appearance-none cursor-pointer accent-purple-500"
-                disabled={isGenerating}
-              />
-              <span className="min-w-[120px] px-4 py-2 bg-purple-500/30 backdrop-blur-sm border border-purple-400/30 text-white rounded-lg font-medium text-center drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-                {storyLength} words
-              </span>
-            </div>
-            <div className="flex justify-between text-xs text-white/80 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mt-2">
-              <span>Quick Read (500)</span>
-              <span>Standard (1500)</span>
-              <span>Epic (5000)</span>
-            </div>
-          </div>
-
-          {/* Spice Level Slider */}
-          <div className="mb-6">
-            <label className="block text-lg font-semibold mb-3 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-              Intimacy Level
-            </label>
-            <div className="flex items-center gap-4">
-              <input
-                type="range"
-                min="0"
-                max="2"
-                value={
-                  spiceLevel === "soft" ? 0 : spiceLevel === "medium" ? 1 : 2
-                }
-                onChange={(e) => {
-                  const levels: ("soft" | "medium" | "explicit")[] = [
-                    "soft",
-                    "medium",
-                    "explicit",
-                  ];
-                  setSpiceLevel(levels[parseInt(e.target.value)]);
-                }}
-                className="flex-1 h-2 bg-white/20 rounded-lg appearance-none cursor-pointer accent-pink-500"
-                disabled={isGenerating}
-              />
-              <span className="min-w-[100px] px-4 py-2 bg-pink-500/30 backdrop-blur-sm border border-pink-400/30 text-white rounded-lg font-medium text-center drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-                {spiceLevel === "soft" && "😊 Sweet"}
-                {spiceLevel === "medium" && "🔥 Passionate"}
-                {spiceLevel === "explicit" && "🌶️ Explicit"}
-              </span>
-            </div>
-            <div className="flex justify-between text-xs text-white/80 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mt-2">
-              <span>Sweet & Tender</span>
-              <span>Passionate & Sensual</span>
-              <span>Mature & Explicit</span>
-            </div>
-          </div>
-
-          {/* Character Reference (Coming Soon) */}
-          <div className="mb-6">
-            <label className="block text-lg font-semibold mb-2 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-              Character Reference (Optional - Coming Soon)
-            </label>
-            <div className="border-2 border-dashed border-white/30 rounded-lg p-6 text-center bg-black/20 backdrop-blur-sm">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleCharacterUpload}
-                className="hidden"
-                id="character-upload"
-                disabled={true} // Disabled for MVP
-              />
-              <label
-                htmlFor="character-upload"
-                className="cursor-not-allowed opacity-50"
-              >
-                <div className="text-4xl mb-2">📷</div>
-                <p className="text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-                  Upload a character photo for consistent visuals
-                </p>
-                <p className="text-sm text-white/60 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mt-1">
-                  (Feature coming in Phase 2)
-                </p>
-              </label>
-            </div>
-          </div>
-
-          {/* Generation Options */}
-          <div className="mb-8 space-y-4">
-            {/* Streaming Toggle */}
-            <div className="flex items-center justify-between p-4 bg-purple-500/20 backdrop-blur-sm border border-purple-400/30 rounded-lg">
-              <div className="flex-1">
-                <label className="flex items-center gap-3 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={useStreaming}
-                    onChange={(e) => setUseStreaming(e.target.checked)}
-                    disabled={isGenerating}
-                    className="w-5 h-5 text-pink-500 bg-black/30 border-white/30 rounded focus:ring-pink-500 focus:ring-2"
-                  />
-                  <div>
-                    <span className="text-base font-semibold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-                      Real-Time Story Streaming ✨
-                    </span>
-                    <p className="text-sm text-white/80 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mt-1">
-                      {useStreaming
-                        ? "Watch your story come to life in real-time with progressive text generation"
-                        : "Generate the complete story at once (faster but no preview)"}
+                {/* Error Message */}
+                {error && (
+                  <div className="mb-6 p-4 bg-red-900/40 backdrop-blur-sm border border-red-500/50 rounded-lg">
+                    <p className="text-red-200 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                      {error}
                     </p>
                   </div>
-                </label>
-              </div>
-              {!isConnected && useStreaming && (
-                <div className="ml-4 px-3 py-1 bg-yellow-500/30 backdrop-blur-sm border border-yellow-400/30 text-yellow-200 text-xs rounded-full">
-                  Connecting...
-                </div>
-              )}
-            </div>
+                )}
 
-            {/* Image Generation Toggle */}
-            <div className="flex items-center justify-between p-4 bg-orange-500/20 backdrop-blur-sm border border-orange-400/30 rounded-lg">
-              <div className="flex-1">
-                <label className="flex items-center gap-3 cursor-pointer">
+                {/* Story Title (Optional) */}
+                <div className="mb-6">
+                  <label className="block text-lg font-semibold mb-2 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                    Story Title (Optional)
+                  </label>
                   <input
-                    type="checkbox"
-                    checked={generateImages}
-                    onChange={(e) => setGenerateImages(e.target.checked)}
+                    type="text"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="e.g., Forbidden Office Romance"
+                    className="w-full px-4 py-3 border border-white/20 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-black/30 backdrop-blur-sm text-white placeholder-white/60"
                     disabled={isGenerating}
-                    className="w-5 h-5 text-orange-500 bg-black/30 border-white/30 rounded focus:ring-orange-500 focus:ring-2"
                   />
-                  <div>
-                    <span className="text-base font-semibold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-                      Generate Scene Images 🎨
-                      <span className="ml-2 px-2 py-0.5 bg-orange-400/30 backdrop-blur-sm border border-orange-300/30 text-white text-xs rounded-full">
-                        {generateImages ? "COSTS TOKENS" : "TESTING MODE"}
-                      </span>
+                </div>
+
+                {/* Story Prompt */}
+                <div className="mb-6">
+                  <label className="block text-lg font-semibold mb-2 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                    Story Prompt <span className="text-red-400">*</span>
+                  </label>
+                  <textarea
+                    value={prompt}
+                    onChange={(e) => setPrompt(e.target.value)}
+                    placeholder="Example: A forbidden office romance between a CEO and their new intern, filled with tension and secret glances across the boardroom..."
+                    rows={5}
+                    className="w-full px-4 py-3 border border-white/20 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 resize-none bg-black/30 backdrop-blur-sm text-white placeholder-white/60"
+                    disabled={isGenerating}
+                  />
+                  <p className="text-sm text-white/80 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mt-2">
+                    {prompt.length} characters (minimum 10 required)
+                  </p>
+                </div>
+
+                {/* Trope Selector */}
+                <div className="mb-6">
+                  <TropeSelector selected={tropes} onChange={setTropes} />
+                </div>
+
+                {/* Narrative Style Toggle */}
+                <div className="mb-6">
+                  <label className="block text-lg font-semibold mb-3 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                    Narrative Style
+                  </label>
+                  <div className="flex gap-4 ">
+                    <button
+                      type="button"
+                      onClick={() => setNarrativeStyle("third-person")}
+                      disabled={isGenerating}
+                      className={`cursor-pointer flex-1 px-4 py-3 rounded-lg font-semibold transition-all ${
+                        narrativeStyle === "third-person"
+                          ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg"
+                          : "bg-white/10 text-white/70 hover:bg-white/20 border border-white/20"
+                      } disabled:opacity-50`}
+                    >
+                      <div className="text-left">
+                        <div className="font-bold">📖 Third Person</div>
+                        <div className="text-sm opacity-80">
+                          Cinematic storytelling
+                        </div>
+                        <div className="text-xs opacity-60 mt-1">
+                          "He nervously waited..."
+                        </div>
+                      </div>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setNarrativeStyle("first-person")}
+                      disabled={isGenerating}
+                      className={`cursor-pointer flex-1 px-4 py-3 rounded-lg font-semibold transition-all ${
+                        narrativeStyle === "first-person"
+                          ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg"
+                          : "bg-white/10 text-white/70 hover:bg-white/20 border border-white/20"
+                      } disabled:opacity-50`}
+                    >
+                      <div className="text-left">
+                        <div className="font-bold">✍️ First Person</div>
+                        <div className="text-sm opacity-80">
+                          Personal diary style
+                        </div>
+                        <div className="text-xs opacity-60 mt-1">
+                          "I nervously waited..."
+                        </div>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Story Length Slider */}
+                <div className="mb-6">
+                  <label className="block text-lg font-semibold mb-3 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                    Story Length
+                  </label>
+                  <div className="flex items-center gap-4">
+                    <input
+                      type="range"
+                      min="500"
+                      max="5000"
+                      step="100"
+                      value={storyLength}
+                      onChange={(e) => setStoryLength(parseInt(e.target.value))}
+                      className="flex-1 h-2 bg-white/20 rounded-lg appearance-none cursor-pointer accent-purple-500"
+                      disabled={isGenerating}
+                    />
+                    <span className="min-w-[120px] px-4 py-2 bg-purple-500/30 backdrop-blur-sm border border-purple-400/30 text-white rounded-lg font-medium text-center drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                      {storyLength} words
                     </span>
-                    <p className="text-sm text-white/80 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mt-1">
+                  </div>
+                  <div className="flex justify-between text-xs text-white/80 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mt-2">
+                    <span>Quick Read (500)</span>
+                    <span>Standard (1500)</span>
+                    <span>Epic (5000)</span>
+                  </div>
+                </div>
+
+                {/* Intimacy Level - Button Group */}
+                <div className="mb-6">
+                  <label className="block text-lg font-semibold mb-3 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                    Intimacy Level
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    {/* Sweet Option */}
+                    <button
+                      type="button"
+                      onClick={() => setSpiceLevel("soft")}
+                      disabled={isGenerating}
+                      className={`px-4 py-4 rounded-xl font-semibold transition-all ${
+                        spiceLevel === "soft"
+                          ? "bg-gradient-to-r from-pink-400 to-rose-400 text-white shadow-lg ring-2 ring-white/50 scale-105"
+                          : "bg-white/10 text-white/70 hover:bg-white/20 border border-white/20 hover:border-white/40"
+                      } disabled:opacity-50`}
+                    >
+                      <div className="text-center">
+                        <div className="text-3xl mb-2">😊</div>
+                        <div className="font-bold text-base">Sweet</div>
+                        <div className="text-xs opacity-80 mt-1">Tender & Romantic</div>
+                      </div>
+                    </button>
+
+                    {/* Passionate Option */}
+                    <button
+                      type="button"
+                      onClick={() => setSpiceLevel("medium")}
+                      disabled={isGenerating}
+                      className={`px-4 py-4 rounded-xl font-semibold transition-all ${
+                        spiceLevel === "medium"
+                          ? "bg-gradient-to-r from-orange-400 to-red-400 text-white shadow-lg ring-2 ring-white/50 scale-105"
+                          : "bg-white/10 text-white/70 hover:bg-white/20 border border-white/20 hover:border-white/40"
+                      } disabled:opacity-50`}
+                    >
+                      <div className="text-center">
+                        <div className="text-3xl mb-2">🔥</div>
+                        <div className="font-bold text-base">Passionate</div>
+                        <div className="text-xs opacity-80 mt-1">Sensual & Steamy</div>
+                      </div>
+                    </button>
+
+                    {/* Explicit Option */}
+                    <button
+                      type="button"
+                      onClick={() => setSpiceLevel("explicit")}
+                      disabled={isGenerating}
+                      className={`px-4 py-4 rounded-xl font-semibold transition-all ${
+                        spiceLevel === "explicit"
+                          ? "bg-gradient-to-r from-red-500 to-pink-600 text-white shadow-lg ring-2 ring-white/50 scale-105"
+                          : "bg-white/10 text-white/70 hover:bg-white/20 border border-white/20 hover:border-white/40"
+                      } disabled:opacity-50`}
+                    >
+                      <div className="text-center">
+                        <div className="text-3xl mb-2">🌶️</div>
+                        <div className="font-bold text-base">Explicit</div>
+                        <div className="text-xs opacity-80 mt-1">Mature & Intense</div>
+                      </div>
+                    </button>
+                  </div>
+                  <p className="text-xs text-white/60 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mt-3 text-center">
+                    Choose the level of romance and intimacy for your story
+                  </p>
+                </div>
+
+                {/* Character Reference (Coming Soon) */}
+                <div className="mb-6">
+                  <label className="block text-lg font-semibold mb-2 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                    Character Reference (Optional - Coming Soon)
+                  </label>
+                  <div className="border-2 border-dashed border-white/30 rounded-lg p-6 text-center bg-black/20 backdrop-blur-sm">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleCharacterUpload}
+                      className="hidden"
+                      id="character-upload"
+                      disabled={true} // Disabled for MVP
+                    />
+                    <label
+                      htmlFor="character-upload"
+                      className="cursor-not-allowed opacity-50"
+                    >
+                      <div className="text-4xl mb-2">📷</div>
+                      <p className="text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                        Upload a character photo for consistent visuals
+                      </p>
+                      <p className="text-sm text-white/60 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mt-1">
+                        (Feature coming in Phase 2)
+                      </p>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Generation Options */}
+                <div className="mb-8 space-y-4">
+                  {/* Streaming Toggle */}
+                  <div className=" hidden  items-center justify-between p-4 bg-purple-500/20 backdrop-blur-sm border border-purple-400/30 rounded-lg">
+                    <div className="flex-1">
+                      <label className="flex items-center gap-3 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={useStreaming}
+                          onChange={(e) => setUseStreaming(e.target.checked)}
+                          disabled={isGenerating}
+                          className="w-5 h-5 text-pink-500 bg-black/30 border-white/30 rounded focus:ring-pink-500 focus:ring-2"
+                        />
+                        <div>
+                          <span className="text-base font-semibold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                            Real-Time Story Streaming ✨
+                          </span>
+                          <p className="text-sm text-white/80 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mt-1">
+                            {useStreaming
+                              ? "Watch your story come to life in real-time with progressive text generation"
+                              : "Generate the complete story at once (faster but no preview)"}
+                          </p>
+                        </div>
+                      </label>
+                    </div>
+                    {!isConnected && useStreaming && (
+                      <div className="ml-4 px-3 py-1 bg-yellow-500/30 backdrop-blur-sm border border-yellow-400/30 text-yellow-200 text-xs rounded-full">
+                        Connecting...
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Image Generation Toggle */}
+                  <div className="flex items-center justify-between p-4 bg-orange-500/20 backdrop-blur-sm border border-orange-400/30 rounded-lg">
+                    <div className="flex-1">
+                      <label className="flex items-center gap-3 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={generateImages}
+                          onChange={(e) => setGenerateImages(e.target.checked)}
+                          disabled={isGenerating}
+                          className="w-5 h-5 text-orange-500 bg-black/30 border-white/30 rounded focus:ring-orange-500 focus:ring-2"
+                        />
+                        <div>
+                          <span className="text-base font-semibold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                            Generate Scene Images 🎨
+                            {/* <span className="ml-2 px-2 py-0.5 bg-orange-400/30 backdrop-blur-sm border border-orange-300/30 text-white text-xs rounded-full">
+                              {generateImages ? "COSTS TOKENS" : "TESTING MODE"}
+                            </span> */}
+                          </span>
+                          {/* <p className="text-sm text-white/80 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mt-1">
                       {generateImages
                         ? "⚠️ Will generate images for each scene (~$0.10-0.20 per story). Only enable after text streaming works!"
                         : "✅ Text-only generation for testing (saves money). Enable images once streaming is confirmed working."}
-                    </p>
+                    </p> */}
+                        </div>
+                      </label>
+                    </div>
                   </div>
-                </label>
-              </div>
-            </div>
-          </div>
+                </div>
 
-          {/* Generate Button */}
-          <button
-            onClick={handleCreate}
-            disabled={isGenerating || !prompt.trim() || prompt.length < 10}
-            className={`
+                {/* Generate Button */}
+                <button
+                  onClick={handleCreate}
+                  disabled={
+                    isGenerating || !prompt.trim() || prompt.length < 10
+                  }
+                  className={`
               w-full py-4 px-6 rounded-xl font-bold text-lg transition-all transform hover:scale-105
               ${
                 isGenerating || !prompt.trim() || prompt.length < 10
@@ -510,63 +552,63 @@ export default function CreateStoryPage() {
                   : "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/30 hover:shadow-xl hover:shadow-purple-500/40"
               }
             `}
-          >
-            {isGenerating ? (
-              <span className="flex items-center justify-center gap-3">
-                <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                    fill="none"
-                  />
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  />
-                </svg>
-                Generating Your Story... (30-60s)
-              </span>
-            ) : (
-              "✨ Generate Story"
-            )}
-          </button>
+                >
+                  {isGenerating ? (
+                    <span className="flex items-center justify-center gap-3">
+                      <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                          fill="none"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        />
+                      </svg>
+                      Generating Your Story... (30-60s)
+                    </span>
+                  ) : (
+                    "✨ Generate Story"
+                  )}
+                </button>
 
-          {/* Info Box */}
-          <div className="mt-6 p-4 bg-blue-500/20 backdrop-blur-sm border border-blue-400/30 rounded-lg">
-            <p className="text-sm text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-              <strong>💡 Tip:</strong> The AI will generate a 5-8 scene story
-              (800-1500 words) with automatic visual moments. You can add more
-              images and edit text in the canvas view!
-            </p>
-          </div>
-          </div>
-          </div>
-        </GlassEffect>
+                {/* Info Box */}
+                <div className=" hidden mt-6 p-4 bg-blue-500/20 backdrop-blur-sm border border-blue-400/30 rounded-lg">
+                  <p className="text-sm text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                    <strong>💡 Tip:</strong> The AI will generate a 5-8 scene
+                    story (800-1500 words) with automatic visual moments. You
+                    can add more images and edit text in the canvas view!
+                  </p>
+                </div>
+              </div>
+            </div>
+          </GlassEffect>
 
-        {/* Streaming Story Generation (shown below the form) */}
-        {isGenerating && useStreaming && isConnected && socket && user && (
-          <div className="mt-8">
-            <StreamingStoryCreation
-              prompt={prompt.trim()}
-              title={title.trim() || "Untitled Romance"}
-              tropes={tropes}
-              narrativeStyle={narrativeStyle}
-              storyLength={storyLength}
-              spiceLevel={spiceLevel}
-              userId={user.uid}
-              socket={socket}
-              generateImages={generateImages}
-              onComplete={handleStreamingComplete}
-              onError={handleStreamingError}
-            />
-          </div>
-        )}
-      </div>
+          {/* Streaming Story Generation (shown below the form) */}
+          {isGenerating && useStreaming && isConnected && socket && user && (
+            <div className="mt-8">
+              <StreamingStoryCreation
+                prompt={prompt.trim()}
+                title={title.trim() || "Untitled Romance"}
+                tropes={tropes}
+                narrativeStyle={narrativeStyle}
+                storyLength={storyLength}
+                spiceLevel={spiceLevel}
+                userId={user.uid}
+                socket={socket}
+                generateImages={generateImages}
+                onComplete={handleStreamingComplete}
+                onError={handleStreamingError}
+              />
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Soft Gate Modal */}

@@ -49,13 +49,6 @@ export default function StoryLine({
   const [showComments, setShowComments] = useState(false);
   const [isGeneratingImage, setIsGeneratingImage] = useState(false);
   const initialVisualMomentsCount = useRef(visualMoments.length);
-  const lineRef = useRef<HTMLDivElement>(null);
-  const isTouchDevice = useRef(false);
-
-  // Detect if device supports touch
-  useEffect(() => {
-    isTouchDevice.current = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-  }, []);
 
   // Reset loader when new visual moment arrives
   useEffect(() => {
@@ -64,26 +57,6 @@ export default function StoryLine({
       initialVisualMomentsCount.current = visualMoments.length;
     }
   }, [visualMoments]);
-
-  // Click/touch outside to close actions
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
-      if (lineRef.current && !lineRef.current.contains(event.target as Node)) {
-        setShowActions(false);
-      }
-    };
-
-    if (showActions) {
-      // Use capture phase to handle clicks before they bubble
-      document.addEventListener('mousedown', handleClickOutside, true);
-      document.addEventListener('touchstart', handleClickOutside, true);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside, true);
-      document.removeEventListener('touchstart', handleClickOutside, true);
-    };
-  }, [showActions]);
 
   const handleGenerateImage = async () => {
     if (isGeneratingImage) return;
@@ -109,6 +82,7 @@ export default function StoryLine({
       if (!response.ok) {
         const error = await response.json();
         throw new Error(error.error || "Failed to generate image");
+        setIsGeneratingImage(false);
       }
 
       const data = await response.json();
@@ -123,41 +97,11 @@ export default function StoryLine({
     }
   };
 
-  // Handle mouse enter (desktop only)
-  const handleMouseEnter = () => {
-    if (!isTouchDevice.current) {
-      setShowActions(true);
-    }
-  };
-
-  // Handle mouse leave (desktop only)
-  const handleMouseLeave = () => {
-    if (!isTouchDevice.current) {
-      setShowActions(false);
-    }
-  };
-
-  // Handle touch/click on the line (mobile)
-  const handleLineClick = (e: React.MouseEvent | React.TouchEvent) => {
-    // Don't toggle if clicking on buttons or other interactive elements
-    const target = e.target as HTMLElement;
-    if (target.closest('.action-button') || target.closest('.comment-badge') || target.closest('.comment-button')) {
-      return;
-    }
-
-    // On touch devices, toggle the actions
-    if (isTouchDevice.current) {
-      setShowActions(prev => !prev);
-    }
-  };
-
   return (
     <div
-      ref={lineRef}
       className="story-line"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      onClick={handleLineClick}
+      onMouseEnter={() => setShowActions(true)}
+      onMouseLeave={() => setShowActions(false)}
     >
       {/* Line Text with Markdown Support */}
       <div className="line-text prose prose-sm max-w-none">
@@ -209,10 +153,7 @@ export default function StoryLine({
       {comments.length > 0 && (
         <button
           className="comment-badge"
-          onClick={(e) => {
-            e.stopPropagation();
-            setShowComments(!showComments);
-          }}
+          onClick={() => setShowComments(!showComments)}
         >
           💬 {comments.length}
         </button>
@@ -231,14 +172,11 @@ export default function StoryLine({
         />
       )}
 
-      {/* Quick Actions (on hover/tap) */}
+      {/* Quick Actions (on hover) */}
       {showActions && (
         <div className="line-actions">
           <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleGenerateImage();
-            }}
+            onClick={handleGenerateImage}
             disabled={isGeneratingImage}
             className="action-button generate-image-button"
             title="Generate image for this line"
@@ -246,10 +184,7 @@ export default function StoryLine({
             {isGeneratingImage ? "⏳" : "🎨"}
           </button>
           <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setShowComments(!showComments);
-            }}
+            onClick={() => setShowComments(!showComments)}
             className="action-button comment-button"
             title="Add comment"
           >
