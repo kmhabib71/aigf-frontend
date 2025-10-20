@@ -96,6 +96,13 @@ export default function StoryCanvas({
     const handleStoryUpdate = (update: any) => {
       console.log("📡 Received story update:", update);
 
+      // Log timing for image updates
+      if (update.type === 'image_added' && update.visualMoment?.isTemporary) {
+        console.log("⚡ RAW IMAGE RECEIVED - Displaying immediately!");
+      } else if (update.type === 'image_updated') {
+        console.log("✅ Permanent Firebase URL received - Replacing image");
+      }
+
       setLocalStory((prevStory) => {
         const newStory = { ...prevStory };
 
@@ -106,16 +113,32 @@ export default function StoryCanvas({
               const exists = newStory.scenes[
                 update.sceneIdx
               ].visualMoments.some(
-                (vm) => vm.imageUrl === update.visualMoment.imageUrl
+                (vm) => vm.lineNumber === update.visualMoment.lineNumber
               );
               if (!exists) {
                 newStory.scenes[update.sceneIdx].visualMoments.push(
                   update.visualMoment
                 );
+                console.log("⚡ Raw image added immediately for display");
               } else {
                 console.log(
                   "⏭️ Visual moment already exists, skipping duplicate"
                 );
+              }
+            }
+            break;
+
+          case "image_updated":
+            // Replace temporary base64 image with permanent Firebase URL
+            if (newStory.scenes[update.sceneIdx]) {
+              const visualMoment = newStory.scenes[
+                update.sceneIdx
+              ].visualMoments.find(
+                (vm) => vm.lineNumber === update.visualMoment.lineNumber
+              );
+              if (visualMoment) {
+                visualMoment.imageUrl = update.visualMoment.imageUrl;
+                console.log("✅ Image URL updated to permanent Firebase URL");
               }
             }
             break;

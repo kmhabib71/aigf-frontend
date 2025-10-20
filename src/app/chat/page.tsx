@@ -111,6 +111,7 @@ export default function ChatPage() {
   const socketRef = useRef<Socket | null>(null);
   const streamingChatRef = useRef<any>(null);
   const messageInputRef = useRef<HTMLInputElement>(null);
+  const pendingPersonaRef = useRef<string | null>(null);
 
   // Mouse tracking effect
   useEffect(() => {
@@ -283,6 +284,10 @@ export default function ChatPage() {
         navigateToConversation(currentConversationId!);
         console.log(`🆕 Fallback conversation ID: ${currentConversationId}`);
       }
+    }
+
+    if (currentConversationId) {
+      await flushPendingPersona(currentConversationId);
     }
 
     // Add user message
@@ -472,6 +477,7 @@ export default function ChatPage() {
   useEffect(() => {
     if (!conversationId) {
       setPersona("");
+      pendingPersonaRef.current = null;
       return;
     }
 
@@ -502,27 +508,58 @@ export default function ChatPage() {
       }
     };
 
+    const pendingPersona = pendingPersonaRef.current;
+
     fetchNsfwMode();
-    loadPersona(conversationId);
+    loadPersona(conversationId, pendingPersona);
   }, [conversationId]);
 
-  const loadPersona = async (convId: string) => {
+  const loadPersona = async (
+    convId: string,
+    pendingPersona?: string | null
+  ) => {
     try {
       const response = await fetch(
         `${backendUrl}/api/conversations/${convId}/persona`
       );
+      if (!response.ok) {
+        throw new Error(`Failed to load persona for ${convId}`);
+      }
       const data = await response.json();
-      setPersona(data.persona || "");
+      const fetchedPersona = data.persona ?? "";
+
+      if (fetchedPersona) {
+        setPersona(fetchedPersona);
+        pendingPersonaRef.current = null;
+        return;
+      }
+
+      if (pendingPersona && pendingPersona.trim()) {
+        setPersona(pendingPersona);
+        await savePersona(pendingPersona, convId);
+        pendingPersonaRef.current = null;
+      } else {
+        setPersona("");
+      }
     } catch (error) {
       console.error("Error loading persona:", error);
+      if (pendingPersona && pendingPersona.trim()) {
+        setPersona(pendingPersona);
+      }
     }
   };
 
-  const savePersona = async (personaText: string) => {
-    if (!conversationId) return;
+  const savePersona = async (
+    personaText: string,
+    targetConversationId?: string | null
+  ) => {
+    const activeConversationId = targetConversationId ?? conversationId;
+    if (!activeConversationId) return;
 
     try {
-      await fetch(`${backendUrl}/api/conversations/${conversationId}/persona`, {
+      await fetch(
+        `${backendUrl}/api/conversations/${activeConversationId}/persona`,
+        {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ persona: personaText }),
@@ -530,6 +567,28 @@ export default function ChatPage() {
       console.log("🎭 Persona saved");
     } catch (error) {
       console.error("Error saving persona:", error);
+    }
+  };
+
+  const flushPendingPersona = async (targetConversationId: string) => {
+    const pendingPersona = pendingPersonaRef.current;
+    if (!pendingPersona || !pendingPersona.trim()) return;
+
+    try {
+      await savePersona(pendingPersona, targetConversationId);
+      pendingPersonaRef.current = null;
+    } catch (error) {
+      console.error("Error flushing pending persona:", error);
+    }
+  };
+
+  const handlePersonaUpdate = (value: string) => {
+    setPersona(value);
+    if (conversationId) {
+      savePersona(value);
+      pendingPersonaRef.current = null;
+    } else {
+      pendingPersonaRef.current = value;
     }
   };
 
@@ -715,8 +774,7 @@ export default function ChatPage() {
                 <textarea
                   value={persona}
                   onChange={(e) => {
-                    setPersona(e.target.value);
-                    savePersona(e.target.value);
+                    handlePersonaUpdate(e.target.value);
                   }}
                   placeholder="Example: You are a wise mentor..."
                   className="w-full h-20 sm:h-24 p-2 sm:p-3 border border-purple-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-purple-500 text-gray-900 text-sm"
@@ -728,8 +786,7 @@ export default function ChatPage() {
                   </span>
                   <button
                     onClick={() => {
-                      setPersona("");
-                      savePersona("");
+                      handlePersonaUpdate("");
                     }}
                     className="text-xs text-red-500 hover:text-red-700"
                   >
