@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useEffect, useState, useRef } from "react";
 import { Socket } from "socket.io-client";
@@ -38,6 +38,7 @@ interface Story {
   title: string;
   prompt: string;
   scenes: Scene[];
+  heartReactions?: string[];
   metadata: {
     tropes: string[];
     spiceLevel: string;
@@ -84,18 +85,31 @@ export default function StoryCanvas({
   const [continueGuidance, setContinueGuidance] = useState("");
   const [showGuidanceInput, setShowGuidanceInput] = useState(false);
   const canvasEndRef = useRef<HTMLDivElement>(null);
+  const lastSyncedStoryRef = useRef<Story>(story);
+  const propSyncVersionRef = useRef(0);
+  const lastHandledVersionRef = useRef(0);
 
   // Sync local story with prop changes
   useEffect(() => {
+    propSyncVersionRef.current += 1;
     setLocalStory(story);
+    lastSyncedStoryRef.current = story;
   }, [story]);
 
   // Sync local story changes back to parent (prevents render-phase updates)
   useEffect(() => {
-    if (localStory !== story) {
-      onStoryUpdate(localStory);
+    if (lastHandledVersionRef.current < propSyncVersionRef.current) {
+      lastHandledVersionRef.current = propSyncVersionRef.current;
+      return;
     }
-  }, [localStory]);
+
+    if (localStory === lastSyncedStoryRef.current) {
+      return;
+    }
+
+    lastSyncedStoryRef.current = localStory;
+    onStoryUpdate(localStory);
+  }, [localStory, onStoryUpdate]);
 
   useEffect(() => {
     if (!canContinue) {
@@ -206,6 +220,10 @@ export default function StoryCanvas({
                 console.log("⭐️ Comment already exists, skipping duplicate");
               }
             }
+            break;
+
+          case "reaction_updated":
+            newStory.heartReactions = update.heartReactions || [];
             break;
 
           default:

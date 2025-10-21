@@ -52,6 +52,7 @@ interface Story {
       };
     }>;
   };
+  heartReactions?: string[];
   visibility: string;
   createdAt: string;
 }
@@ -83,6 +84,7 @@ export default function StoryViewPage() {
   } | null>(null);
   const [savingEdits, setSavingEdits] = useState(false);
   const [editError, setEditError] = useState("");
+  const [reactionUpdating, setReactionUpdating] = useState(false);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -208,6 +210,8 @@ export default function StoryViewPage() {
   const handleStoryUpdate = (updatedStory: Story) => {
     setStory((prev) => ({
       ...updatedStory,
+      heartReactions:
+        (updatedStory as any)?.heartReactions ?? prev?.heartReactions ?? [],
       isOwner: prev?.isOwner ?? (updatedStory as any)?.isOwner,
     }));
   };
@@ -374,6 +378,86 @@ export default function StoryViewPage() {
     }
   };
 
+  const handleToggleReaction = async () => {
+    if (!isAuthenticated) {
+      requireAuth();
+      return;
+    }
+
+    if (reactionUpdating) return;
+
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
+      requireAuth();
+      return;
+    }
+
+    setReactionUpdating(true);
+    if (!user?.uid) {
+      requireAuth();
+      return;
+    }
+
+    const previousHeartReactions = heartReactions;
+    const nextHeartReactions = hasReacted
+      ? previousHeartReactions.filter((id) => id !== user.uid)
+      : [...previousHeartReactions, user.uid];
+
+    setStory((prev) =>
+      prev
+        ? {
+            ...prev,
+            heartReactions: nextHeartReactions,
+          }
+        : prev
+    );
+
+    try {
+      const token = await currentUser.getIdToken();
+      setIdToken(token);
+
+      const response = await fetch(
+        `${backendUrl}/api/romance/story/${storyId}/react`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || "Failed to react to story");
+      }
+
+      const data = await response.json();
+      setStory((prev) =>
+        prev
+          ? {
+              ...prev,
+              heartReactions: data.heartReactions || [],
+            }
+          : prev
+      );
+    } catch (err: any) {
+      console.error("Toggle reaction error:", err);
+      // Rollback optimistic update
+      setStory((prev) =>
+        prev
+          ? {
+              ...prev,
+              heartReactions: previousHeartReactions,
+            }
+          : prev
+      );
+      alert(err?.message || "Failed to update reaction");
+    } finally {
+      setReactionUpdating(false);
+    }
+  };
+
   if (loading) {
     return (
       <div
@@ -485,10 +569,19 @@ export default function StoryViewPage() {
       : !!(user?.uid && story.userId === user.uid);
   const isStoryPublic = story.visibility === "public";
   const canUseInteractiveFeatures = Boolean(idToken);
+  const heartReactions = story.heartReactions || [];
+  const hasReacted = user?.uid ? heartReactions.includes(user.uid) : false;
+  const heartCount = heartReactions.length;
   const visibilityBadgeClasses = isStoryPublic
     ? "px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-100 border border-emerald-300/40"
     : "px-3 py-1 rounded-full text-xs font-semibold bg-white/10 text-white border border-white/20";
   const visibilityLabel = isStoryPublic ? "Public" : "Private";
+  const loveButtonClasses = hasReacted
+    ? "px-3 py-2 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-xl text-sm font-semibold shadow-lg shadow-pink-500/40 hover:shadow-pink-500/60 transition-all"
+    : "px-3 py-2 bg-white/10 border border-white/30 text-white rounded-xl text-sm font-semibold hover:bg-white/20 transition-all";
+  const loveIconClasses = hasReacted
+    ? "text-lg leading-none text-rose-100"
+    : "text-lg leading-none text-white/80";
 
   const chatButtonNode =
     story.metadata.characters && story.metadata.characters.length > 0 ? (
@@ -685,6 +778,20 @@ export default function StoryViewPage() {
           </h2>
           <div className="flex items-center gap-2">
             <span className={visibilityBadgeClasses}>{visibilityLabel}</span>
+            <button
+              onClick={handleToggleReaction}
+              disabled={reactionUpdating}
+              className={`${loveButtonClasses} flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed`}
+              aria-pressed={hasReacted}
+            >
+              <span className={loveIconClasses} aria-hidden="true">
+                {hasReacted ? "♥" : "♡"}
+              </span>
+              <span>{reactionUpdating ? "..." : heartCount}</span>
+              <span className="sr-only">
+                {hasReacted ? "Remove love reaction" : "Add love reaction"}
+              </span>
+            </button>
             {isOwner && !isEditing && (
               <button
                 onClick={startEditing}
