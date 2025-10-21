@@ -14,7 +14,7 @@ import Header from "@/components/layout/Header";
 import { backendUrl } from "@/lib/config";
 export default function CreateStoryPage() {
   const router = useRouter();
-  const { user, isAuthenticated, anonymousSession } = useAuth();
+  const { user, isAuthenticated, anonymousSession, userProfile } = useAuth();
   const { socket, isConnected } = useSocket(); // Use global socket
 
   const [prompt, setPrompt] = useState(
@@ -38,6 +38,13 @@ export default function CreateStoryPage() {
   // Soft gate state
   const [showSoftGate, setShowSoftGate] = useState(false);
   const [storyScenesCreated, setStoryScenesCreated] = useState(0);
+
+  // Story limit modal state
+  const [showLimitModal, setShowLimitModal] = useState(false);
+  const [limitModalData, setLimitModalData] = useState<{
+    storiesCreated: number;
+    storyLimit: number;
+  } | null>(null);
 
   const handleCharacterUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -68,13 +75,20 @@ export default function CreateStoryPage() {
       return;
     }
 
-    // Check anonymous session limits (only for non-authenticated users)
-    if (!user && anonymousSession) {
-      const canCreate = await sessionService.canCreateStory();
-      if (!canCreate) {
-        setShowSoftGate(true);
-        return;
-      }
+    // Authentication is now required - redirect to login when user clicks generate
+    if (!user) {
+      // Save form data to localStorage so they don't lose their work
+      localStorage.setItem('pendingStoryData', JSON.stringify({
+        prompt: prompt.trim(),
+        title: title.trim(),
+        tropes,
+        narrativeStyle,
+        storyLength,
+        spiceLevel
+      }));
+      // Redirect to login
+      router.push('/login?redirect=/romance/create');
+      return;
     }
 
     setIsGenerating(true);
@@ -88,19 +102,10 @@ export default function CreateStoryPage() {
 
     // Fallback to original HTTP-based creation
     try {
-      // Get auth token or sessionId
-      let idToken = null;
-      let sessionId = null;
-
-      if (user) {
-        idToken = await authService.getIdToken();
-        if (!idToken) {
-          throw new Error("Authentication required");
-        }
-      } else if (anonymousSession) {
-        sessionId = anonymousSession.sessionId;
-      } else {
-        throw new Error("Session required");
+      // Get auth token (required)
+      const idToken = await authService.getIdToken();
+      if (!idToken) {
+        throw new Error("Authentication required. Please sign in to create stories.");
       }
 
       // Upload character reference if provided (optional for MVP)
@@ -112,17 +117,12 @@ export default function CreateStoryPage() {
       }
 
       // Call API to create story
-      const headers: Record<string, string> = {
-        "Content-Type": "application/json",
-      };
-
-      if (idToken) {
-        headers["Authorization"] = `Bearer ${idToken}`;
-      }
-
       const response = await fetch(`${backendUrl}/api/romance/create`, {
         method: "POST",
-        headers,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${idToken}`,
+        },
         body: JSON.stringify({
           prompt: prompt.trim(),
           title: title.trim() || undefined,
@@ -131,28 +131,31 @@ export default function CreateStoryPage() {
           storyLength,
           spiceLevel,
           characterRef: characterRefUrl,
-          sessionId: sessionId || undefined,
+          generateImages,
         }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
+        // Handle limit reached error
+        if (data.limitReached) {
+          setLimitModalData({
+            storiesCreated: data.storiesCreated || 0,
+            storyLimit: data.storyLimit || 5,
+          });
+          setShowLimitModal(true);
+          setIsGenerating(false);
+          return;
+        }
         throw new Error(data.error || "Failed to create story");
       }
 
       console.log("✅ Story created:", data.story);
+      console.log(`📊 Stories: ${data.storiesCreated}/${data.storyLimit} (Plan: ${data.userPlan})`);
 
-      // Increment anonymous scene count if applicable
-      if (!user && anonymousSession) {
-        const count = await sessionService.incrementStorySceneCount();
-        setStoryScenesCreated(count);
-
-        // Show soft gate after first scene
-        if (count >= 1) {
-          setShowSoftGate(true);
-        }
-      }
+      // Clear pending story data from localStorage after successful creation
+      localStorage.removeItem('pendingStoryData');
 
       // Redirect to canvas view
       router.push(`/romance/story/${data.story.id}`);
@@ -165,16 +168,48 @@ export default function CreateStoryPage() {
 
   const handleStreamingComplete = (storyId: string) => {
     console.log("✅ Streaming story complete, redirecting to:", storyId);
+    // Clear pending story data from localStorage after successful creation
+    localStorage.removeItem('pendingStoryData');
     router.push(`/romance/story/${storyId}`);
   };
 
-  const handleStreamingError = (errorMsg: string) => {
-    console.error("❌ Streaming error:", errorMsg);
+  const handleStreamingError = (errorMsg: string, data?: any) => {
+    console.error("❌ Streaming error:", errorMsg, data);
+
+    // Check if it's a limit error
+    if (data?.upgradeRequired) {
+      setShowLimitModal(true);
+      setIsGenerating(false);
+      return;
+    }
+
     setError(errorMsg);
     setIsGenerating(false);
   };
 
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  // Restore pending story data after login
+  useEffect(() => {
+    if (user) {
+      const pendingData = localStorage.getItem('pendingStoryData');
+      if (pendingData) {
+        try {
+          const data = JSON.parse(pendingData);
+          setPrompt(data.prompt || '');
+          setTitle(data.title || '');
+          setTropes(data.tropes || ['slow-burn']);
+          setNarrativeStyle(data.narrativeStyle || 'third-person');
+          setStoryLength(data.storyLength || 1500);
+          setSpiceLevel(data.spiceLevel || 'soft');
+          localStorage.removeItem('pendingStoryData');
+          console.log('✅ Restored pending story data after login');
+        } catch (e) {
+          console.error('Failed to restore pending story data:', e);
+        }
+      }
+    }
+  }, [user]);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -634,15 +669,12 @@ export default function CreateStoryPage() {
                         <div>
                           <span className="text-base font-semibold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
                             Generate Scene Images 🎨
-                            {/* <span className="ml-2 px-2 py-0.5 bg-orange-400/30 backdrop-blur-sm border border-orange-300/30 text-white text-xs rounded-full">
-                              {generateImages ? "COSTS TOKENS" : "TESTING MODE"}
-                            </span> */}
                           </span>
-                          {/* <p className="text-sm text-white/80 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mt-1">
-                      {generateImages
-                        ? "⚠️ Will generate images for each scene (~$0.10-0.20 per story). Only enable after text streaming works!"
-                        : "✅ Text-only generation for testing (saves money). Enable images once streaming is confirmed working."}
-                    </p> */}
+                          {userProfile?.plan === 'free' && generateImages && (
+                            <p className="text-sm text-green-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mt-1">
+                              ✨ FREE: You'll get 1 preview image (first scene). Upgrade for images on all scenes!
+                            </p>
+                          )}
                         </div>
                       </label>
                     </div>
@@ -747,6 +779,80 @@ export default function CreateStoryPage() {
         type="story"
         storyScenesCreated={storyScenesCreated}
       />
+
+      {/* Story Limit Modal */}
+      {showLimitModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm">
+          <div className="relative bg-white rounded-3xl shadow-2xl max-w-md w-full mx-4 overflow-hidden">
+            {/* Gradient Header */}
+            <div className="bg-gradient-to-br from-purple-500 via-pink-500 to-orange-500 p-8 text-white text-center relative">
+              {/* Animated Icons */}
+              <div className="absolute top-4 right-4 text-2xl animate-bounce">📚</div>
+              <div className="absolute bottom-4 left-4 text-2xl animate-bounce animation-delay-300">✨</div>
+
+              {/* Emoji Icon */}
+              <div className="text-6xl mb-4">🔒</div>
+
+              {/* Headline */}
+              <h2 className="text-3xl font-black mb-2">Story Limit Reached!</h2>
+
+              {/* Usage Info */}
+              <p className="text-sm opacity-90">
+                You've created {limitModalData?.storiesCreated || 0} of {limitModalData?.storyLimit || 5} free stories this month
+              </p>
+            </div>
+
+            {/* Content */}
+            <div className="p-8">
+              <p className="text-gray-700 text-lg text-center mb-6">
+                Upgrade to Premium to create unlimited stories with AI-generated images!
+              </p>
+
+              {/* Features */}
+              <div className="space-y-3 mb-6">
+                <div className="flex items-center gap-3 text-gray-700">
+                  <span className="text-green-500 text-xl">✓</span>
+                  <span>Unlimited stories per month</span>
+                </div>
+                <div className="flex items-center gap-3 text-gray-700">
+                  <span className="text-green-500 text-xl">✓</span>
+                  <span>AI-generated scene images</span>
+                </div>
+                <div className="flex items-center gap-3 text-gray-700">
+                  <span className="text-green-500 text-xl">✓</span>
+                  <span>Line-by-line image generation</span>
+                </div>
+                <div className="flex items-center gap-3 text-gray-700">
+                  <span className="text-green-500 text-xl">✓</span>
+                  <span>Priority generation speed</span>
+                </div>
+              </div>
+
+              {/* CTA Buttons */}
+              <div className="space-y-3">
+                <button
+                  onClick={() => router.push('/pricing')}
+                  className="w-full px-6 py-4 rounded-2xl font-bold text-lg bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                >
+                  ✨ Upgrade to Premium
+                </button>
+
+                <button
+                  onClick={() => setShowLimitModal(false)}
+                  className="w-full px-6 py-3 rounded-2xl font-semibold text-gray-600 hover:bg-gray-100 transition-colors duration-200"
+                >
+                  Maybe Later
+                </button>
+              </div>
+
+              {/* Reset Info */}
+              <p className="text-xs text-gray-500 text-center mt-4">
+                Your free stories reset on the 1st of each month
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Animations */}
       <style jsx>{`

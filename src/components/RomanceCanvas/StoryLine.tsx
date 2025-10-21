@@ -5,6 +5,7 @@ import { Socket } from "socket.io-client";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import CommentsThread from "./CommentsThread";
+import BlurredImagePlaceholder from "./BlurredImagePlaceholder";
 import { backendUrl } from "@/lib/config";
 import "./StoryLine.css";
 
@@ -35,6 +36,7 @@ interface StoryLineProps {
   comments: Comment[];
   allowInteractions: boolean;
   onRequireAuth?: () => void;
+  userPlan?: string;
 }
 
 export default function StoryLine({
@@ -48,6 +50,7 @@ export default function StoryLine({
   comments,
   allowInteractions,
   onRequireAuth,
+  userPlan = 'free',
 }: StoryLineProps) {
   const [showActions, setShowActions] = useState(false);
   const [showComments, setShowComments] = useState(false);
@@ -97,6 +100,13 @@ export default function StoryLine({
 
     if (isGeneratingImage) return;
 
+    // Free users see blurred placeholder (no actual image generation)
+    if (userPlan === 'free') {
+      setIsGeneratingImage(true);
+      // Keep it in generating state to show the blurred placeholder
+      return;
+    }
+
     setIsGeneratingImage(true);
 
     try {
@@ -115,12 +125,18 @@ export default function StoryLine({
         }
       );
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Failed to generate image");
+        // Handle premium required error
+        if (data.premiumRequired) {
+          // Show blurred placeholder
+          setIsGeneratingImage(true); // Keep generating state to show placeholder
+          return;
+        }
+        throw new Error(data.error || "Failed to generate image");
       }
 
-      const data = await response.json();
       console.log("✅ Image generated:", data);
 
       // Image will be added via Socket.io real-time update
@@ -184,14 +200,20 @@ export default function StoryLine({
         </ReactMarkdown>
       </div>
 
-      {/* Image Generation Loader */}
+      {/* Image Generation Loader or Blurred Placeholder */}
       {isGeneratingImage && (
-        <div className="image-generation-loader">
-          <div className="loader-content">
-            <div className="spinner"></div>
-            <span className="loader-text">Generating image with AI...</span>
+        userPlan === 'free' ? (
+          <div className="my-4">
+            <BlurredImagePlaceholder type="line" />
           </div>
-        </div>
+        ) : (
+          <div className="image-generation-loader">
+            <div className="loader-content">
+              <div className="spinner"></div>
+              <span className="loader-text">Generating image with AI...</span>
+            </div>
+          </div>
+        )
       )}
 
       {/* Embedded Images (Visual Moments) */}

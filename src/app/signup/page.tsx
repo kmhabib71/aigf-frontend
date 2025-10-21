@@ -250,9 +250,13 @@ function SignupContent() {
             <p className="text-gray-600">
               Already have an account?{" "}
               <button
-                onClick={() =>
-                  router.push(`/login${planParam ? `?plan=${planParam}` : ""}`)
-                }
+                onClick={() => {
+                  const params = new URLSearchParams();
+                  if (planParam) params.set('plan', planParam);
+                  if (redirectTo && redirectTo !== '/') params.set('redirect', redirectTo);
+                  const queryString = params.toString();
+                  router.push(`/login${queryString ? `?${queryString}` : ''}`);
+                }}
                 className="text-indigo-600 hover:text-indigo-700 font-semibold"
               >
                 Sign in

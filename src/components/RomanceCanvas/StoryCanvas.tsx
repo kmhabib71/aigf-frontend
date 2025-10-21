@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useEffect, useState, useRef } from "react";
 import { Socket } from "socket.io-client";
@@ -57,7 +57,15 @@ interface StoryCanvasProps {
   allowInteractions: boolean;
   onRequireAuth?: () => void;
   chatButton?: React.ReactNode;
+  userPlan?: string;
 }
+
+// Spice level display mapping
+const SPICE_LEVEL_DISPLAY: Record<string, string> = {
+  soft: "😊 Sweet",
+  medium: "🔥 Passionate",
+  explicit: "🌶️ Explicit",
+};
 
 export default function StoryCanvas({
   story,
@@ -69,6 +77,7 @@ export default function StoryCanvas({
   allowInteractions,
   onRequireAuth,
   chatButton,
+  userPlan = 'free',
 }: StoryCanvasProps) {
   const [localStory, setLocalStory] = useState<Story>(story);
   const [isContinuing, setIsContinuing] = useState(false);
@@ -103,17 +112,17 @@ export default function StoryCanvas({
     // Join story room (only once)
     socket.emit("join-story", storyId);
     hasJoinedRef.current = true;
-    console.log(`ðŸ“– Joined story room: ${storyId}`);
+    console.log(`📖 Joined story room: ${storyId}`);
 
     // Listen for story updates
     const handleStoryUpdate = (update: any) => {
-      console.log("ðŸ“¡ Received story update:", update);
+      console.log("📡 Received story update:", update);
 
       // Log timing for image updates
       if (update.type === 'image_added' && update.visualMoment?.isTemporary) {
-        console.log("âš¡ RAW IMAGE RECEIVED - Displaying immediately!");
+        console.log("⚡ RAW IMAGE RECEIVED - Displaying immediately!");
       } else if (update.type === 'image_updated') {
-        console.log("âœ… Permanent Firebase URL received - Replacing image");
+        console.log("✅ Permanent Firebase URL received - Replacing image");
       }
 
       setLocalStory((prevStory) => {
@@ -132,10 +141,10 @@ export default function StoryCanvas({
                 newStory.scenes[update.sceneIdx].visualMoments.push(
                   update.visualMoment
                 );
-                console.log("âš¡ Raw image added immediately for display");
+                console.log("⚡ Raw image added immediately for display");
               } else {
                 console.log(
-                  "â­ï¸ Visual moment already exists, skipping duplicate"
+                  "⭐️ Visual moment already exists, skipping duplicate"
                 );
               }
             }
@@ -151,7 +160,7 @@ export default function StoryCanvas({
               );
               if (visualMoment) {
                 visualMoment.imageUrl = update.visualMoment.imageUrl;
-                console.log("âœ… Image URL updated to permanent Firebase URL");
+                console.log("✅ Image URL updated to permanent Firebase URL");
               }
             }
             break;
@@ -168,7 +177,7 @@ export default function StoryCanvas({
                 canvasEndRef.current?.scrollIntoView({ behavior: "smooth" });
               }, 100);
             } else {
-              console.log("â­ï¸ Scene already exists, skipping duplicate");
+              console.log("⭐️ Scene already exists, skipping duplicate");
             }
             break;
 
@@ -185,7 +194,7 @@ export default function StoryCanvas({
               if (!commentExists) {
                 newStory.scenes[update.sceneIdx].comments.push(update.comment);
               } else {
-                console.log("â­ï¸ Comment already exists, skipping duplicate");
+                console.log("⭐️ Comment already exists, skipping duplicate");
               }
             }
             break;
@@ -207,7 +216,7 @@ export default function StoryCanvas({
       if (hasJoinedRef.current) {
         socket.emit("leave-story", storyId);
         hasJoinedRef.current = false;
-        console.log(`ðŸ“– Left story room: ${storyId}`);
+        console.log(`📖 Left story room: ${storyId}`);
       }
     };
   }, [socket, storyId]);
@@ -238,7 +247,7 @@ export default function StoryCanvas({
       }
 
       const data = await response.json();
-      console.log("âœ… Story continued:", data);
+      console.log("✅ Story continued:", data);
 
       setContinueGuidance("");
       setShowGuidanceInput(false);
@@ -246,7 +255,7 @@ export default function StoryCanvas({
       // Story will be updated via Socket.io, but we can also update locally
       // The socket event might arrive first, so we handle both cases
     } catch (error: any) {
-      console.error("âŒ Continue story error:", error);
+      console.error("❌ Continue story error:", error);
       alert(`Failed to continue story: ${error.message}`);
     } finally {
       setIsContinuing(false);
@@ -260,12 +269,10 @@ export default function StoryCanvas({
         <h1>{localStory.title}</h1>
         <div className="story-meta">
           <span className="tropes">
-            {localStory.metadata.tropes.join(" â€¢ ")}
+            {localStory.metadata.tropes.join(" • ")}
           </span>
           <span className="spice-level">
-            {localStory.metadata.spiceLevel === "soft" && "ðŸ’• Sweet"}
-            {localStory.metadata.spiceLevel === "medium" && "ðŸ”¥ Passionate"}
-            {localStory.metadata.spiceLevel === "explicit" && "ðŸŒ¶ï¸ Explicit"}
+            {SPICE_LEVEL_DISPLAY[localStory.metadata.spiceLevel] || localStory.metadata.spiceLevel}
           </span>
           <span className="scenes-count">
             {localStory.scenes.length} scenes
@@ -285,6 +292,7 @@ export default function StoryCanvas({
             socket={socket}
             allowInteractions={allowInteractions}
             onRequireAuth={onRequireAuth}
+            userPlan={userPlan}
           />
         ))}
 
@@ -339,4 +347,3 @@ export default function StoryCanvas({
     </div>
   );
 }
-

@@ -17,7 +17,7 @@ interface StreamingStoryCreationProps {
   socket: Socket | null;
   generateImages: boolean;
   onComplete: (storyId: string) => void;
-  onError: (error: string) => void;
+  onError: (error: string, data?: any) => void;
 }
 
 interface Scene {
@@ -358,9 +358,9 @@ export default function StreamingStoryCreation({
     };
 
     // Listen for errors
-    const handleError = (data: { error: string }) => {
+    const handleError = (data: { error: string; upgradeRequired?: boolean; message?: string }) => {
       console.error('❌ [CLIENT] Story generation error:', data);
-      onError(data.error);
+      onError(data.error, data);
     };
 
     // Register event listeners

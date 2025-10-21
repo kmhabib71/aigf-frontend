@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Socket } from 'socket.io-client';
 import StoryLine from './StoryLine';
+import BlurredImagePlaceholder from './BlurredImagePlaceholder';
 import './SceneBlock.css';
 
 interface VisualMoment {
@@ -40,6 +41,7 @@ interface SceneBlockProps {
   socket: Socket | null;
   allowInteractions: boolean;
   onRequireAuth?: () => void;
+  userPlan?: string;
 }
 
 export default function SceneBlock({
@@ -50,6 +52,7 @@ export default function SceneBlock({
   socket,
   allowInteractions,
   onRequireAuth,
+  userPlan = 'free',
 }: SceneBlockProps) {
   const [expanded, setExpanded] = useState(true);
 
@@ -74,20 +77,31 @@ export default function SceneBlock({
         </button>
       </div>
 
-      {/* Scene Image (if available) */}
-      {expanded && scene.sceneImageUrl && (
-        <div className="scene-image-container">
-          <img
-            src={scene.sceneImageUrl}
-            alt={`Scene ${scene.sceneNumber}`}
-            className="scene-image"
-          />
-          {scene.sceneImagePrompt && (
-            <div className="scene-image-prompt-hint" title={scene.sceneImagePrompt}>
-              🎨 AI Generated
-            </div>
-          )}
-        </div>
+      {/* Scene Image (if available) OR Blurred Placeholder for free users */}
+      {expanded && (
+        scene.sceneImageUrl ? (
+          <div className="scene-image-container">
+            <img
+              src={scene.sceneImageUrl}
+              alt={`Scene ${scene.sceneNumber}`}
+              className="scene-image"
+            />
+            {scene.sceneImagePrompt && (
+              <div className="scene-image-prompt-hint" title={scene.sceneImagePrompt}>
+                🎨 AI Generated
+              </div>
+            )}
+          </div>
+        ) : userPlan === 'free' ? (
+          <div className="scene-image-container">
+            <BlurredImagePlaceholder
+              type="scene"
+              className="w-full"
+              sceneNumber={scene.sceneNumber}
+              message="See what happens next! Upgrade to unlock all scene images 🎬"
+            />
+          </div>
+        ) : null
       )}
 
       {/* Scene Content (Lines) - RESTORED with markdown support per line */}
@@ -106,6 +120,7 @@ export default function SceneBlock({
               comments={scene.comments.filter(c => c.lineNumber === lineIdx)}
               allowInteractions={allowInteractions}
               onRequireAuth={onRequireAuth}
+              userPlan={userPlan}
             />
           ))}
         </div>

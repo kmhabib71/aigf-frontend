@@ -59,7 +59,7 @@ interface Story {
 export default function StoryViewPage() {
   const params = useParams();
   const router = useRouter();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, userProfile } = useAuth();
   const storyId = params.id as string;
 
   const [story, setStory] = useState<(Story & { isOwner?: boolean }) | null>(
@@ -255,7 +255,7 @@ export default function StoryViewPage() {
           backgroundAttachment: "fixed",
         }}
       >
-            Back
+        Back
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
           <div
             className="absolute w-[300px] sm:w-[500px] lg:w-[800px] h-[300px] sm:h-[500px] lg:h-[800px] rounded-full opacity-10 sm:opacity-15 lg:opacity-20 animate-float-slow"
@@ -289,7 +289,7 @@ export default function StoryViewPage() {
           backgroundAttachment: "fixed",
         }}
       >
-            Back
+        Back
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
           <div
             className="absolute w-[300px] sm:w-[500px] lg:w-[800px] h-[300px] sm:h-[500px] lg:h-[800px] rounded-full opacity-10 sm:opacity-15 lg:opacity-20 animate-float-slow"
@@ -301,7 +301,6 @@ export default function StoryViewPage() {
             }}
           />
         </div>
-
         <div className="text-center max-w-md px-6 relative z-10">
           <GlassEffect
             borderRadius="2rem"
@@ -361,24 +360,22 @@ export default function StoryViewPage() {
   const visibilityLabel = isStoryPublic ? "Public" : "Private";
 
   const chatButtonNode =
-    story.metadata.characters && story.metadata.characters.length > 0
-      ? isAuthenticated
-        ? (
-            <ChatWithCharacter
-              storyId={storyId}
-              socket={socket}
-              characters={story.metadata.characters}
-            />
-          )
-        : (
-            <button
-              onClick={requireAuth}
-              className="px-6 py-3 bg-white/10 border border-white/25 text-white rounded-full font-semibold shadow-lg hover:bg-white/15 transition-all"
-            >
-              Sign in to Chat
-            </button>
-          )
-      : undefined;
+    story.metadata.characters && story.metadata.characters.length > 0 ? (
+      isAuthenticated ? (
+        <ChatWithCharacter
+          storyId={storyId}
+          socket={socket}
+          characters={story.metadata.characters}
+        />
+      ) : (
+        <button
+          onClick={requireAuth}
+          className="px-6 py-3 bg-purple-400 border border-white/25 text-white rounded-full font-semibold shadow-lg hover:bg-purple-800/40 transition-all"
+        >
+          Chat with Character
+        </button>
+      )
+    ) : undefined;
 
   return (
     <div
@@ -391,7 +388,6 @@ export default function StoryViewPage() {
         backgroundAttachment: "fixed",
       }}
     >
-            Back
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div
           className="absolute w-[300px] sm:w-[500px] lg:w-[800px] h-[300px] sm:h-[500px] lg:h-[800px] rounded-full opacity-10 sm:opacity-15 lg:opacity-20 animate-float-slow"
@@ -412,7 +408,6 @@ export default function StoryViewPage() {
           }}
         />
       </div>
-
       {/* Mouse Follow Glow - Desktop only */}
       <div
         className="hidden lg:block fixed w-[400px] h-[400px] rounded-full pointer-events-none z-10 transition-all duration-300"
@@ -424,7 +419,6 @@ export default function StoryViewPage() {
           transform: "translate(-50%, -50%)",
         }}
       />
-
       {/* Navigation Bar */}
       <div className="bg-black/40 backdrop-blur-2xl border-b border-white/10 sticky top-0 z-50 shadow-lg shadow-purple-500/20">
         <div className="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center gap-3">
@@ -461,9 +455,7 @@ export default function StoryViewPage() {
           </div>
         </div>
       </div>
-
       {/* Main Story Canvas */}
-
       <div className="py-8 relative z-20">
         <StoryCanvas
           story={story}
@@ -475,11 +467,10 @@ export default function StoryViewPage() {
           allowInteractions={canUseInteractiveFeatures}
           onRequireAuth={!canUseInteractiveFeatures ? requireAuth : undefined}
           chatButton={chatButtonNode}
+          userPlan={userProfile?.plan || 'free'}
         />
       </div>
-
       {/* Phase 2 Feature Showcase */}
-
       {/* Animations */}
       <style jsx>{`
         @keyframes float-slow {
