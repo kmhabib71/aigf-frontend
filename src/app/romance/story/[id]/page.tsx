@@ -71,6 +71,18 @@ export default function StoryViewPage() {
   const [idToken, setIdToken] = useState<string>("");
   const [visibilityUpdating, setVisibilityUpdating] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedStory, setEditedStory] = useState<{
+    title: string;
+    scenes: Array<{
+      sceneNumber: number;
+      index: number;
+      headline: string;
+      content: string;
+    }>;
+  } | null>(null);
+  const [savingEdits, setSavingEdits] = useState(false);
+  const [editError, setEditError] = useState("");
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -194,7 +206,10 @@ export default function StoryViewPage() {
   };
 
   const handleStoryUpdate = (updatedStory: Story) => {
-    setStory(updatedStory);
+    setStory((prev) => ({
+      ...updatedStory,
+      isOwner: prev?.isOwner ?? (updatedStory as any)?.isOwner,
+    }));
   };
 
   const handleVisibilityToggle = async () => {
@@ -241,6 +256,122 @@ export default function StoryViewPage() {
 
   const requireAuth = () => {
     router.push(`/login?redirect=/romance/story/${storyId}`);
+  };
+
+  const startEditing = () => {
+    if (!story) return;
+
+    setEditedStory({
+      title: story.title,
+      scenes: story.scenes.map((scene, index) => ({
+        sceneNumber: scene.sceneNumber,
+        index,
+        headline: scene.headline || "",
+        content: scene.content,
+      })),
+    });
+    setEditError("");
+    setIsEditing(true);
+  };
+
+  const handleTitleChange = (value: string) => {
+    setEditedStory((prev) =>
+      prev
+        ? {
+            ...prev,
+            title: value,
+          }
+        : prev
+    );
+  };
+
+  const handleSceneFieldChange = (
+    sceneNumber: number,
+    index: number,
+    field: "headline" | "content",
+    value: string
+  ) => {
+    setEditedStory((prev) => {
+      if (!prev) return prev;
+
+      return {
+        ...prev,
+        scenes: prev.scenes.map((scene) =>
+          scene.sceneNumber === sceneNumber && scene.index === index
+            ? { ...scene, [field]: value }
+            : scene
+        ),
+      };
+    });
+  };
+
+  const handleCancelEditing = () => {
+    setIsEditing(false);
+    setEditedStory(null);
+    setSavingEdits(false);
+    setEditError("");
+  };
+
+  const handleSaveEdits = async () => {
+    if (!editedStory) return;
+
+    const trimmedTitle = editedStory.title.trim();
+    if (!trimmedTitle) {
+      setEditError("Story title cannot be empty.");
+      return;
+    }
+
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
+      requireAuth();
+      return;
+    }
+
+    setSavingEdits(true);
+    setEditError("");
+
+    try {
+      const token = await currentUser.getIdToken();
+
+      const response = await fetch(
+        `${backendUrl}/api/romance/story/${storyId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            title: trimmedTitle,
+            scenes: editedStory.scenes.map((scene) => ({
+              sceneNumber: scene.sceneNumber,
+              index: scene.index,
+              headline: scene.headline,
+              content: scene.content,
+            })),
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || "Failed to save story edits");
+      }
+
+      const data = await response.json();
+
+      setStory((prev) => ({
+        ...(data.story as Story),
+        isOwner: prev?.isOwner ?? true,
+      }));
+      setIsEditing(false);
+      setEditedStory(null);
+    } catch (err: any) {
+      console.error("Save story edits error:", err);
+      setEditError(err?.message || "Failed to save story edits");
+    } finally {
+      setSavingEdits(false);
+    }
   };
 
   if (loading) {
@@ -388,6 +519,127 @@ export default function StoryViewPage() {
         backgroundAttachment: "fixed",
       }}
     >
+      {isEditing && editedStory && (
+        <div className="fixed inset-0 z-[80] flex items-center justify-center bg-black/70 backdrop-blur-sm px-4 py-6">
+          <div className="w-full max-w-5xl max-h-full overflow-y-auto">
+            <GlassEffect
+              borderRadius="1.5rem"
+              backgroundOpacity={18}
+              intensity={{
+                blur: 16,
+                saturation: 140,
+                brightness: 90,
+                displacement: 40,
+              }}
+            >
+              <div className="relative p-6 sm:p-8 space-y-6">
+                <button
+                  onClick={handleCancelEditing}
+                  className="absolute right-6 top-6 text-white/70 hover:text-white transition-colors text-xl"
+                  aria-label="Close editor"
+                >
+                  &times;
+                </button>
+                <div className="space-y-2">
+                  <h3 className="text-2xl font-semibold text-white">
+                    Manual Story Editor
+                  </h3>
+                  <p className="text-sm text-purple-100/80">
+                    Fine-tune your scenes with custom wording. Changes are saved instantly to this story.
+                  </p>
+                </div>
+
+                <div className="space-y-4">
+                  <label className="block text-sm font-semibold text-purple-100/90">
+                    Story Title
+                  </label>
+                  <input
+                    type="text"
+                    value={editedStory.title}
+                    onChange={(event) => handleTitleChange(event.target.value)}
+                    className="w-full rounded-2xl border border-white/20 bg-black/40 px-4 py-3 text-white shadow-inner shadow-black/20 focus:outline-none focus:ring-2 focus:ring-purple-400"
+                    maxLength={120}
+                    placeholder="Enter your story title"
+                  />
+                </div>
+
+                <div className="space-y-8">
+                  {editedStory.scenes.map((scene) => (
+                    <div
+                      key={`${scene.sceneNumber}-${scene.index}`}
+                      className="rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6 shadow-lg shadow-purple-900/20"
+                    >
+                      <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
+                        <h4 className="text-lg font-semibold text-white">
+                          Scene {scene.sceneNumber}
+                        </h4>
+                        <span className="text-xs uppercase tracking-wide text-purple-100/70">
+                          Manual edit
+                        </span>
+                      </div>
+                      <div className="space-y-3">
+                        <input
+                          type="text"
+                          value={scene.headline}
+                          onChange={(event) =>
+                            handleSceneFieldChange(
+                              scene.sceneNumber,
+                              scene.index,
+                              "headline",
+                              event.target.value
+                            )
+                          }
+                          className="w-full rounded-2xl border border-white/15 bg-black/30 px-4 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-purple-400"
+                          maxLength={160}
+                          placeholder="Scene headline (optional)"
+                        />
+                        <textarea
+                          value={scene.content}
+                          onChange={(event) =>
+                            handleSceneFieldChange(
+                              scene.sceneNumber,
+                              scene.index,
+                              "content",
+                              event.target.value
+                            )
+                          }
+                          rows={10}
+                          className="w-full rounded-2xl border border-white/15 bg-black/30 px-4 py-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-purple-400"
+                          placeholder="Write or refine this scene..."
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {editError && (
+                  <div className="rounded-2xl border border-red-400/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+                    {editError}
+                  </div>
+                )}
+
+                <div className="flex flex-col sm:flex-row justify-end gap-3">
+                  <button
+                    onClick={handleCancelEditing}
+                    className="px-5 py-3 rounded-xl border border-white/20 text-white bg-white/10 hover:bg-white/20 transition-all disabled:opacity-60"
+                    disabled={savingEdits}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleSaveEdits}
+                    disabled={savingEdits}
+                    className="px-6 py-3 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold shadow-lg shadow-purple-500/40 hover:shadow-purple-500/60 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                  >
+                    {savingEdits ? "Saving..." : "Save Changes"}
+                  </button>
+                </div>
+              </div>
+            </GlassEffect>
+          </div>
+        </div>
+      )}
+
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div
           className="absolute w-[300px] sm:w-[500px] lg:w-[800px] h-[300px] sm:h-[500px] lg:h-[800px] rounded-full opacity-10 sm:opacity-15 lg:opacity-20 animate-float-slow"
@@ -433,6 +685,14 @@ export default function StoryViewPage() {
           </h2>
           <div className="flex items-center gap-2">
             <span className={visibilityBadgeClasses}>{visibilityLabel}</span>
+            {isOwner && !isEditing && (
+              <button
+                onClick={startEditing}
+                className="px-4 py-2 bg-white/10 border border-white/30 text-white rounded-xl text-sm font-semibold hover:bg-white/20 transition-all"
+              >
+                Edit Story
+              </button>
+            )}
             {isOwner && (
               <button
                 onClick={handleVisibilityToggle}

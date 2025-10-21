@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function RomanceCanvasDemoPage() {
   const router = useRouter();
@@ -12,18 +12,38 @@ export default function RomanceCanvasDemoPage() {
   // Demo loading stages
   const loadingStages = [
     { stage: 0, text: "Analyzing your prompt...", icon: "🤔", duration: 1500 },
-    { stage: 1, text: "Generating story outline (5-8 scenes)...", icon: "📝", duration: 2000 },
-    { stage: 2, text: "Detecting visual moments...", icon: "🎨", duration: 1500 },
-    { stage: 3, text: "Creating scene 1 image with Venice AI...", icon: "🖼️", duration: 2500 },
+    {
+      stage: 1,
+      text: "Generating story outline (5-8 scenes)...",
+      icon: "📝",
+      duration: 2000,
+    },
+    {
+      stage: 2,
+      text: "Detecting visual moments...",
+      icon: "🎨",
+      duration: 1500,
+    },
+    {
+      stage: 3,
+      text: "Creating scene 1 image with Venice AI...",
+      icon: "🖼️",
+      duration: 2500,
+    },
     { stage: 4, text: "Creating scene 2 image...", icon: "🖼️", duration: 2000 },
     { stage: 5, text: "Creating scene 3 image...", icon: "🖼️", duration: 2000 },
-    { stage: 6, text: "Finalizing your romantic story...", icon: "✨", duration: 1500 },
+    {
+      stage: 6,
+      text: "Finalizing your romantic story...",
+      icon: "✨",
+      duration: 1500,
+    },
   ];
 
   useEffect(() => {
     if (isGenerating && loadingStage < loadingStages.length) {
       const timer = setTimeout(() => {
-        setLoadingStage(prev => prev + 1);
+        setLoadingStage((prev) => prev + 1);
       }, loadingStages[loadingStage].duration);
 
       return () => clearTimeout(timer);
@@ -49,13 +69,15 @@ export default function RomanceCanvasDemoPage() {
 The way he looked at her made her breath catch. This was supposed to be professional. This was supposed to be just a job.
 
 But the electricity between them suggested otherwise.`,
-        sceneImageUrl: "/generated-images/2025-09-24/e7c86541-6f89-4bf0-af33-f0c4566993f3_1758692448537_6d58cd51_0.png",
+        sceneImageUrl:
+          "/generated-images/2025-09-24/e7c86541-6f89-4bf0-af33-f0c4566993f3_1758692448537_6d58cd51_0.png",
         visualMoments: [
           {
             lineNumber: 3,
             context: "Marcus Cole regarding her with piercing blue eyes",
-            imageUrl: "/generated-images/2025-09-24/e7c86541-6f89-4bf0-af33-f0c4566993f3_1758692448533_aac4a424_1.png"
-          }
+            imageUrl:
+              "/generated-images/2025-09-24/e7c86541-6f89-4bf0-af33-f0c4566993f3_1758692448533_aac4a424_1.png",
+          },
         ],
         comments: [
           {
@@ -64,9 +86,9 @@ But the electricity between them suggested otherwise.`,
             text: "OMG the tension already! 😍",
             lineNumber: 3,
             reactions: ["❤️", "🔥"],
-            createdAt: new Date(Date.now() - 3600000).toISOString()
-          }
-        ]
+            createdAt: new Date(Date.now() - 3600000).toISOString(),
+          },
+        ],
       },
       {
         sceneNumber: 2,
@@ -79,7 +101,8 @@ She should say no. She should maintain boundaries.
 "Of course, Mr. Cole," she heard herself say instead.
 
 The city lights twinkled outside the floor-to-ceiling windows as they worked side by side, their shoulders occasionally brushing. The accidental touches felt anything but accidental.`,
-        sceneImageUrl: "/generated-images/2025-09-24/e7c86541-6f89-4bf0-af33-f0c4566993f3_1758692448530_b57688e0_2.png",
+        sceneImageUrl:
+          "/generated-images/2025-09-24/e7c86541-6f89-4bf0-af33-f0c4566993f3_1758692448530_b57688e0_2.png",
         visualMoments: [],
         comments: [
           {
@@ -88,9 +111,9 @@ The city lights twinkled outside the floor-to-ceiling windows as they worked sid
             text: "The slow burn is killing me! More tension please! 🔥",
             lineNumber: null,
             reactions: ["🔥", "💕"],
-            createdAt: new Date(Date.now() - 1800000).toISOString()
-          }
-        ]
+            createdAt: new Date(Date.now() - 1800000).toISOString(),
+          },
+        ],
       },
       {
         sceneNumber: 3,
@@ -111,13 +134,15 @@ She finally looked up, finding him mere inches away. When had he moved so close?
 But she couldn't. Because she'd been waiting for this moment since the day they met.
 
 Their lips met in a kiss that shattered every professional boundary they'd carefully constructed.`,
-        sceneImageUrl: "/generated-images/2025-09-24/e7c86541-6f89-4bf0-af33-f0c4566993f3_1758692448538_c474fae1_3.png",
+        sceneImageUrl:
+          "/generated-images/2025-09-24/e7c86541-6f89-4bf0-af33-f0c4566993f3_1758692448538_c474fae1_3.png",
         visualMoments: [
           {
             lineNumber: 6,
             context: "Their lips met in a kiss",
-            imageUrl: "/generated-images/2025-09-24/e655536e-b38d-4f55-ac72-07a64bcd8eb9_1758693059434_d5fbd1d6_0.png"
-          }
+            imageUrl:
+              "/generated-images/2025-09-24/e655536e-b38d-4f55-ac72-07a64bcd8eb9_1758693059434_d5fbd1d6_0.png",
+          },
         ],
         comments: [
           {
@@ -126,7 +151,7 @@ Their lips met in a kiss that shattered every professional boundary they'd caref
             text: "FINALLY!! This is what I've been waiting for! 💋",
             lineNumber: 6,
             reactions: ["❤️", "😍", "🔥"],
-            createdAt: new Date(Date.now() - 300000).toISOString()
+            createdAt: new Date(Date.now() - 300000).toISOString(),
           },
           {
             userId: "demo4",
@@ -134,11 +159,11 @@ Their lips met in a kiss that shattered every professional boundary they'd caref
             text: "The forbidden love trope done RIGHT! Continue this story please!",
             lineNumber: null,
             reactions: ["💕"],
-            createdAt: new Date(Date.now() - 60000).toISOString()
-          }
-        ]
-      }
-    ]
+            createdAt: new Date(Date.now() - 60000).toISOString(),
+          },
+        ],
+      },
+    ],
   };
 
   if (isGenerating) {
@@ -157,7 +182,11 @@ Their lips met in a kiss that shattered every professional boundary they'd caref
               <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 transition-all duration-500 ease-out"
-                  style={{ width: `${((loadingStage + 1) / loadingStages.length) * 100}%` }}
+                  style={{
+                    width: `${
+                      ((loadingStage + 1) / loadingStages.length) * 100
+                    }%`,
+                  }}
                 />
               </div>
               <p className="text-sm text-gray-500 mt-2">
@@ -177,14 +206,18 @@ Their lips met in a kiss that shattered every professional boundary they'd caref
                   key={idx}
                   className={`flex items-center gap-3 p-3 rounded-lg transition-all ${
                     idx < loadingStage
-                      ? 'bg-green-50 text-green-700'
+                      ? "bg-green-50 text-green-700"
                       : idx === loadingStage
-                      ? 'bg-purple-50 text-purple-700 font-semibold'
-                      : 'bg-gray-50 text-gray-400'
+                      ? "bg-purple-50 text-purple-700 font-semibold"
+                      : "bg-gray-50 text-gray-400"
                   }`}
                 >
                   <span className="text-2xl">
-                    {idx < loadingStage ? '✓' : idx === loadingStage ? stage.icon : '○'}
+                    {idx < loadingStage
+                      ? "✓"
+                      : idx === loadingStage
+                      ? stage.icon
+                      : "○"}
                   </span>
                   <span className="text-sm">{stage.text}</span>
                 </div>
@@ -194,7 +227,8 @@ Their lips met in a kiss that shattered every professional boundary they'd caref
             {/* Fun Fact */}
             <div className="mt-8 p-4 bg-gradient-to-r from-pink-50 to-purple-50 rounded-xl">
               <p className="text-sm text-gray-600 italic">
-                💡 Did you know? Our AI analyzes your story for emotional peaks to generate the perfect images!
+                💡 Did you know? Our AI analyzes your story for emotional peaks
+                to generate the perfect images!
               </p>
             </div>
           </div>
@@ -210,7 +244,7 @@ Their lips met in a kiss that shattered every professional boundary they'd caref
         <div className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
           <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
             <button
-              onClick={() => router.push('/')}
+              onClick={() => router.push("/")}
               className="text-gray-600 hover:text-gray-900 flex items-center gap-2"
             >
               ← Back to Home
@@ -224,7 +258,7 @@ Their lips met in a kiss that shattered every professional boundary they'd caref
               </h2>
             </div>
             <button
-              onClick={() => router.push('/romance/create')}
+              onClick={() => router.push("/romance/create")}
               className="px-4 py-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-lg text-sm font-medium hover:from-pink-600 hover:to-purple-700 shadow-lg"
             >
               ✨ Create Your Story
@@ -246,7 +280,7 @@ Their lips met in a kiss that shattered every professional boundary they'd caref
                     key={trope}
                     className="px-4 py-2 bg-pink-100 text-pink-700 rounded-full text-sm font-medium"
                   >
-                    {trope.replace('-', ' ')}
+                    {trope.replace("-", " ")}
                   </span>
                 ))}
                 <span className="px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">
@@ -289,21 +323,25 @@ Their lips met in a kiss that shattered every professional boundary they'd caref
                         alt={`Scene ${scene.sceneNumber}`}
                         className="w-full h-[500px] object-cover"
                       />
-                      <div className="absolute bottom-4 right-4 px-3 py-1 bg-black/70 text-white text-xs rounded-full">
+                      {/* <div className="absolute bottom-4 right-4 px-3 py-1 bg-black/70 text-white text-xs rounded-full">
                         🎨 AI Generated
-                      </div>
+                      </div> */}
                     </div>
                   )}
 
                   {/* Scene Content */}
                   <div className="p-8">
-                    {scene.content.split('\n\n').map((paragraph, pIdx) => {
+                    {scene.content.split("\n\n").map((paragraph, pIdx) => {
                       const paraLineNumber = scene.content
-                        .split('\n\n')
+                        .split("\n\n")
                         .slice(0, pIdx)
-                        .join('\n\n').split('\n').length;
+                        .join("\n\n")
+                        .split("\n").length;
                       const visualMoment = scene.visualMoments.find(
-                        (vm) => vm.lineNumber >= paraLineNumber && vm.lineNumber < paraLineNumber + paragraph.split('\n').length
+                        (vm) =>
+                          vm.lineNumber >= paraLineNumber &&
+                          vm.lineNumber <
+                            paraLineNumber + paragraph.split("\n").length
                       );
 
                       return (
@@ -321,7 +359,8 @@ Their lips met in a kiss that shattered every professional boundary they'd caref
                                 className="w-full h-auto"
                               />
                               <div className="bg-gray-900 text-white px-4 py-2 text-sm">
-                                🎨 Generated for: "{visualMoment.context.substring(0, 60)}..."
+                                🎨 Generated for: "
+                                {visualMoment.context.substring(0, 60)}..."
                               </div>
                             </div>
                           )}
@@ -342,7 +381,9 @@ Their lips met in a kiss that shattered every professional boundary they'd caref
                     {/* Comments */}
                     {scene.comments.length > 0 && (
                       <div className="mt-8 space-y-4">
-                        <h4 className="font-semibold text-gray-900 mb-4">💬 Comments</h4>
+                        <h4 className="font-semibold text-gray-900 mb-4">
+                          💬 Comments
+                        </h4>
                         {scene.comments.map((comment, cIdx) => (
                           <div
                             key={cIdx}
@@ -353,7 +394,9 @@ Their lips met in a kiss that shattered every professional boundary they'd caref
                                 {comment.displayName}
                               </span>
                               <span className="text-xs text-gray-500">
-                                {new Date(comment.createdAt).toLocaleDateString()}
+                                {new Date(
+                                  comment.createdAt
+                                ).toLocaleDateString()}
                               </span>
                             </div>
                             <p className="text-gray-700 mb-2">{comment.text}</p>
@@ -385,7 +428,8 @@ Their lips met in a kiss that shattered every professional boundary they'd caref
                   🔄 Continue Story with AI
                 </button>
                 <p className="text-sm text-gray-500 mt-3">
-                  Venice AI will analyze reader comments and generate the next scene!
+                  Venice AI will analyze reader comments and generate the next
+                  scene!
                 </p>
               </div>
             </div>
@@ -399,35 +443,51 @@ Their lips met in a kiss that shattered every professional boundary they'd caref
                 <div className="flex items-start gap-3 p-4 bg-white rounded-lg shadow">
                   <span className="text-2xl">🎨</span>
                   <div>
-                    <h4 className="font-semibold mb-1">Line-by-Line Image Generation</h4>
-                    <p className="text-gray-600">Click any line to generate a custom image with Venice AI</p>
+                    <h4 className="font-semibold mb-1">
+                      Line-by-Line Image Generation
+                    </h4>
+                    <p className="text-gray-600">
+                      Click any line to generate a custom image with Venice AI
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3 p-4 bg-white rounded-lg shadow">
                   <span className="text-2xl">💬</span>
                   <div>
                     <h4 className="font-semibold mb-1">Real-Time Comments</h4>
-                    <p className="text-gray-600">Add comments to specific lines and see updates instantly</p>
+                    <p className="text-gray-600">
+                      Add comments to specific lines and see updates instantly
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3 p-4 bg-white rounded-lg shadow">
                   <span className="text-2xl">🔄</span>
                   <div>
-                    <h4 className="font-semibold mb-1">AI Story Continuation</h4>
-                    <p className="text-gray-600">Venice uncensored AI generates next scenes based on reader feedback</p>
+                    <h4 className="font-semibold mb-1">
+                      AI Story Continuation
+                    </h4>
+                    <p className="text-gray-600">
+                      Venice uncensored AI generates next scenes based on reader
+                      feedback
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3 p-4 bg-white rounded-lg shadow">
                   <span className="text-2xl">🖼️</span>
                   <div>
-                    <h4 className="font-semibold mb-1">Inline Visual Moments</h4>
-                    <p className="text-gray-600">Images embedded directly in the text at key emotional moments</p>
+                    <h4 className="font-semibold mb-1">
+                      Inline Visual Moments
+                    </h4>
+                    <p className="text-gray-600">
+                      Images embedded directly in the text at key emotional
+                      moments
+                    </p>
                   </div>
                 </div>
               </div>
               <div className="mt-6 text-center">
                 <button
-                  onClick={() => router.push('/romance/create')}
+                  onClick={() => router.push("/romance/create")}
                   className="px-8 py-3 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
                 >
                   🚀 Create Your Own Romance Story Now!

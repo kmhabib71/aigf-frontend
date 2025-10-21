@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState } from 'react';
-import { Socket } from 'socket.io-client';
-import StoryLine from './StoryLine';
-import BlurredImagePlaceholder from './BlurredImagePlaceholder';
-import './SceneBlock.css';
+import React, { useState } from "react";
+import { Socket } from "socket.io-client";
+import StoryLine from "./StoryLine";
+import BlurredImagePlaceholder from "./BlurredImagePlaceholder";
+import "./SceneBlock.css";
 
 interface VisualMoment {
   lineNumber: number;
@@ -52,12 +52,12 @@ export default function SceneBlock({
   socket,
   allowInteractions,
   onRequireAuth,
-  userPlan = 'free',
+  userPlan = "free",
 }: SceneBlockProps) {
   const [expanded, setExpanded] = useState(true);
 
   // Parse scene content into lines
-  const lines = scene.content.split('\n').filter(line => line.trim());
+  const lines = scene.content.split("\n").filter((line) => line.trim());
 
   // Get comments count for this scene
   const sceneCommentsCount = scene.comments.length;
@@ -69,30 +69,32 @@ export default function SceneBlock({
         <div className="scene-header-left">
           <h3>{scene.headline || `Scene ${scene.sceneNumber}`}</h3>
           {sceneCommentsCount > 0 && (
-            <span className="scene-comments-badge">💬 {sceneCommentsCount}</span>
+            <span className="scene-comments-badge">
+              💬 {sceneCommentsCount}
+            </span>
           )}
         </div>
         <button className="scene-collapse-button">
-          {expanded ? '▼' : '▶'}
+          {expanded ? "▼" : "▶"}
         </button>
       </div>
 
       {/* Scene Image (if available) OR Blurred Placeholder for free users */}
-      {expanded && (
-        scene.sceneImageUrl ? (
+      {expanded &&
+        (scene.sceneImageUrl ? (
           <div className="scene-image-container">
             <img
               src={scene.sceneImageUrl}
               alt={`Scene ${scene.sceneNumber}`}
               className="scene-image"
             />
-            {scene.sceneImagePrompt && (
+            {/* {scene.sceneImagePrompt && (
               <div className="scene-image-prompt-hint" title={scene.sceneImagePrompt}>
                 🎨 AI Generated
               </div>
-            )}
+            )} */}
           </div>
-        ) : userPlan === 'free' ? (
+        ) : userPlan === "free" ? (
           <div className="scene-image-container">
             <BlurredImagePlaceholder
               type="scene"
@@ -101,8 +103,7 @@ export default function SceneBlock({
               message="See what happens next! Upgrade to unlock all scene images 🎬"
             />
           </div>
-        ) : null
-      )}
+        ) : null)}
 
       {/* Scene Content (Lines) - RESTORED with markdown support per line */}
       {expanded && (
@@ -116,8 +117,10 @@ export default function SceneBlock({
               storyId={storyId}
               idToken={idToken}
               socket={socket}
-              visualMoments={scene.visualMoments.filter(vm => vm.lineNumber === lineIdx)}
-              comments={scene.comments.filter(c => c.lineNumber === lineIdx)}
+              visualMoments={scene.visualMoments.filter(
+                (vm) => vm.lineNumber === lineIdx
+              )}
+              comments={scene.comments.filter((c) => c.lineNumber === lineIdx)}
               allowInteractions={allowInteractions}
               onRequireAuth={onRequireAuth}
               userPlan={userPlan}

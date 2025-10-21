@@ -50,7 +50,7 @@ export default function StoryLine({
   comments,
   allowInteractions,
   onRequireAuth,
-  userPlan = 'free',
+  userPlan = "free",
 }: StoryLineProps) {
   const [showActions, setShowActions] = useState(false);
   const [showComments, setShowComments] = useState(false);
@@ -61,7 +61,8 @@ export default function StoryLine({
 
   // Detect if device supports touch
   useEffect(() => {
-    isTouchDevice.current = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    isTouchDevice.current =
+      "ontouchstart" in window || navigator.maxTouchPoints > 0;
   }, []);
 
   // Reset loader when new visual moment arrives
@@ -82,13 +83,13 @@ export default function StoryLine({
 
     if (showActions) {
       // Use capture phase to handle clicks before they bubble
-      document.addEventListener('mousedown', handleClickOutside, true);
-      document.addEventListener('touchstart', handleClickOutside, true);
+      document.addEventListener("mousedown", handleClickOutside, true);
+      document.addEventListener("touchstart", handleClickOutside, true);
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside, true);
-      document.removeEventListener('touchstart', handleClickOutside, true);
+      document.removeEventListener("mousedown", handleClickOutside, true);
+      document.removeEventListener("touchstart", handleClickOutside, true);
     };
   }, [showActions]);
 
@@ -101,7 +102,7 @@ export default function StoryLine({
     if (isGeneratingImage) return;
 
     // Free users see blurred placeholder (no actual image generation)
-    if (userPlan === 'free') {
+    if (userPlan === "free") {
       setIsGeneratingImage(true);
       // Keep it in generating state to show the blurred placeholder
       return;
@@ -166,13 +167,17 @@ export default function StoryLine({
   const handleLineClick = (e: React.MouseEvent | React.TouchEvent) => {
     // Don't toggle if clicking on buttons or other interactive elements
     const target = e.target as HTMLElement;
-    if (target.closest('.action-button') || target.closest('.comment-badge') || target.closest('.comment-button')) {
+    if (
+      target.closest(".action-button") ||
+      target.closest(".comment-badge") ||
+      target.closest(".comment-button")
+    ) {
       return;
     }
 
     // On touch devices, toggle the actions
     if (isTouchDevice.current) {
-      setShowActions(prev => !prev);
+      setShowActions((prev) => !prev);
     }
   };
 
@@ -201,8 +206,8 @@ export default function StoryLine({
       </div>
 
       {/* Image Generation Loader or Blurred Placeholder */}
-      {isGeneratingImage && (
-        userPlan === 'free' ? (
+      {isGeneratingImage &&
+        (userPlan === "free" ? (
           <div className="my-4">
             <BlurredImagePlaceholder type="line" />
           </div>
@@ -213,8 +218,7 @@ export default function StoryLine({
               <span className="loader-text">Generating image with AI...</span>
             </div>
           </div>
-        )
-      )}
+        ))}
 
       {/* Embedded Images (Visual Moments) */}
       {visualMoments.length > 0 && (
@@ -226,11 +230,11 @@ export default function StoryLine({
                 alt={`Visual for: ${vm.context.substring(0, 50)}...`}
                 className="inline-visual"
               />
-              {vm.imagePrompt && (
+              {/* {vm.imagePrompt && (
                 <div className="visual-prompt-hint" title={vm.imagePrompt}>
                   🎨 AI Generated
                 </div>
-              )}
+              )} */}
             </div>
           ))}
         </div>

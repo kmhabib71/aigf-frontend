@@ -84,7 +84,6 @@ export default function StoryCanvas({
   const [continueGuidance, setContinueGuidance] = useState("");
   const [showGuidanceInput, setShowGuidanceInput] = useState(false);
   const canvasEndRef = useRef<HTMLDivElement>(null);
-  const hasJoinedRef = useRef(false);
 
   // Sync local story with prop changes
   useEffect(() => {
@@ -107,12 +106,18 @@ export default function StoryCanvas({
 
   // Socket.io real-time updates
   useEffect(() => {
-    if (!socket || !storyId || hasJoinedRef.current) return;
+    if (!socket || !storyId) return;
 
-    // Join story room (only once)
-    socket.emit("join-story", storyId);
-    hasJoinedRef.current = true;
-    console.log(`📖 Joined story room: ${storyId}`);
+    // Ensure socket joins story room and re-joins after reconnects
+    const joinStoryRoom = () => {
+      socket.emit("join-story", storyId);
+      console.log(`dY"- Joined story room: ${storyId}`);
+    };
+    if (socket.connected) {
+      joinStoryRoom();
+    }
+    socket.on("connect", joinStoryRoom);
+    socket.on("reconnect", joinStoryRoom);
 
     // Listen for story updates
     const handleStoryUpdate = (update: any) => {
@@ -126,6 +131,10 @@ export default function StoryCanvas({
       }
 
       setLocalStory((prevStory) => {
+        if (update.type === "story_edited" && update.story) {
+          return update.story as Story;
+        }
+
         const newStory = { ...prevStory };
 
         switch (update.type) {
@@ -213,12 +222,12 @@ export default function StoryCanvas({
     // Cleanup
     return () => {
       socket.off("story:updated", handleStoryUpdate);
-      if (hasJoinedRef.current) {
-        socket.emit("leave-story", storyId);
-        hasJoinedRef.current = false;
-        console.log(`📖 Left story room: ${storyId}`);
-      }
+      socket.off("connect", joinStoryRoom);
+      socket.off("reconnect", joinStoryRoom);
+      socket.emit("leave-story", storyId);
+      console.log(`dY"- Left story room: ${storyId}`);
     };
+
   }, [socket, storyId]);
 
   const handleContinueStory = async () => {
