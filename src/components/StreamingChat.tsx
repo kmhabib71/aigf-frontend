@@ -8,7 +8,7 @@ interface StreamingChatProps {
   conversationId: string | null;
   userId?: string | null; // Optional userId for token tracking
   onResponse: (response: string) => void;
-  onError: (error: string) => void;
+  onError: (error: string, data?: any) => void;
   onStart: () => void;
   onComplete: (
     imageUrls?: string[],
@@ -44,6 +44,16 @@ interface StreamingResponse {
     quality: string;
     generatedAt: string;
   };
+  requiresAuth?: boolean;
+  authMessage?: string;
+  trialUsed?: boolean;
+  trialsUsed?: number;
+  upgradeMessage?: string;
+  insufficientCredits?: boolean;
+  creditBalance?: number;
+  rateLimitReached?: boolean;
+  resetAt?: string;
+  messageLimitReached?: boolean;
 }
 
 export const StreamingChat = React.forwardRef<any, StreamingChatProps>(
@@ -134,7 +144,7 @@ export const StreamingChat = React.forwardRef<any, StreamingChatProps>(
             // Streaming error
             setIsStreaming(false);
             setStreamingContent("");
-            onError(data.error || "Streaming error occurred");
+            onError(data.error || "Streaming error occurred", data);
             break;
 
           case "tool_processing":

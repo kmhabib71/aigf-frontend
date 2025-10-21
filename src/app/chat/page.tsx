@@ -106,6 +106,13 @@ export default function ChatPage() {
   const [showSoftGate, setShowSoftGate] = useState(false);
   const [anonymousMessagesUsed, setAnonymousMessagesUsed] = useState(0);
 
+  // IMAGE LIMIT MODAL STATE
+  const [showImageLimitModal, setShowImageLimitModal] = useState(false);
+  const [imageLimitData, setImageLimitData] = useState<{
+    type: 'auth' | 'trial' | 'credits';
+    message: string;
+  } | null>(null);
+
   const streamingContentRef = useRef("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const socketRef = useRef<Socket | null>(null);
@@ -381,8 +388,80 @@ export default function ChatPage() {
     });
   };
 
-  const handleStreamingError = async (error: string) => {
-    console.error("Streaming error:", error);
+  const handleStreamingError = async (error: string, data?: any) => {
+    console.error("Streaming error:", error, data);
+
+    // Handle authentication required
+    if (data?.requiresAuth) {
+      setImageLimitData({
+        type: 'auth',
+        message: data.authMessage || 'Please sign in to generate images!'
+      });
+      setShowImageLimitModal(true);
+      setIsStreamingInProgress(false);
+      setStreamingContent("");
+      streamingContentRef.current = "";
+      setToolProcessingMessage(null);
+      return;
+    }
+
+    // Handle trial limit reached
+    if (data?.trialUsed) {
+      setImageLimitData({
+        type: 'trial',
+        message: data.upgradeMessage || 'You\'ve used your free image trials! Upgrade to Premium for unlimited images.'
+      });
+      setShowImageLimitModal(true);
+      setIsStreamingInProgress(false);
+      setStreamingContent("");
+      streamingContentRef.current = "";
+      setToolProcessingMessage(null);
+      return;
+    }
+
+    // Handle insufficient credits
+    if (data?.insufficientCredits) {
+      setImageLimitData({
+        type: 'credits',
+        message: data.upgradeMessage || 'You\'ve run out of credits.'
+      });
+      setShowImageLimitModal(true);
+      setIsStreamingInProgress(false);
+      setStreamingContent("");
+      streamingContentRef.current = "";
+      setToolProcessingMessage(null);
+      return;
+    }
+
+    // Handle IP rate limit reached (anonymous users)
+    if (data?.rateLimitReached) {
+      setImageLimitData({
+        type: 'auth',
+        message: data.upgradeMessage || 'You\'ve reached your daily message limit. Create a free account to continue!'
+      });
+      setShowImageLimitModal(true);
+      setIsStreamingInProgress(false);
+      setStreamingContent("");
+      streamingContentRef.current = "";
+      setToolProcessingMessage(null);
+      return;
+    }
+
+    // Handle message limit reached (free users)
+    if (data?.messageLimitReached) {
+      setImageLimitData({
+        type: 'trial',
+        message: data.upgradeMessage || 'You\'ve reached your monthly message limit. Upgrade to Premium for unlimited messaging!'
+      });
+      setShowImageLimitModal(true);
+      setIsStreamingInProgress(false);
+      setStreamingContent("");
+      streamingContentRef.current = "";
+      setToolProcessingMessage(null);
+      return;
+    }
+
+    // Regular error handling
     const errorMessage: Message = {
       role: "assistant",
       content: `Sorry, there was an error: ${error}`,
@@ -1031,6 +1110,110 @@ export default function ChatPage() {
         type="chat"
         messagesUsed={anonymousMessagesUsed}
       />
+
+      {/* Image Limit Modal */}
+      {showImageLimitModal && imageLimitData && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm">
+          <div className="relative bg-white rounded-3xl shadow-2xl max-w-md w-full mx-4 overflow-hidden">
+            {/* Gradient Header */}
+            <div className="bg-gradient-to-br from-purple-500 via-pink-500 to-orange-500 p-8 text-white text-center relative">
+              {/* Animated Icons */}
+              <div className="absolute top-4 right-4 text-2xl animate-bounce">🎨</div>
+              <div className="absolute bottom-4 left-4 text-2xl animate-bounce animation-delay-300">✨</div>
+
+              {/* Emoji Icon */}
+              <div className="text-6xl mb-4">
+                {imageLimitData.type === 'auth' ? '🔐' : imageLimitData.type === 'trial' ? '🔒' : '💳'}
+              </div>
+
+              {/* Headline */}
+              <h2 className="text-3xl font-black mb-2">
+                {imageLimitData.type === 'auth' ? 'Sign In Required' : imageLimitData.type === 'trial' ? 'Free Trials Used' : 'Out of Credits'}
+              </h2>
+
+              {/* Usage Info */}
+              <p className="text-sm opacity-90">
+                {imageLimitData.type === 'auth' ? 'Create images with a free account' : imageLimitData.type === 'trial' ? 'You\'ve used your 2 free image trials' : 'Your monthly credits have been used'}
+              </p>
+            </div>
+
+            {/* Content */}
+            <div className="p-8">
+              <p className="text-gray-700 text-lg text-center mb-6">
+                {imageLimitData.message}
+              </p>
+
+              {/* Features */}
+              <div className="space-y-3 mb-6">
+                <div className="flex items-center gap-3 text-gray-700">
+                  <span className="text-green-500 text-xl">✓</span>
+                  <span>Unlimited AI-generated images</span>
+                </div>
+                <div className="flex items-center gap-3 text-gray-700">
+                  <span className="text-green-500 text-xl">✓</span>
+                  <span>Uncensored romantic content</span>
+                </div>
+                <div className="flex items-center gap-3 text-gray-700">
+                  <span className="text-green-500 text-xl">✓</span>
+                  <span>Priority generation speed</span>
+                </div>
+                <div className="flex items-center gap-3 text-gray-700">
+                  <span className="text-green-500 text-xl">✓</span>
+                  <span>HD quality images</span>
+                </div>
+              </div>
+
+              {/* CTA Buttons */}
+              <div className="space-y-3">
+                {imageLimitData.type === 'auth' ? (
+                  <>
+                    <button
+                      onClick={() => window.location.href = '/login?redirect=/chat'}
+                      className="w-full px-6 py-4 rounded-2xl font-bold text-lg bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                    >
+                      🔐 Sign In to Generate Images
+                    </button>
+                    <button
+                      onClick={() => window.location.href = '/signup?redirect=/chat'}
+                      className="w-full px-6 py-3 rounded-2xl font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors duration-200"
+                    >
+                      Create Free Account
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => window.location.href = '/pricing'}
+                      className="w-full px-6 py-4 rounded-2xl font-bold text-lg bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                    >
+                      ✨ Upgrade to Premium
+                    </button>
+                  </>
+                )}
+
+                <button
+                  onClick={() => setShowImageLimitModal(false)}
+                  className="w-full px-6 py-3 rounded-2xl font-semibold text-gray-600 hover:bg-gray-100 transition-colors duration-200"
+                >
+                  Maybe Later
+                </button>
+              </div>
+
+              {/* Reset Info */}
+              {imageLimitData.type === 'trial' && (
+                <p className="text-xs text-gray-500 text-center mt-4">
+                  Upgrade for unlimited image generation
+                </p>
+              )}
+              {imageLimitData.type === 'credits' && (
+                <p className="text-xs text-gray-500 text-center mt-4">
+                  Your credits will refresh on the 1st of each month
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Animations */}
       <style jsx>{`

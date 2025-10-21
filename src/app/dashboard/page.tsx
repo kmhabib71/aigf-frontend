@@ -381,35 +381,6 @@ export default function DashboardPage() {
 
           {/* Right Column - Usage Stats */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Credit Balance Card (Plus/Pro users) */}
-            {(userProfile.plan === "plus" || userProfile.plan === "pro") &&
-              userProfile.creditBalance !== undefined && (
-                <div className="bg-white rounded-3xl shadow-2xl p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-2xl font-bold text-gray-900">
-                      Credit Balance
-                    </h3>
-                    <button
-                      onClick={() => {
-                        refreshUserProfile();
-                        fetchMonthlyUsage();
-                      }}
-                      className="text-indigo-600 hover:text-indigo-700 text-sm font-semibold"
-                    >
-                      Refresh
-                    </button>
-                  </div>
-
-                  <CreditBalance
-                    credits={userProfile.creditBalance}
-                    plan={userProfile.plan}
-                    variant="detailed"
-                    showWarning={true}
-                    lastRefresh={userProfile.lastCreditRefresh}
-                  />
-                </div>
-              )}
-
             {/* Usage Overview - Credit Consumption */}
             <div className="bg-white rounded-3xl shadow-2xl p-6">
               <div className="flex items-center justify-between mb-6">
@@ -531,45 +502,69 @@ export default function DashboardPage() {
                         <div className="flex items-center gap-2">
                           <span className="text-2xl">💬</span>
                           <span className="font-semibold text-gray-900">
-                            Free Messages
+                            Monthly Messages
                           </span>
                         </div>
                         <span className="text-sm font-semibold text-gray-600">
-                          {userProfile.messagesUsed || 0} / 3
+                          {userProfile.messagesUsed || 0} / {userProfile.messageLimit || 100}
                         </span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
                         <div
                           className="h-full transition-all bg-blue-500"
-                          style={{ width: `${((userProfile.messagesUsed || 0) / 3) * 100}%` }}
+                          style={{ width: `${((userProfile.messagesUsed || 0) / (userProfile.messageLimit || 100)) * 100}%` }}
                         />
                       </div>
                       <p className="text-xs text-gray-600 mt-1">
-                        {3 - (userProfile.messagesUsed || 0)} free messages remaining
+                        {(userProfile.messageLimit || 100) - (userProfile.messagesUsed || 0)} messages remaining this month
                       </p>
                     </div>
 
-                    {/* Story Scenes (Free tier tracking only) */}
+                    {/* Stories (Free tier tracking only) */}
                     <div>
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
                           <span className="text-2xl">📖</span>
                           <span className="font-semibold text-gray-900">
-                            Free Story Scene
+                            Monthly Stories
                           </span>
                         </div>
                         <span className="text-sm font-semibold text-gray-600">
-                          {userProfile.storyScenesCreated || 0} / 1
+                          {userProfile.storiesCreated || 0} / {userProfile.storyLimit || 5}
                         </span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
                         <div
                           className="h-full transition-all bg-purple-500"
-                          style={{ width: `${((userProfile.storyScenesCreated || 0) / 1) * 100}%` }}
+                          style={{ width: `${((userProfile.storiesCreated || 0) / (userProfile.storyLimit || 5)) * 100}%` }}
                         />
                       </div>
                       <p className="text-xs text-gray-600 mt-1">
-                        {1 - (userProfile.storyScenesCreated || 0)} free scene remaining
+                        {(userProfile.storyLimit || 5) - (userProfile.storiesCreated || 0)} stories remaining this month
+                      </p>
+                    </div>
+
+                    {/* Chat Image Trials (Lifetime) */}
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <span className="text-2xl">🎨</span>
+                          <span className="font-semibold text-gray-900">
+                            Chat Image Trials
+                          </span>
+                        </div>
+                        <span className="text-sm font-semibold text-gray-600">
+                          {userProfile.chatImageTrialsUsed || 0} / 2
+                        </span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                        <div
+                          className="h-full transition-all bg-pink-500"
+                          style={{ width: `${((userProfile.chatImageTrialsUsed || 0) / 2) * 100}%` }}
+                        />
+                      </div>
+                      <p className="text-xs text-gray-600 mt-1">
+                        {2 - (userProfile.chatImageTrialsUsed || 0)} image {2 - (userProfile.chatImageTrialsUsed || 0) === 1 ? 'trial' : 'trials'} remaining (lifetime)
                       </p>
                     </div>
 
@@ -582,7 +577,7 @@ export default function DashboardPage() {
                             Upgrade for Unlimited Access
                           </div>
                           <div className="text-xs text-gray-700 mb-3">
-                            Get 999+ credits for unlimited chat, stories, and image generation
+                            Get unlimited messages, stories, and image generation with credit-based premium plans
                           </div>
                           <button
                             onClick={() => router.push("/pricing")}
