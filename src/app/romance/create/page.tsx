@@ -17,10 +17,8 @@ export default function CreateStoryPage() {
   const { user, isAuthenticated, anonymousSession, userProfile } = useAuth();
   const { socket, isConnected } = useSocket(); // Use global socket
 
-  const [prompt, setPrompt] = useState(
-    "A forbidden office romance between a CEO and their new intern, filled with tension and secret glances across the boardroom."
-  );
-  const [title, setTitle] = useState("Forbidden Office Romance");
+  const [prompt, setPrompt] = useState("");
+  const [title, setTitle] = useState("");
   const [tropes, setTropes] = useState<string[]>(["slow-burn"]);
   const [narrativeStyle, setNarrativeStyle] = useState<
     "third-person" | "first-person"
@@ -78,16 +76,19 @@ export default function CreateStoryPage() {
     // Authentication is now required - redirect to login when user clicks generate
     if (!user) {
       // Save form data to localStorage so they don't lose their work
-      localStorage.setItem('pendingStoryData', JSON.stringify({
-        prompt: prompt.trim(),
-        title: title.trim(),
-        tropes,
-        narrativeStyle,
-        storyLength,
-        spiceLevel
-      }));
+      localStorage.setItem(
+        "pendingStoryData",
+        JSON.stringify({
+          prompt: prompt.trim(),
+          title: title.trim(),
+          tropes,
+          narrativeStyle,
+          storyLength,
+          spiceLevel,
+        })
+      );
       // Redirect to login
-      router.push('/login?redirect=/romance/create');
+      router.push("/login?redirect=/romance/create");
       return;
     }
 
@@ -105,7 +106,9 @@ export default function CreateStoryPage() {
       // Get auth token (required)
       const idToken = await authService.getIdToken();
       if (!idToken) {
-        throw new Error("Authentication required. Please sign in to create stories.");
+        throw new Error(
+          "Authentication required. Please sign in to create stories."
+        );
       }
 
       // Upload character reference if provided (optional for MVP)
@@ -121,7 +124,7 @@ export default function CreateStoryPage() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${idToken}`,
+          Authorization: `Bearer ${idToken}`,
         },
         body: JSON.stringify({
           prompt: prompt.trim(),
@@ -152,10 +155,12 @@ export default function CreateStoryPage() {
       }
 
       console.log("✅ Story created:", data.story);
-      console.log(`📊 Stories: ${data.storiesCreated}/${data.storyLimit} (Plan: ${data.userPlan})`);
+      console.log(
+        `📊 Stories: ${data.storiesCreated}/${data.storyLimit} (Plan: ${data.userPlan})`
+      );
 
       // Clear pending story data from localStorage after successful creation
-      localStorage.removeItem('pendingStoryData');
+      localStorage.removeItem("pendingStoryData");
 
       // Redirect to canvas view
       router.push(`/romance/story/${data.story.id}`);
@@ -169,15 +174,19 @@ export default function CreateStoryPage() {
   const handleStreamingComplete = (storyId: string) => {
     console.log("✅ Streaming story complete, redirecting to:", storyId);
     // Clear pending story data from localStorage after successful creation
-    localStorage.removeItem('pendingStoryData');
+    localStorage.removeItem("pendingStoryData");
     router.push(`/romance/story/${storyId}`);
   };
 
   const handleStreamingError = (errorMsg: string, data?: any) => {
-    console.error("❌ Streaming error:", errorMsg, data);
+    console.error("?? Streaming error:", errorMsg, data);
 
     // Check if it's a limit error
     if (data?.upgradeRequired) {
+      setLimitModalData({
+        storiesCreated: data?.storiesCreated ?? 0,
+        storyLimit: data?.storyLimit ?? 5,
+      });
       setShowLimitModal(true);
       setIsGenerating(false);
       return;
@@ -192,20 +201,20 @@ export default function CreateStoryPage() {
   // Restore pending story data after login
   useEffect(() => {
     if (user) {
-      const pendingData = localStorage.getItem('pendingStoryData');
+      const pendingData = localStorage.getItem("pendingStoryData");
       if (pendingData) {
         try {
           const data = JSON.parse(pendingData);
-          setPrompt(data.prompt || '');
-          setTitle(data.title || '');
-          setTropes(data.tropes || ['slow-burn']);
-          setNarrativeStyle(data.narrativeStyle || 'third-person');
+          setPrompt(data.prompt || "");
+          setTitle(data.title || "");
+          setTropes(data.tropes || ["slow-burn"]);
+          setNarrativeStyle(data.narrativeStyle || "third-person");
           setStoryLength(data.storyLength || 1500);
-          setSpiceLevel(data.spiceLevel || 'soft');
-          localStorage.removeItem('pendingStoryData');
-          console.log('✅ Restored pending story data after login');
+          setSpiceLevel(data.spiceLevel || "soft");
+          localStorage.removeItem("pendingStoryData");
+          console.log("✅ Restored pending story data after login");
         } catch (e) {
-          console.error('Failed to restore pending story data:', e);
+          console.error("Failed to restore pending story data:", e);
         }
       }
     }
@@ -268,7 +277,6 @@ export default function CreateStoryPage() {
 
       <div className="relative z-20 pt-24 pb-12 px-4">
         <div className="max-w-4xl mx-auto space-y-6">
-
           {/* Header Section */}
           <GlassEffect
             borderRadius="2rem"
@@ -289,7 +297,8 @@ export default function CreateStoryPage() {
                   Create Your Romance Canvas 💕
                 </h1>
                 <p className="text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-                  Describe your dream romance story and watch AI bring it to life with stunning visuals
+                  Describe your dream romance story and watch AI bring it to
+                  life with stunning visuals
                 </p>
               </div>
             </div>
@@ -511,7 +520,9 @@ export default function CreateStoryPage() {
                       <div className="text-center">
                         <div className="text-3xl mb-2">😊</div>
                         <div className="font-bold text-base">Sweet</div>
-                        <div className="text-xs opacity-80 mt-1">Tender & Romantic</div>
+                        <div className="text-xs opacity-80 mt-1">
+                          Tender & Romantic
+                        </div>
                       </div>
                     </button>
 
@@ -529,7 +540,9 @@ export default function CreateStoryPage() {
                       <div className="text-center">
                         <div className="text-3xl mb-2">🔥</div>
                         <div className="font-bold text-base">Passionate</div>
-                        <div className="text-xs opacity-80 mt-1">Sensual & Steamy</div>
+                        <div className="text-xs opacity-80 mt-1">
+                          Sensual & Steamy
+                        </div>
                       </div>
                     </button>
 
@@ -547,7 +560,9 @@ export default function CreateStoryPage() {
                       <div className="text-center">
                         <div className="text-3xl mb-2">🌶️</div>
                         <div className="font-bold text-base">Explicit</div>
-                        <div className="text-xs opacity-80 mt-1">Mature & Intense</div>
+                        <div className="text-xs opacity-80 mt-1">
+                          Mature & Intense
+                        </div>
                       </div>
                     </button>
                   </div>
@@ -579,27 +594,27 @@ export default function CreateStoryPage() {
                   Character Reference (Optional - Coming Soon)
                 </label>
                 <div className="border-2 border-dashed border-white/30 rounded-lg p-6 text-center bg-black/20 backdrop-blur-sm">
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleCharacterUpload}
-                      className="hidden"
-                      id="character-upload"
-                      disabled={true} // Disabled for MVP
-                    />
-                    <label
-                      htmlFor="character-upload"
-                      className="cursor-not-allowed opacity-50"
-                    >
-                      <div className="text-4xl mb-2">📷</div>
-                      <p className="text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-                        Upload a character photo for consistent visuals
-                      </p>
-                      <p className="text-sm text-white/60 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mt-1">
-                        (Feature coming in Phase 2)
-                      </p>
-                    </label>
-                  </div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleCharacterUpload}
+                    className="hidden"
+                    id="character-upload"
+                    disabled={true} // Disabled for MVP
+                  />
+                  <label
+                    htmlFor="character-upload"
+                    className="cursor-not-allowed opacity-50"
+                  >
+                    <div className="text-4xl mb-2">📷</div>
+                    <p className="text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                      Upload a character photo for consistent visuals
+                    </p>
+                    <p className="text-sm text-white/60 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mt-1">
+                      (Feature coming in Phase 2)
+                    </p>
+                  </label>
+                </div>
               </div>
             </div>
           </GlassEffect>
@@ -670,9 +685,10 @@ export default function CreateStoryPage() {
                           <span className="text-base font-semibold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
                             Generate Scene Images 🎨
                           </span>
-                          {userProfile?.plan === 'free' && generateImages && (
+                          {userProfile?.plan === "free" && generateImages && (
                             <p className="text-sm text-green-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mt-1">
-                              ✨ FREE: You'll get 1 preview image (first scene). Upgrade for images on all scenes!
+                              ✨ FREE: You'll get 1 preview image (first scene).
+                              Upgrade for images on all scenes!
                             </p>
                           )}
                         </div>
@@ -787,8 +803,12 @@ export default function CreateStoryPage() {
             {/* Gradient Header */}
             <div className="bg-gradient-to-br from-purple-500 via-pink-500 to-orange-500 p-8 text-white text-center relative">
               {/* Animated Icons */}
-              <div className="absolute top-4 right-4 text-2xl animate-bounce">📚</div>
-              <div className="absolute bottom-4 left-4 text-2xl animate-bounce animation-delay-300">✨</div>
+              <div className="absolute top-4 right-4 text-2xl animate-bounce">
+                📚
+              </div>
+              <div className="absolute bottom-4 left-4 text-2xl animate-bounce animation-delay-300">
+                ✨
+              </div>
 
               {/* Emoji Icon */}
               <div className="text-6xl mb-4">🔒</div>
@@ -798,14 +818,16 @@ export default function CreateStoryPage() {
 
               {/* Usage Info */}
               <p className="text-sm opacity-90">
-                You've created {limitModalData?.storiesCreated || 0} of {limitModalData?.storyLimit || 5} free stories this month
+                You've created {limitModalData?.storiesCreated || 0} of{" "}
+                {limitModalData?.storyLimit || 5} free stories this month
               </p>
             </div>
 
             {/* Content */}
             <div className="p-8">
               <p className="text-gray-700 text-lg text-center mb-6">
-                Upgrade to Premium to create unlimited stories with AI-generated images!
+                Upgrade to Premium to create unlimited stories with AI-generated
+                images!
               </p>
 
               {/* Features */}
@@ -831,7 +853,7 @@ export default function CreateStoryPage() {
               {/* CTA Buttons */}
               <div className="space-y-3">
                 <button
-                  onClick={() => router.push('/pricing')}
+                  onClick={() => router.push("/pricing")}
                   className="w-full px-6 py-4 rounded-2xl font-bold text-lg bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
                 >
                   ✨ Upgrade to Premium

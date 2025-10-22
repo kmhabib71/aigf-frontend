@@ -470,7 +470,6 @@ export default function StoryViewPage() {
           backgroundAttachment: "fixed",
         }}
       >
-        Back
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
           <div
             className="absolute w-[300px] sm:w-[500px] lg:w-[800px] h-[300px] sm:h-[500px] lg:h-[800px] rounded-full opacity-10 sm:opacity-15 lg:opacity-20 animate-float-slow"
@@ -638,7 +637,8 @@ export default function StoryViewPage() {
                     Manual Story Editor
                   </h3>
                   <p className="text-sm text-purple-100/80">
-                    Fine-tune your scenes with custom wording. Changes are saved instantly to this story.
+                    Fine-tune your scenes with custom wording. Changes are saved
+                    instantly to this story.
                   </p>
                 </div>
 
@@ -834,7 +834,7 @@ export default function StoryViewPage() {
           allowInteractions={canUseInteractiveFeatures}
           onRequireAuth={!canUseInteractiveFeatures ? requireAuth : undefined}
           chatButton={chatButtonNode}
-          userPlan={userProfile?.plan || 'free'}
+          userPlan={userProfile?.plan || "free"}
         />
       </div>
       {/* Phase 2 Feature Showcase */}
