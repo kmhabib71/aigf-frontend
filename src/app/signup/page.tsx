@@ -280,7 +280,7 @@ function SignupContent() {
                         params.set("redirect", redirectTo);
                       }
                       const query = params.toString();
-                      router.push(`/login?${query}`);
+                      router.push(query ? `/login?${query}` : "/login");
                     }}
                     className="text-purple-600 hover:text-purple-700 font-semibold"
                   >
