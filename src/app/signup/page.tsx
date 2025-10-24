@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import React, { Suspense, useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "../../contexts/AuthContext";
 import Header from "@/components/layout/Header";
@@ -264,9 +265,22 @@ function SignupContent() {
                 </button>
               </form>
 
-              <p className="mt-4 text-xs text-gray-600 text-center">
-                By signing up, you agree to our Terms of Service and Privacy
-                Policy
+              <p className="mt-4 text-xs text-gray-600 text-center space-x-1">
+                <span>By signing up, you agree to our</span>
+                <Link
+                  href="/legal/terms"
+                  className="text-purple-600 hover:text-purple-800 underline"
+                >
+                  Terms of Service
+                </Link>
+                <span>and</span>
+                <Link
+                  href="/legal/privacy"
+                  className="text-purple-600 hover:text-purple-800 underline"
+                >
+                  Privacy Policy
+                </Link>
+                .
               </p>
 
               <div className="mt-6 text-center">
