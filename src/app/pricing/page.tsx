@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../../contexts/AuthContext";
 import Header from "../../components/layout/Header";
+import Footer from "../../components/layout/Footer";
 import { backendUrl } from "@/lib/config";
 interface PlanFeature {
   name: string;
@@ -484,6 +485,9 @@ export default function PricingPage() {
           </div>
         </div>
       </div>
+
+      {/* Footer */}
+      <Footer />
 
       {/* Animations */}
       <style jsx>{`

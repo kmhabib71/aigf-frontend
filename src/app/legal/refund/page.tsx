@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Footer from "../../../components/layout/Footer";
 
 const steps = [
   {
@@ -73,7 +74,7 @@ export default function RefundPolicyPage() {
           ))}
         </div>
 
-        <footer className="mt-12 text-sm text-purple-200">
+        <div className="mt-12 text-sm text-purple-200">
           Need help right now? Email{" "}
           <a
             href="mailto:hello@romancecanvas.com"
@@ -82,8 +83,10 @@ export default function RefundPolicyPage() {
             hello@romancecanvas.com
           </a>
           .
-        </footer>
+        </div>
       </section>
+
+      <Footer />
     </main>
   );
 }

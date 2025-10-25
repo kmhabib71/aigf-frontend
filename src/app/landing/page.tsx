@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "../../contexts/AuthContext";
 import { authService } from "../../lib/auth/authService";
 import Header from "../../components/layout/Header";
+import Footer from "../../components/layout/Footer";
 import { backendUrl } from "@/lib/config";
 interface TrendingStory {
   id: string;
@@ -471,21 +472,7 @@ export default function LandingPage() {
         </section>
 
         {/* Footer */}
-        <footer className="py-12 px-6 border-t border-purple-100">
-          <div className="max-w-7xl mx-auto text-center">
-            <div className="flex justify-center items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-2xl shadow-lg">
-                💕
-              </div>
-              <span className="text-2xl font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                RomanceCanvas
-              </span>
-            </div>
-            <p className="text-gray-600 text-sm">
-              © 2025 RomanceCanvas. Creating infinite love stories.
-            </p>
-          </div>
-        </footer>
+        <Footer />
       </div>
 
       {/* Animations */}
