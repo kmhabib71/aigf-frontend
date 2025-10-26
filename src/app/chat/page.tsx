@@ -768,7 +768,7 @@ export default function ChatPage() {
       <Header />
 
       {/* Main Container - Mobile First */}
-      <div className="flex h-[calc(100vh-80px)] lg:h-[calc(100vh-60px)] mt-20 lg:mt-16 overflow-hidden">
+      <div className="flex h-[calc(100vh-72px)] sm:h-[calc(100vh-80px)] lg:h-[calc(100vh-60px)] mt-[72px] sm:mt-20 lg:mt-16 overflow-hidden">
         {/* Sidebar - Hidden on mobile, shown on desktop */}
         <ConversationSidebar
           isOpen={sidebarOpen}
