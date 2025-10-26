@@ -72,7 +72,7 @@ export default function SiteSettingsTab() {
                 type="file"
                 accept="image/*"
                 onChange={(e) => handleImageUpload(e, "background")}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
               />
               <p className="text-xs text-gray-500 mt-1">
                 Recommended: 1920x1080px or higher. JPG, PNG, WEBP.
@@ -105,7 +105,7 @@ export default function SiteSettingsTab() {
                 type="file"
                 accept="image/*"
                 onChange={(e) => handleImageUpload(e, "logo")}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
               />
               <p className="text-xs text-gray-500 mt-1">
                 Recommended: 200x200px square. PNG with transparent background.
@@ -146,7 +146,7 @@ export default function SiteSettingsTab() {
                   homePageHeading: e.target.value,
                 })
               }
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
               placeholder="Start Instantly — No Signup Required"
             />
           </div>
@@ -164,7 +164,7 @@ export default function SiteSettingsTab() {
                   homePageTagline: e.target.value,
                 })
               }
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
               placeholder="Every love story deserves to be finished"
             />
           </div>
@@ -182,7 +182,7 @@ export default function SiteSettingsTab() {
                   chatPageHeading: e.target.value,
                 })
               }
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
               placeholder="Romantic Chat"
             />
           </div>
@@ -200,7 +200,7 @@ export default function SiteSettingsTab() {
                   storyPageHeading: e.target.value,
                 })
               }
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
               placeholder="Create a Story"
             />
           </div>

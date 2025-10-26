@@ -644,7 +644,7 @@ export default function AdminPage() {
                 placeholder="Search by email or name..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white text-gray-900"
               />
               <div className="flex gap-2">
                 <button
@@ -762,7 +762,7 @@ export default function AdminPage() {
                         )}
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-xs space-y-1">
+                        <div className="text-xs space-y-1 text-gray-900">
                           <div>
                             💬 {user.messagesUsed}/{user.messageLimit}
                           </div>
@@ -838,12 +838,12 @@ export default function AdminPage() {
             {tiers.map((tier) => (
               <div
                 key={tier.plan}
-                className="bg-white rounded-2xl shadow-lg p-6"
+                className="bg-white rounded-2xl shadow-lg p-6 text-gray-900"
               >
-                <h3 className="text-2xl font-bold text-gray-900 mb-4 capitalize">
+                <h3 className="text-2xl font-bold text-gray-900 mb-4 capitalize text-gray-900">
                   {tier.plan}
                 </h3>
-                <div className="text-3xl font-bold text-purple-600 mb-6">
+                <div className="text-3xl font-bold text-purple-600 mb-6 text-gray-900">
                   ${tier.price}
                   <span className="text-lg text-gray-600">/mo</span>
                 </div>
@@ -864,7 +864,7 @@ export default function AdminPage() {
                             price: parseFloat(e.target.value),
                           })
                         }
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
                       />
                     </div>
                     <div>
@@ -880,7 +880,7 @@ export default function AdminPage() {
                             creditsPerMonth: parseInt(e.target.value),
                           })
                         }
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
                       />
                       <div className="text-xs text-gray-500 mt-1">
                         1 credit = $0.01 USD
@@ -899,7 +899,7 @@ export default function AdminPage() {
                             rolloverPercentage: parseInt(e.target.value),
                           })
                         }
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
                       />
                     </div>
                     <div className="flex items-center gap-2">
@@ -933,7 +933,7 @@ export default function AdminPage() {
                                 messageLimit: parseInt(e.target.value),
                               })
                             }
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
                           />
                         </div>
                         <div>
@@ -949,7 +949,7 @@ export default function AdminPage() {
                                 imageLimit: parseInt(e.target.value),
                               })
                             }
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
                           />
                         </div>
                         <div>
@@ -965,7 +965,7 @@ export default function AdminPage() {
                                 voiceCharLimit: parseInt(e.target.value),
                               })
                             }
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
                           />
                         </div>
                       </>
@@ -1192,7 +1192,7 @@ export default function AdminPage() {
                                   <div className="text-sm font-semibold text-gray-700 mb-2">
                                     Model Usage Breakdown:
                                   </div>
-                                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-gray-900">
                                     {userModelBreakdown[user._id].map(
                                       (model: any) => (
                                         <div
@@ -1336,7 +1336,7 @@ export default function AdminPage() {
                       onChange={(e) =>
                         setCreditAmount(parseInt(e.target.value) || 0)
                       }
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
                       placeholder="Enter credits"
                     />
                     <div className="text-xs text-gray-500 mt-1">
@@ -1351,7 +1351,7 @@ export default function AdminPage() {
                       type="text"
                       value={creditReason}
                       onChange={(e) => setCreditReason(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
                       placeholder="Admin adjustment"
                     />
                   </div>
@@ -1491,7 +1491,7 @@ export default function AdminPage() {
                       e.target.value as any
                     )
                   }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
                 >
                   <option value="free">Free</option>
                   <option value="plus">Plus</option>
@@ -1507,7 +1507,7 @@ export default function AdminPage() {
                   type="number"
                   defaultValue={selectedUser.messageLimit}
                   id="messageLimit"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
                 />
               </div>
 
@@ -1519,7 +1519,7 @@ export default function AdminPage() {
                   type="number"
                   defaultValue={selectedUser.imageLimit}
                   id="imageLimit"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
                 />
               </div>
 
@@ -1531,7 +1531,7 @@ export default function AdminPage() {
                   type="number"
                   defaultValue={selectedUser.voiceCharLimit}
                   id="voiceCharLimit"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
                 />
               </div>
 
