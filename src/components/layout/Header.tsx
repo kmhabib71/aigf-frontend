@@ -5,11 +5,13 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "../../contexts/AuthContext";
 import CreditBalance from "../CreditBalance";
 import UserAvatar from "../UserAvatar";
+import { useSiteSettings } from "../../contexts/SiteSettingsContext";
 
 export default function Header() {
   const router = useRouter();
   const { user, userProfile, isAuthenticated, signOut } = useAuth();
   const [scrolled, setScrolled] = useState(false);
+  const { settings } = useSiteSettings();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {

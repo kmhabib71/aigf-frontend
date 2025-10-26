@@ -481,6 +481,12 @@ export default function AdminPage() {
             >
               Back to App
             </button>
+            <button
+              onClick={() => router.push("/admin/settings")}
+              className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-4 py-2 rounded-full transition-colors ml-3"
+            >
+              ⚙️ Site Settings
+            </button>
           </div>
         </div>
       </header>

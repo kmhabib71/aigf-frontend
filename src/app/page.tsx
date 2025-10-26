@@ -7,6 +7,7 @@ import { authService } from "../lib/auth/authService";
 import Header from "../components/layout/Header";
 import GlassEffect from "../components/GlassEffect";
 import { backendUrl } from "../lib/config";
+import { useSiteSettings } from "../contexts/SiteSettingsContext";
 interface TrendingStory {
   id: string;
   title: string;
@@ -34,6 +35,7 @@ export default function LandingPage() {
   const [trendingStories, setTrendingStories] = useState<TrendingStory[]>([]);
   const [continueStories, setContinueStories] = useState<ContinueStory[]>([]);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const { settings } = useSiteSettings();
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
