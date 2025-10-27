@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Socket } from 'socket.io-client';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface Character {
   name: string;
@@ -23,6 +24,7 @@ interface ChatWithCharacterProps {
 }
 
 export default function ChatWithCharacter({ storyId, socket, characters }: ChatWithCharacterProps) {
+  const { user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCharacter, setSelectedCharacter] = useState<string>('');
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
@@ -82,7 +84,8 @@ export default function ChatWithCharacter({ storyId, socket, characters }: ChatW
       storyId,
       characterName: selectedCharacter,
       message: message.trim(),
-      chatHistory: recentHistory
+      chatHistory: recentHistory,
+      userId: user?.uid || null
     });
 
     setMessage('');

@@ -1151,11 +1151,11 @@ export default function AdminPage() {
                                 </span>
                                 <div>
                                   <div className="font-semibold text-gray-900">
-                                    {user._id.substring(0, 8)}...
+                                    {user.userEmail || user._id.substring(0, 8) + "..."}
                                   </div>
                                   {user.userEmail && (
-                                    <div className="text-sm text-gray-600">
-                                      {user.userEmail}
+                                    <div className="text-xs text-gray-500">
+                                      {user._id.substring(0, 8)}...
                                     </div>
                                   )}
                                 </div>
