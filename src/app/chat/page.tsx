@@ -125,6 +125,37 @@ export default function ChatPage() {
   } | null>(null);
   const personaPanelRef = useRef<HTMLDivElement | null>(null);
 
+  // Helper function to normalize whitespace in AI responses
+  const normalizeWhitespace = (text: string) => {
+    if (!text) return '';
+    // Replace multiple consecutive newlines (2 or more) with a single newline
+    return text.replace(/\n{2,}/g, '\n');
+  };
+
+  // Helper function to render text with styled actions/narrations
+  const renderStyledText = (text: string) => {
+    if (!text) return null;
+
+    const normalizedText = normalizeWhitespace(text);
+    // Split text by asterisk patterns (*text*)
+    const parts = normalizedText.split(/(\*[^*]+\*)/g);
+
+    return parts.map((part, index) => {
+      // Check if this part is wrapped in asterisks
+      if (part.startsWith('*') && part.endsWith('*')) {
+        // Remove asterisks and render as action/narration
+        const actionText = part.slice(1, -1);
+        return (
+          <span key={index} className="text-purple-300 italic opacity-90">
+            {actionText}
+          </span>
+        );
+      }
+      // Regular dialogue text - preserve line breaks
+      return <span key={index}>{part}</span>;
+    });
+  };
+
   // Mouse tracking effect
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -968,13 +999,16 @@ export default function ChatPage() {
                     )}
 
                     <div
-                      className={`whitespace-pre-wrap leading-relaxed text-sm sm:text-base lg:text-base ${
+                      className={`whitespace-pre-line leading-relaxed text-sm sm:text-base lg:text-base ${
                         message.role === "user"
                           ? "text-white drop-shadow-sm"
                           : "text-gray-50"
                       }`}
                     >
-                      {message.content}
+                      {message.role === "assistant"
+                        ? renderStyledText(message.content)
+                        : normalizeWhitespace(message.content)
+                      }
                     </div>
                     <div
                       className={`text-xs sm:text-sm mt-2 ${
@@ -1001,8 +1035,8 @@ export default function ChatPage() {
                         </span>
                       </div>
                     ) : streamingContent ? (
-                      <div className="whitespace-pre-wrap leading-relaxed text-gray-50 text-sm sm:text-base lg:text-base">
-                        {streamingContent}
+                      <div className="whitespace-pre-line leading-relaxed text-gray-50 text-sm sm:text-base lg:text-base">
+                        {renderStyledText(streamingContent)}
                         <div className="inline-block w-2 h-5 bg-purple-400 animate-pulse ml-1" />
                       </div>
                     ) : (
