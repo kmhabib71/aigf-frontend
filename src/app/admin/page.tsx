@@ -33,6 +33,7 @@ interface TierConfig {
   features: Array<{ name: string; enabled: boolean }>;
   creditsPerMonth?: number;
   rolloverPercentage?: number;
+  creditMultiplier?: number;
   useCreditSystem?: boolean;
 }
 
@@ -308,6 +309,7 @@ export default function AdminPage() {
             features: tier.features,
             creditsPerMonth: tier.creditsPerMonth,
             rolloverPercentage: tier.rolloverPercentage,
+            creditMultiplier: tier.creditMultiplier,
             useCreditSystem: tier.useCreditSystem,
           }),
         }
@@ -902,6 +904,28 @@ export default function AdminPage() {
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
                       />
                     </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-1">
+                        Credit Multiplier (Markup)
+                      </label>
+                      <input
+                        type="number"
+                        step="0.5"
+                        min="1"
+                        max="10"
+                        value={editingTier.creditMultiplier || 3}
+                        onChange={(e) =>
+                          setEditingTier({
+                            ...editingTier,
+                            creditMultiplier: parseFloat(e.target.value),
+                          })
+                        }
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
+                      />
+                      <div className="text-xs text-gray-500 mt-1">
+                        Multiply API cost by this value (e.g., 3x, 4x, 5x)
+                      </div>
+                    </div>
                     <div className="flex items-center gap-2">
                       <input
                         type="checkbox"
@@ -1007,9 +1031,14 @@ export default function AdminPage() {
                             {tier.rolloverPercentage}%
                           </span>
                         </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-600">Markup:</span>
+                          <span className="font-semibold text-purple-600">
+                            {tier.creditMultiplier || 3}x
+                          </span>
+                        </div>
                         <div className="px-3 py-2 bg-green-50 border border-green-200 rounded-lg text-xs text-green-700">
-                          <strong>Credit System</strong> - Usage charged at 3x
-                          API cost
+                          <strong>Credit System</strong> - Usage charged at {tier.creditMultiplier || 3}x API cost
                         </div>
                       </>
                     ) : (

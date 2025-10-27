@@ -24,6 +24,7 @@ export default function DashboardPage() {
   const [usageLoading, setUsageLoading] = useState(true);
   const [stories, setStories] = useState<any[]>([]);
   const [storiesLoading, setStoriesLoading] = useState(true);
+  const [creditMultiplier, setCreditMultiplier] = useState<number>(3); // Default 3x
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
@@ -38,6 +39,46 @@ export default function DashboardPage() {
       fetchUserStories();
     }
   }, [isAuthenticated]);
+
+  // Fetch tier config when userProfile is loaded
+  useEffect(() => {
+    if (isAuthenticated && userProfile) {
+      fetchTierConfig();
+    }
+  }, [isAuthenticated, userProfile]);
+
+  const fetchTierConfig = async () => {
+    try {
+      const currentUser = auth.currentUser;
+      if (!currentUser || !userProfile) return;
+
+      const token = await currentUser.getIdToken();
+
+      // Fetch all tier configs (public endpoint)
+      const response = await fetch(`${backendUrl}/api/admin/tiers/public`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const configs = await response.json();
+        console.log("Fetched tier configs:", configs); // Debug log
+        // Find the config for the user's plan
+        const userTierConfig = configs.find((c: any) => c.plan === userProfile.plan);
+        console.log("User tier config:", userTierConfig); // Debug log
+        if (userTierConfig && userTierConfig.creditMultiplier) {
+          console.log("Setting credit multiplier to:", userTierConfig.creditMultiplier); // Debug log
+          setCreditMultiplier(userTierConfig.creditMultiplier);
+        }
+      } else {
+        console.error("Failed to fetch tier configs:", response.status, response.statusText);
+      }
+    } catch (err) {
+      console.error("Failed to fetch tier config:", err);
+      // Keep default 3x multiplier if fetch fails
+    }
+  };
 
   const fetchMonthlyUsage = async () => {
     try {
@@ -158,11 +199,11 @@ export default function DashboardPage() {
     });
   };
 
-  // Calculate credits from cost (3x markup)
+  // Calculate credits from cost (markup based on tier config)
   const calculateCreditsFromCost = (cost: number) => {
     // cost is already in USD, 1 credit = $0.01
-    // We charge 3x the API cost
-    return Math.ceil(cost * 3 * 100); // Convert to credits (multiply by 100 to convert dollars to cents/credits)
+    // We charge based on tier's credit multiplier (e.g., 3x, 4x, 5x API cost)
+    return Math.ceil(cost * creditMultiplier * 100); // Convert to credits (multiply by 100 to convert dollars to cents/credits)
   };
 
   // Calculate total credits consumed this month
@@ -175,7 +216,7 @@ export default function DashboardPage() {
   // Calculate AI conversation credits (excluding images)
   const getAIConversationCredits = () => {
     if (!monthlyUsage) return 0;
-    // Image cost: $0.01 per image, we charge 3 credits per image = $0.03 per image
+    // Image cost: $0.01 per image, we charge based on multiplier
     const imageCost = (monthlyUsage.imagesGenerated || 0) * 0.01;
     const conversationCost = (monthlyUsage.totalCost || 0) - imageCost;
     return calculateCreditsFromCost(conversationCost);
@@ -190,12 +231,17 @@ export default function DashboardPage() {
 
   // Calculate remaining credits (allocated - used)
   const getRemainingCredits = () => {
-    // If creditBalance is properly set, use it
-    if (userProfile.creditBalance > 0) {
-      return userProfile.creditBalance;
+    // If backend creditBalance is set and doesn't match default, use it
+    // Otherwise calculate from usage
+    const defaultCredits = getPlanCredits();
+    const backendBalance = userProfile.creditBalance || 0;
+
+    if (backendBalance > 0 && backendBalance < defaultCredits) {
+      // Backend has deducted credits, use that value
+      return backendBalance;
     }
-    // Otherwise calculate it: plan allocation - used
-    return Math.max(0, getPlanCredits() - getTotalCreditsConsumed());
+    // Calculate based on usage (for display purposes)
+    return Math.max(0, defaultCredits - getTotalCreditsConsumed());
   };
 
   return (
@@ -482,12 +528,12 @@ export default function DashboardPage() {
                             {usageLoading ? "..." : monthlyUsage?.imagesGenerated || 0} images
                           </div>
                           <div className="text-xs text-gray-600">
-                            {usageLoading ? "..." : (monthlyUsage?.imagesGenerated || 0) * 3} credits used
+                            {usageLoading ? "..." : (monthlyUsage?.imagesGenerated || 0) * creditMultiplier} credits used
                           </div>
                         </div>
                       </div>
                       <div className="text-xs text-gray-600">
-                        3 credits per image • Scene and character illustrations
+                        {creditMultiplier} credits per image • Scene and character illustrations
                       </div>
                     </div>
                   </>
