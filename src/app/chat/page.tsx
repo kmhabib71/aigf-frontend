@@ -799,7 +799,7 @@ export default function ChatPage() {
       <Header />
 
       {/* Main Container - Mobile First */}
-      <div className="flex h-[calc(100vh-72px)] sm:h-[calc(100vh-80px)] lg:h-[calc(100vh-60px)] mt-[72px] sm:mt-20 lg:mt-16 overflow-hidden">
+      <div className="flex min-h-[calc(100dvh-72px)] sm:h-[calc(100vh-80px)] lg:h-[calc(100vh-60px)] mt-[72px] sm:mt-20 lg:mt-16 overflow-hidden">
         {/* Sidebar - Hidden on mobile, shown on desktop */}
         <ConversationSidebar
           isOpen={sidebarOpen}
@@ -1055,7 +1055,7 @@ export default function ChatPage() {
             </div>
 
             {/* Input Area */}
-            <div className="p-3 sm:p-4 lg:p-4 border-t border-white/10 shrink-0">
+            <div className="p-3 sm:p-4 lg:p-4 pb-[env(safe-area-inset-bottom)] border-t border-white/10 shrink-0">
               <div className="mb-2 text-xs sm:text-sm text-white/80 text-center sm:text-left">
                 Use <span className="font-semibold">/show</span> or{" "}
                 <span className="font-semibold">/see</span> in your sentence to

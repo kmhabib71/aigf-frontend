@@ -221,7 +221,7 @@ export default function ConversationSidebar({
 
       {/* Sidebar */}
       <GlassEffect
-        className={`fixed top-10 left-0 h-[calc(100vh-64px)] w-72 sm:w-80 text-white transform transition-transform duration-300 ease-in-out z-50 flex-col overflow-hidden ${
+        className={`fixed top-10 left-0 h-[calc(100dvh-64px)] w-72 sm:w-80 text-white transform transition-transform duration-300 ease-in-out z-50 flex-col overflow-hidden ${
           isOpen ? "flex translate-x-0" : "hidden -translate-x-full"
         } lg:flex lg:static lg:translate-x-0 lg:h-auto lg:my-6 lg:ml-6 lg:w-80 lg:self-stretch`}
         borderRadius="1rem"
