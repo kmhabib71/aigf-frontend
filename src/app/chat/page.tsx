@@ -823,8 +823,8 @@ export default function ChatPage() {
             backgroundOpacity={20}
           >
             {/* Top Controls */}
-            <div className="flex items-center justify-between p-2 sm:p-3 border-b border-white/10 shrink-0">
-              <div className="flex gap-2">
+            <div className="flex items-center justify-between p-2 sm:p-3 border-b border-white/10 shrink-0 relative z-40">
+              <div className="flex gap-2 relative z-40">
                 {/* Hamburger - Mobile only */}
                 <button
                   onClick={() => setSidebarOpen(true)}
@@ -1026,21 +1026,21 @@ export default function ChatPage() {
               {/* Streaming Display */}
               {isStreamingInProgress && (
                 <div className="flex justify-start">
-                  <div className="bg-gradient-to-br from-[#ae1e75]/90 via-[#c93387]/85 to-[#f06aa6]/80 backdrop-blur-lg border border-[#ffb1ec]/40 rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-5 shadow-lg shadow-black/25 max-w-[85%] sm:max-w-[75%] lg:max-w-[65%]">
+                  <div className="bg-gradient-to-br from-[#ae1e75]/90 via-[#c93387]/85 to-[#f06aa6]/80 backdrop-blur-lg border border-[#ffb1ec]/40 rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-5 shadow-lg shadow-black/25 max-w-[85%] sm:max-w-[75%] lg:max-w-[65%] min-h-[60px]">
                     {toolProcessingMessage ? (
-                      <div className="flex items-center gap-2 text-blue-200">
+                      <div className="flex items-center gap-2 text-blue-200 min-h-[40px]">
                         <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" />
                         <span className="text-sm sm:text-base lg:text-base italic">
                           {toolProcessingMessage}
                         </span>
                       </div>
                     ) : streamingContent ? (
-                      <div className="whitespace-pre-line leading-relaxed text-gray-50 text-sm sm:text-base lg:text-base">
+                      <div className="whitespace-pre-line leading-relaxed text-gray-50 text-sm sm:text-base lg:text-base min-h-[40px]">
                         {renderStyledText(streamingContent)}
                         <div className="inline-block w-2 h-5 bg-purple-400 animate-pulse ml-1" />
                       </div>
                     ) : (
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 min-h-[40px]">
                         <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse" />
                         <span className="text-sm sm:text-base text-purple-300">
                           {loadingState.message}
