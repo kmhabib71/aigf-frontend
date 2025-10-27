@@ -6,7 +6,7 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="relative z-20 border-t border-purple-100/50 bg-white/40 backdrop-blur-sm">
+    <footer className="relative z-20 border-t border-white/10 bg-black/50 backdrop-blur-xl">
       <div className="max-w-7xl mx-auto px-6 py-12">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
@@ -20,7 +20,7 @@ export default function Footer() {
                 RomanceCanvas
               </span>
             </div>
-            <p className="text-sm text-gray-600 mb-4">
+            <p className="text-sm text-white/80 mb-4">
               AI-powered interactive fiction platform. Create and experience infinite stories.
             </p>
             <div className="flex gap-3">
@@ -28,7 +28,7 @@ export default function Footer() {
                 href="https://twitter.com/romancecanvas"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-8 h-8 rounded-lg bg-purple-100 hover:bg-purple-200 flex items-center justify-center text-purple-600 transition-colors"
+                className="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors"
                 aria-label="Twitter"
               >
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -39,7 +39,7 @@ export default function Footer() {
                 href="https://discord.gg/romancecanvas"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-8 h-8 rounded-lg bg-purple-100 hover:bg-purple-200 flex items-center justify-center text-purple-600 transition-colors"
+                className="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors"
                 aria-label="Discord"
               >
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -50,7 +50,7 @@ export default function Footer() {
                 href="https://reddit.com/r/romancecanvas"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-8 h-8 rounded-lg bg-purple-100 hover:bg-purple-200 flex items-center justify-center text-purple-600 transition-colors"
+                className="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors"
                 aria-label="Reddit"
               >
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -62,25 +62,25 @@ export default function Footer() {
 
           {/* Product Links */}
           <div>
-            <h3 className="font-bold text-gray-800 mb-4">Product</h3>
+            <h3 className="font-bold text-white mb-4">Product</h3>
             <ul className="space-y-3">
               <li>
-                <Link href="/" className="text-sm text-gray-600 hover:text-purple-600 transition-colors">
+                <Link href="/" className="text-sm text-white/80 hover:text-white transition-colors">
                   Romantic Chat
                 </Link>
               </li>
               <li>
-                <Link href="/romance/create" className="text-sm text-gray-600 hover:text-purple-600 transition-colors">
+                <Link href="/romance/create" className="text-sm text-white/80 hover:text-white transition-colors">
                   Create Story
                 </Link>
               </li>
               <li>
-                <Link href="/pricing" className="text-sm text-gray-600 hover:text-purple-600 transition-colors">
+                <Link href="/pricing" className="text-sm text-white/80 hover:text-white transition-colors">
                   Pricing
                 </Link>
               </li>
               <li>
-                <Link href="/dashboard" className="text-sm text-gray-600 hover:text-purple-600 transition-colors">
+                <Link href="/dashboard" className="text-sm text-white/80 hover:text-white transition-colors">
                   Dashboard
                 </Link>
               </li>
@@ -89,25 +89,25 @@ export default function Footer() {
 
           {/* Legal Links */}
           <div>
-            <h3 className="font-bold text-gray-800 mb-4">Legal</h3>
+            <h3 className="font-bold text-white mb-4">Legal</h3>
             <ul className="space-y-3">
               <li>
-                <Link href="/legal/terms" className="text-sm text-gray-600 hover:text-purple-600 transition-colors">
+                <Link href="/legal/terms" className="text-sm text-white/80 hover:text-white transition-colors">
                   Terms of Service
                 </Link>
               </li>
               <li>
-                <Link href="/legal/privacy" className="text-sm text-gray-600 hover:text-purple-600 transition-colors">
+                <Link href="/legal/privacy" className="text-sm text-white/80 hover:text-white transition-colors">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="/legal/refund" className="text-sm text-gray-600 hover:text-purple-600 transition-colors">
+                <Link href="/legal/refund" className="text-sm text-white/80 hover:text-white transition-colors">
                   Refund Policy
                 </Link>
               </li>
               <li>
-                <Link href="/legal/content-policy" className="text-sm text-gray-600 hover:text-purple-600 transition-colors">
+                <Link href="/legal/content-policy" className="text-sm text-white/80 hover:text-white transition-colors">
                   Content Policy
                 </Link>
               </li>
@@ -116,25 +116,25 @@ export default function Footer() {
 
           {/* Support Links */}
           <div>
-            <h3 className="font-bold text-gray-800 mb-4">Support</h3>
+            <h3 className="font-bold text-white mb-4">Support</h3>
             <ul className="space-y-3">
               <li>
-                <Link href="/contact" className="text-sm text-gray-600 hover:text-purple-600 transition-colors">
+                <Link href="/contact" className="text-sm text-white/80 hover:text-white transition-colors">
                   Contact Us
                 </Link>
               </li>
               <li>
-                <a href="mailto:hello@romancecanvas.com" className="text-sm text-gray-600 hover:text-purple-600 transition-colors">
+                <a href="mailto:hello@romancecanvas.com" className="text-sm text-white/80 hover:text-white transition-colors">
                   Email Support
                 </a>
               </li>
               <li>
-                <a href="mailto:support@romancecanvas.com" className="text-sm text-gray-600 hover:text-purple-600 transition-colors">
+                <a href="mailto:support@romancecanvas.com" className="text-sm text-white/80 hover:text-white transition-colors">
                   Technical Help
                 </a>
               </li>
               <li>
-                <Link href="/faq" className="text-sm text-gray-600 hover:text-purple-600 transition-colors">
+                <Link href="/faq" className="text-sm text-white/80 hover:text-white transition-colors">
                   FAQ
                 </Link>
               </li>
@@ -143,27 +143,27 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t border-purple-100">
+        <div className="pt-8 border-t border-white/10">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="text-sm text-gray-600">
+            <div className="text-sm text-white/70">
               © {currentYear} SnapPair Labs. All rights reserved.
             </div>
-            <div className="flex items-center gap-6 text-sm text-gray-500">
-              <span>Made with ❤️ for storytellers</span>
+            <div className="flex items-center gap-6 text-sm text-white/70">
+              <span>Made with ?? for storytellers</span>
               <div className="flex items-center gap-2">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
                 </span>
-                <span className="text-xs text-gray-500">All systems operational</span>
+                <span className="text-xs text-white/60">All systems operational</span>
               </div>
             </div>
           </div>
         </div>
 
         {/* Age Disclaimer */}
-        <div className="mt-6 pt-6 border-t border-purple-100/50">
-          <p className="text-xs text-center text-gray-500">
+        <div className="mt-6 pt-6 border-t border-white/10">
+          <p className="text-xs text-center text-white/60">
             RomanceCanvas is intended for users 18 years of age and older. By using this service, you confirm that you are of legal age in your jurisdiction.
             Our platform uses AI to generate interactive fiction content. All characters and scenarios are fictional.
           </p>

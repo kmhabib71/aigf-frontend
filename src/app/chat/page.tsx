@@ -8,6 +8,7 @@ import ConversationSidebar from "@/components/ConversationSidebar";
 import { StreamingChat } from "@/components/StreamingChat";
 import SoftGateModal from "@/components/SoftGateModal";
 import Header from "@/components/layout/Header";
+ 
 import GlassEffect from "@/components/GlassEffect";
 import { sessionService } from "@/lib/auth/sessionService";
 import {
@@ -782,6 +783,8 @@ export default function ChatPage() {
           }}
         />
       </div>
+
+      
 
       {/* Mouse Glow - Desktop only */}
       <div

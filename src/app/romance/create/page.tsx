@@ -11,6 +11,7 @@ import StreamingStoryCreation from "@/components/RomanceCanvas/StreamingStoryCre
 import SoftGateModal from "@/components/SoftGateModal";
 import GlassEffect from "@/components/GlassEffect";
 import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 import { backendUrl } from "@/lib/config";
 export default function CreateStoryPage() {
   const router = useRouter();
@@ -787,6 +788,9 @@ export default function CreateStoryPage() {
           )}
         </div>
       </div>
+
+      {/* Site Footer */}
+      <Footer />
 
       {/* Soft Gate Modal */}
       <SoftGateModal

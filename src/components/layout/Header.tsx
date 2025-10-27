@@ -83,30 +83,7 @@ export default function Header() {
                 Pricing
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-full transition-all duration-300"></span>
               </button>
-              <button
-                onClick={() => router.push("/legal/terms")}
-                className="text-white hover:text-purple-300 transition-colors font-semibold relative group drop-shadow-lg"
-                style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
-              >
-                Terms
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-full transition-all duration-300"></span>
-              </button>
-              <button
-                onClick={() => router.push("/legal/privacy")}
-                className="text-white hover:text-purple-300 transition-colors font-semibold relative group drop-shadow-lg"
-                style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
-              >
-                Privacy
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-full transition-all duration-300"></span>
-              </button>
-              <button
-                onClick={() => router.push("/legal/refund")}
-                className="text-white hover:text-purple-300 transition-colors font-semibold relative group drop-shadow-lg"
-                style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
-              >
-                Refunds
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-full transition-all duration-300"></span>
-              </button>
+              {/* Legal links moved to Footer */}
               {isAuthenticated && (
                 <>
                   <button
@@ -288,36 +265,7 @@ export default function Header() {
             >
               Pricing
             </button>
-            <button
-              onClick={() => {
-                router.push("/legal/terms");
-                setMobileMenuOpen(false);
-              }}
-              className="text-white hover:text-purple-300 transition-colors font-semibold py-3 px-4 hover:bg-purple-50 rounded-xl text-left drop-shadow-lg"
-              style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
-            >
-              Terms
-            </button>
-            <button
-              onClick={() => {
-                router.push("/legal/privacy");
-                setMobileMenuOpen(false);
-              }}
-              className="text-white hover:text-purple-300 transition-colors font-semibold py-3 px-4 hover:bg-purple-50 rounded-xl text-left drop-shadow-lg"
-              style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
-            >
-              Privacy
-            </button>
-            <button
-              onClick={() => {
-                router.push("/legal/refund");
-                setMobileMenuOpen(false);
-              }}
-              className="text-white hover:text-purple-300 transition-colors font-semibold py-3 px-4 hover:bg-purple-50 rounded-xl text-left drop-shadow-lg"
-              style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
-            >
-              Refunds
-            </button>
+            {/* Legal links moved to Footer */}
 
             {isAuthenticated && (
               <>

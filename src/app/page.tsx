@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "../contexts/AuthContext";
 import { authService } from "../lib/auth/authService";
 import Header from "../components/layout/Header";
+import Footer from "../components/layout/Footer";
 import GlassEffect from "../components/GlassEffect";
 import { backendUrl } from "../lib/config";
 interface TrendingStory {
@@ -571,7 +572,7 @@ export default function LandingPage() {
         </section>
 
         {/* Footer */}
-        <footer className="py-12 px-6 border-t border-purple-100">
+        <footer className="hidden">
           <div className="max-w-7xl mx-auto text-center">
             <div className="flex justify-center items-center gap-3 mb-4">
               <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-2xl shadow-lg">
@@ -586,6 +587,7 @@ export default function LandingPage() {
             </p>
           </div>
         </footer>
+        <Footer />
       </div>
 
       {/* Animations */}
