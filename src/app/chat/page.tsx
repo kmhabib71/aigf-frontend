@@ -157,6 +157,16 @@ export default function ChatPage() {
     });
   };
 
+  // Generate a readable conversation title from the user's first message
+  const makeTitleFromMessage = (text: string) => {
+    if (!text) return "New Conversation";
+    let clean = text.replace(/\s+/g, " ").trim();
+    // Strip a leading slash-command like /show or /see
+    clean = clean.replace(/^\/[a-zA-Z]+\s*/, "");
+    if (clean.length > 60) clean = clean.slice(0, 60).trim() + "…";
+    return clean || "New Conversation";
+  };
+
   // Mouse tracking effect
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -305,7 +315,7 @@ export default function ChatPage() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            title: "New Conversation",
+            title: makeTitleFromMessage(userMessage),
             currentConversationId: null,
             nsfwMode: true,
             userId: user?.uid || anonymousSession?.sessionId || null,
