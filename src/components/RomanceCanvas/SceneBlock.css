@@ -1,28 +1,32 @@
 .scene-block {
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(180deg, rgba(12, 10, 20, 0.65), rgba(12, 10, 20, 0.55));
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 10px 30px rgba(10, 6, 20, 0.35);
   overflow: hidden;
-  transition: box-shadow 0.2s;
+  transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+  backdrop-filter: saturate(140%) blur(10px);
 }
 
 .scene-block:hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+  box-shadow: 0 16px 40px rgba(10, 6, 20, 0.45);
+  border-color: rgba(255, 255, 255, 0.18);
 }
 
 .scene-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 20px;
-  background: linear-gradient(135deg, #f8f8f8, #fff);
-  border-bottom: 1px solid #e0e0e0;
+  padding: 16px 20px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   cursor: pointer;
   user-select: none;
 }
 
 .scene-header:hover {
-  background: linear-gradient(135deg, #f0f0f0, #f8f8f8);
+  background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0));
 }
 
 .scene-header-left {
@@ -33,13 +37,14 @@
 
 .scene-header h3 {
   font-size: 1.1rem;
-  color: #333;
+  color: #f4f1fb;
   margin: 0;
+  letter-spacing: 0.2px;
 }
 
 .scene-comments-badge {
-  background: #e91e63;
-  color: white;
+  background: linear-gradient(135deg, #ff6aa2, #ff3e7f);
+  color: #fff;
   padding: 4px 10px;
   border-radius: 12px;
   font-size: 0.8rem;
@@ -50,7 +55,7 @@
   background: none;
   border: none;
   font-size: 1rem;
-  color: #666;
+  color: #d9d2ef;
   cursor: pointer;
   padding: 5px 10px;
 }
@@ -58,20 +63,37 @@
 .scene-image-container {
   position: relative;
   width: 100%;
-  max-height: 600px;
+  max-height: 640px;
   overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #f5f5f5;
+  background: linear-gradient(180deg, rgba(12,10,20,0.6), rgba(12,10,20,0.35));
+}
+
+/* Soft vignette overlay to blend image with the story background */
+.scene-image-container::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(140% 90% at 50% 0%, rgba(12,10,20,0.55) 0%, rgba(12,10,20,0.25) 30%, transparent 55%),
+    radial-gradient(140% 90% at 50% 100%, rgba(12,10,20,0.55) 0%, rgba(12,10,20,0.25) 30%, transparent 55%),
+    radial-gradient(120% 120% at 0% 50%, rgba(12,10,20,0.55) 0%, transparent 55%),
+    radial-gradient(120% 120% at 100% 50%, rgba(12,10,20,0.55) 0%, transparent 55%);
 }
 
 .scene-image {
   width: 100%;
   height: auto;
-  max-height: 600px;
+  max-height: 640px;
   display: block;
-  object-fit: contain;
+  object-fit: cover;
+  border-radius: 18px;
+  /* Fade edges gently so the image feels part of the canvas */
+  -webkit-mask-image: radial-gradient(ellipse 120% 120% at 50% 50%, #000 60%, rgba(0,0,0,0.7) 78%, rgba(0,0,0,0.35) 88%, transparent 100%);
+  mask-image: radial-gradient(ellipse 120% 120% at 50% 50%, #000 60%, rgba(0,0,0,0.7) 78%, rgba(0,0,0,0.35) 88%, transparent 100%);
 }
 
 .scene-image-prompt-hint {
@@ -87,8 +109,10 @@
 }
 
 .scene-content {
-  padding: 20px;
-  line-height: 1.8;
+  padding: 24px 24px 28px;
+  line-height: 1.85;
+  color: #efeafd;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.25);
 }
 
 /* Hybrid Format Styling for Dialogue */
@@ -97,13 +121,13 @@
 }
 
 .scene-content .prose strong {
-  font-weight: 600;
-  color: #1a1a1a;
+  font-weight: 700;
+  color: #ffffff;
 }
 
 .scene-content .prose em {
   font-style: italic;
-  color: #4a4a4a;
+  color: #d7cff3;
 }
 
 /* Responsive */
@@ -117,6 +141,6 @@
   }
 
   .scene-content {
-    padding: 15px;
+    padding: 16px 16px 20px;
   }
 }

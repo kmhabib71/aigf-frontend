@@ -73,6 +73,8 @@ export default function StoryLine({
     }
   }, [visualMoments]);
 
+  // Actions visibility is per-line; no global coordination
+
   // Click/touch outside to close actions
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent | TouchEvent) => {
@@ -270,7 +272,7 @@ export default function StoryLine({
 
       {/* Quick Actions (on hover/tap) */}
       {showActions && (
-        <div className="line-actions">
+      <div className="line-actions">
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -300,3 +302,4 @@ export default function StoryLine({
     </div>
   );
 }
+

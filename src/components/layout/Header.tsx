@@ -95,11 +95,19 @@ export default function Header() {
                     <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-full transition-all duration-300"></span>
                   </button>
                   <button
-                    onClick={() => router.push("/")}
+                    onClick={() => router.push("/chat")}
                     className="text-white hover:text-purple-300 transition-colors font-semibold relative group drop-shadow-lg"
                     style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
                   >
                     Chat
+                    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-full transition-all duration-300"></span>
+                  </button>
+                  <button
+                    onClick={() => router.push("/romance/create")}
+                    className="text-white hover:text-purple-300 transition-colors font-semibold relative group drop-shadow-lg"
+                    style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
+                  >
+                    Story
                     <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-full transition-all duration-300"></span>
                   </button>
                 </>
@@ -281,13 +289,23 @@ export default function Header() {
                 </button>
                 <button
                   onClick={() => {
-                    router.push("/");
+                    router.push("/chat");
                     setMobileMenuOpen(false);
                   }}
                   className="text-white hover:text-purple-300 transition-colors font-semibold py-3 px-4 hover:bg-purple-50 rounded-xl text-left drop-shadow-lg"
                   style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
                 >
                   Chat
+                </button>
+                <button
+                  onClick={() => {
+                    router.push("/romance/create");
+                    setMobileMenuOpen(false);
+                  }}
+                  className="text-white hover:text-purple-300 transition-colors font-semibold py-3 px-4 hover:bg-purple-50 rounded-xl text-left drop-shadow-lg"
+                  style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
+                >
+                  Story
                 </button>
               </>
             )}
