@@ -42,7 +42,7 @@ const sections = [
   },
   {
     title: "10. Refunds and Cancellation",
-    body: `Subscription fees are non-refundable except as required by law or as described in our Refund Policy. If you experience technical issues preventing service access, contact support within 7 days of payment for refund consideration. We will review requests on a case-by-case basis. Refunds, if approved, will be processed to the original payment method within 5-10 business days.`,
+    body: `All purchases are final and non-refundable. We do not accept returns or provide refunds for subscriptions, credits, or digital goods, except where required by law. You may cancel your subscription at any time; cancellation stops future billing but does not refund prior charges or partially used periods. If you believe you were charged in error (e.g., duplicate charge), contact support within 7 days and we will review and correct any confirmed mistakes.`,
   },
   {
     title: "11. Service Modifications",
@@ -94,9 +94,8 @@ export default function TermsOfServicePage() {
           href="/"
           className="inline-flex items-center text-sm text-purple-200 hover:text-pink-200"
         >
-          ← Back to RomanceCanvas
+          Back to RomanceCanvas
         </Link>
-
         <h1 className="mt-6 text-4xl font-black tracking-tight">
           RomanceCanvas Terms of Service
         </h1>
@@ -106,7 +105,10 @@ export default function TermsOfServicePage() {
 
         <div className="mt-12 space-y-10">
           {sections.map(({ title, body }) => (
-            <article key={title} className="bg-white/5 rounded-3xl p-6 border border-white/10 shadow-lg shadow-purple-500/10">
+            <article
+              key={title}
+              className="bg-white/5 rounded-3xl p-6 border border-white/10 shadow-lg shadow-purple-500/10"
+            >
               <h2 className="text-2xl font-semibold text-pink-200">{title}</h2>
               <p className="mt-3 text-sm leading-relaxed text-purple-50">
                 {body}
