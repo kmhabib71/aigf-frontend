@@ -162,7 +162,7 @@ export default function LandingPage() {
             <div className="grid md:grid-cols-2 gap-8 animate-fade-in-up animation-delay-200">
               {/* CHAT CARD */}
               <Link href="/chat" className="group cursor-pointer relative block">
-                <div className="absolute -inset-4 bg-gradient-to-r from-purple-300 via-pink-300 to-purple-300 rounded-[3rem] blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-700"></div>
+                <div className="absolute -inset-4 bg-gradient-to-r from-purple-300 via-fuchsia-300 to-pink-300 rounded-[3rem] blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-700"></div>
                 <GlassEffect
                   className="relative transform hover:scale-105 hover:-translate-y-2 transition-all duration-500"
                   borderRadius="2.5rem"
@@ -182,7 +182,7 @@ export default function LandingPage() {
                   <div className="relative z-10">
                   {/* Icon */}
                   <div className="flex justify-center mb-6">
-                    <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center text-5xl shadow-xl transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
+                    <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-purple-400 via-fuchsia-400 to-pink-500 flex items-center justify-center text-5xl shadow-xl shadow-purple-500/50 transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
                       💬
                     </div>
                   </div>
@@ -194,34 +194,34 @@ export default function LandingPage() {
 
                   {/* Description */}
                   <p className="text-center text-white text-base lg:text-lg mb-6 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-                    Talk with your AI lover — free 3 messages.
+                    Start chatting instantly — no signup needed
                   </p>
 
                   {/* Features */}
                   <div className="space-y-3 mb-6">
                     <div className="flex items-center gap-2 text-sm lg:text-base text-white">
-                      <span className="text-green-400 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">✓</span>
-                      <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">Instant AI responses</span>
+                      <span className="text-emerald-400 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">✓</span>
+                      <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">No credit card required</span>
                     </div>
                     <div className="flex items-center gap-2 text-sm lg:text-base text-white">
-                      <span className="text-green-400 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">✓</span>
-                      <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">Uncensored conversations</span>
+                      <span className="text-emerald-400 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">✓</span>
+                      <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">Intelligent AI conversations</span>
                     </div>
                     <div className="flex items-center gap-2 text-sm lg:text-base text-white">
-                      <span className="text-green-400 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">✓</span>
-                      <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">Memory across chats</span>
+                      <span className="text-emerald-400 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">✓</span>
+                      <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">Signup for unlimited access</span>
                     </div>
                   </div>
 
                   {/* CTA Button */}
-                  <button className="w-full px-6 py-3 lg:py-4 rounded-2xl font-bold text-base lg:text-lg bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/30 hover:shadow-xl hover:shadow-purple-500/40 transform hover:scale-105 transition-all duration-300">
+                  <button className="w-full px-6 py-3 lg:py-4 rounded-2xl font-bold text-base lg:text-lg bg-gradient-to-r from-purple-500 via-fuchsia-500 to-pink-500 text-white shadow-lg shadow-purple-500/30 hover:shadow-xl hover:shadow-purple-500/50 transform hover:scale-105 transition-all duration-300">
                     Start Chatting →
                   </button>
 
                   {/* Free Badge */}
                   <div className="mt-4 text-center">
-                    <span className="inline-block px-4 py-1.5 bg-gradient-to-r from-green-400 to-emerald-500 text-white text-xs font-semibold rounded-full shadow-sm">
-                      First 3 messages FREE
+                    <span className="inline-block px-4 py-1.5 bg-gradient-to-r from-emerald-400 to-green-500 text-white text-xs font-bold rounded-full shadow-lg shadow-emerald-500/30">
+                      3 messages FREE
                     </span>
                   </div>
                   </div>
@@ -231,7 +231,7 @@ export default function LandingPage() {
 
               {/* STORY CARD */}
               <Link href="/romance/create" className="group cursor-pointer relative block">
-                <div className="absolute -inset-4 bg-gradient-to-r from-cyan-300 via-purple-300 to-pink-300 rounded-[3rem] blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-700"></div>
+                <div className="absolute -inset-4 bg-gradient-to-r from-orange-300 via-rose-300 to-pink-300 rounded-[3rem] blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-700"></div>
                 <GlassEffect
                   className="relative transform hover:scale-105 hover:-translate-y-2 transition-all duration-500"
                   borderRadius="2.5rem"
@@ -251,7 +251,7 @@ export default function LandingPage() {
                   <div className="relative z-10">
                   {/* Icon */}
                   <div className="flex justify-center mb-6">
-                    <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-cyan-400 to-purple-500 flex items-center justify-center text-5xl shadow-xl transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
+                    <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-orange-400 via-rose-400 to-pink-500 flex items-center justify-center text-5xl shadow-xl shadow-orange-500/50 transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
                       📖
                     </div>
                   </div>
@@ -263,34 +263,34 @@ export default function LandingPage() {
 
                   {/* Description */}
                   <p className="text-center text-white text-base lg:text-lg mb-6 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-                    Build your own romance — free 1 scene.
+                    Create your romance story in seconds
                   </p>
 
                   {/* Features */}
                   <div className="space-y-3 mb-6">
                     <div className="flex items-center gap-2 text-sm lg:text-base text-white">
-                      <span className="text-green-400 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">✓</span>
-                      <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">AI-generated scenes</span>
+                      <span className="text-amber-400 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">✓</span>
+                      <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">AI writes your story</span>
                     </div>
                     <div className="flex items-center gap-2 text-sm lg:text-base text-white">
-                      <span className="text-green-400 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">✓</span>
-                      <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">Beautiful illustrations</span>
+                      <span className="text-amber-400 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">✓</span>
+                      <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">Custom characters & plot</span>
                     </div>
                     <div className="flex items-center gap-2 text-sm lg:text-base text-white">
-                      <span className="text-green-400 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">✓</span>
-                      <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">Chat with characters</span>
+                      <span className="text-amber-400 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">✓</span>
+                      <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">Choose your spice level</span>
                     </div>
                   </div>
 
                   {/* CTA Button */}
-                  <button className="w-full px-6 py-3 lg:py-4 rounded-2xl font-bold text-base lg:text-lg bg-gradient-to-r from-cyan-500 to-purple-500 text-white shadow-lg shadow-cyan-500/30 hover:shadow-xl hover:shadow-cyan-500/40 transform hover:scale-105 transition-all duration-300">
+                  <button className="w-full px-6 py-3 lg:py-4 rounded-2xl font-bold text-base lg:text-lg bg-gradient-to-r from-orange-500 via-rose-500 to-pink-500 text-white shadow-lg shadow-rose-500/30 hover:shadow-xl hover:shadow-rose-500/50 transform hover:scale-105 transition-all duration-300">
                     Create Story →
                   </button>
 
                   {/* Free Badge */}
                   <div className="mt-4 text-center">
-                    <span className="inline-block px-4 py-1.5 bg-gradient-to-r from-green-400 to-emerald-500 text-white text-xs font-semibold rounded-full shadow-sm">
-                      First scene FREE
+                    <span className="inline-block px-4 py-1.5 bg-gradient-to-r from-amber-400 to-orange-500 text-white text-xs font-bold rounded-full shadow-lg shadow-amber-500/30">
+                      1 scene FREE
                     </span>
                   </div>
                   </div>

@@ -216,154 +216,149 @@ export default function Header() {
         }`}
       >
         <div
-          className="absolute inset-0 bg-black/20 backdrop-blur-sm"
+          className="absolute inset-0 bg-black/60 backdrop-blur-sm"
           onClick={() => setMobileMenuOpen(false)}
         ></div>
         <div
-          className={`absolute top-20 right-6 left-6 bg-white/90 backdrop-blur-2xl rounded-3xl border border-purple-100 shadow-2xl shadow-purple-200/50 p-6 transition-transform duration-300 ${
+          className={`absolute top-20 right-4 left-4 bg-gradient-to-b from-slate-900/95 to-slate-800/95 backdrop-blur-2xl rounded-2xl border border-purple-500/30 shadow-2xl shadow-purple-500/20 overflow-hidden transition-transform duration-300 ${
             mobileMenuOpen ? "translate-y-0" : "-translate-y-4"
           }`}
         >
-          <div className="flex flex-col gap-4">
-            {/* Credit Balance in Mobile Menu */}
-            {isAuthenticated &&
-              userProfile?.useCreditSystem &&
-              userProfile?.creditBalance !== undefined && (
-                <div className="pb-4 border-b border-purple-100">
-                  <CreditBalance
-                    credits={userProfile.creditBalance}
-                    plan={userProfile.plan}
-                    variant="compact"
-                    showWarning={true}
-                  />
-                </div>
+          <div className="p-1">
+            <div className="flex flex-col gap-1">
+              {/* Credit Balance in Mobile Menu */}
+              {isAuthenticated &&
+                userProfile?.useCreditSystem &&
+                userProfile?.creditBalance !== undefined && (
+                  <div className="px-3 py-3 mb-1">
+                    <CreditBalance
+                      credits={userProfile.creditBalance}
+                      plan={userProfile.plan}
+                      variant="compact"
+                      showWarning={true}
+                    />
+                  </div>
+                )}
+
+              {/* Navigation Links */}
+              {!isAuthenticated && (
+                <>
+                  <button
+                    onClick={() => {
+                      router.push("/features");
+                      setMobileMenuOpen(false);
+                    }}
+                    className="text-white hover:bg-purple-600/20 transition-colors font-semibold py-3 px-4 rounded-xl text-left"
+                  >
+                    Features
+                  </button>
+                  <button
+                    onClick={() => {
+                      router.push("/how-it-works");
+                      setMobileMenuOpen(false);
+                    }}
+                    className="text-white hover:bg-purple-600/20 transition-colors font-semibold py-3 px-4 rounded-xl text-left"
+                  >
+                    How It Works
+                  </button>
+                </>
               )}
 
-            {/* Navigation Links */}
-            {!isAuthenticated && (
-              <>
-                <button
-                  onClick={() => {
-                    router.push("/features");
-                    setMobileMenuOpen(false);
-                  }}
-                  className="text-white hover:text-purple-300 transition-colors font-semibold py-3 px-4 hover:bg-purple-50 rounded-xl text-left drop-shadow-lg"
-                  style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
-                >
-                  Features
-                </button>
-                <button
-                  onClick={() => {
-                    router.push("/how-it-works");
-                    setMobileMenuOpen(false);
-                  }}
-                  className="text-white hover:text-purple-300 transition-colors font-semibold py-3 px-4 hover:bg-purple-50 rounded-xl text-left drop-shadow-lg"
-                  style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
-                >
-                  How It Works
-                </button>
-              </>
-            )}
+              <button
+                onClick={() => {
+                  router.push("/pricing");
+                  setMobileMenuOpen(false);
+                }}
+                className="text-white hover:bg-purple-600/20 transition-colors font-semibold py-3 px-4 rounded-xl text-left"
+              >
+                Pricing
+              </button>
 
-            <button
-              onClick={() => {
-                router.push("/pricing");
-                setMobileMenuOpen(false);
-              }}
-              className="text-white hover:text-purple-300 transition-colors font-semibold py-3 px-4 hover:bg-purple-50 rounded-xl text-left drop-shadow-lg"
-              style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
-            >
-              Pricing
-            </button>
-            {/* Legal links moved to Footer */}
+              {isAuthenticated && (
+                <>
+                  <button
+                    onClick={() => {
+                      router.push("/dashboard");
+                      setMobileMenuOpen(false);
+                    }}
+                    className="text-white hover:bg-purple-600/20 transition-colors font-semibold py-3 px-4 rounded-xl text-left"
+                  >
+                    Dashboard
+                  </button>
+                  <button
+                    onClick={() => {
+                      router.push("/chat");
+                      setMobileMenuOpen(false);
+                    }}
+                    className="text-white hover:bg-purple-600/20 transition-colors font-semibold py-3 px-4 rounded-xl text-left"
+                  >
+                    Chat
+                  </button>
+                  <button
+                    onClick={() => {
+                      router.push("/romance/create");
+                      setMobileMenuOpen(false);
+                    }}
+                    className="text-white hover:bg-purple-600/20 transition-colors font-semibold py-3 px-4 rounded-xl text-left"
+                  >
+                    Story
+                  </button>
+                </>
+              )}
 
-            {isAuthenticated && (
-              <>
-                <button
-                  onClick={() => {
-                    router.push("/dashboard");
-                    setMobileMenuOpen(false);
-                  }}
-                  className="text-white hover:text-purple-300 transition-colors font-semibold py-3 px-4 hover:bg-purple-50 rounded-xl text-left drop-shadow-lg"
-                  style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
-                >
-                  Dashboard
-                </button>
-                <button
-                  onClick={() => {
-                    router.push("/chat");
-                    setMobileMenuOpen(false);
-                  }}
-                  className="text-white hover:text-purple-300 transition-colors font-semibold py-3 px-4 hover:bg-purple-50 rounded-xl text-left drop-shadow-lg"
-                  style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
-                >
-                  Chat
-                </button>
-                <button
-                  onClick={() => {
-                    router.push("/romance/create");
-                    setMobileMenuOpen(false);
-                  }}
-                  className="text-white hover:text-purple-300 transition-colors font-semibold py-3 px-4 hover:bg-purple-50 rounded-xl text-left drop-shadow-lg"
-                  style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
-                >
-                  Story
-                </button>
-              </>
-            )}
+              {/* Divider */}
+              <div className="h-px bg-gradient-to-r from-transparent via-purple-500/30 to-transparent my-1"></div>
 
-            <div className="border-t border-purple-100 my-2"></div>
-
-            {/* Auth Buttons */}
-            {!isAuthenticated ? (
-              <>
-                <button
-                  onClick={() => {
-                    router.push("/login");
-                    setMobileMenuOpen(false);
-                  }}
-                  className="text-white hover:text-purple-300 font-semibold py-3 px-4 hover:bg-purple-50 rounded-xl text-left drop-shadow-lg"
-                  style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
-                >
-                  Login
-                </button>
-                <button
-                  onClick={() => {
-                    router.push("/signup");
-                    setMobileMenuOpen(false);
-                  }}
-                  className="bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold py-3 px-4 rounded-xl hover:from-purple-400 hover:to-pink-400 transition-all shadow-lg shadow-purple-200/50"
-                >
-                  Get Started
-                </button>
-              </>
-            ) : (
-              <>
-                {/* User Info in Mobile */}
-                <div className="flex items-center gap-3 py-3 px-4 bg-purple-50 rounded-xl">
-                  <UserAvatar
-                    photoURL={userProfile?.photoURL}
-                    displayName={userProfile?.displayName}
-                    size="md"
-                  />
-                  <div className="flex flex-col">
-                    <span className="text-sm font-semibold text-gray-900">
-                      {userProfile?.displayName || user?.email?.split("@")[0]}
-                    </span>
-                    <span className="text-xs text-gray-500 capitalize">
-                      {userProfile?.plan || "free"} Plan
-                    </span>
+              {/* Auth Buttons */}
+              {!isAuthenticated ? (
+                <>
+                  <button
+                    onClick={() => {
+                      router.push("/login");
+                      setMobileMenuOpen(false);
+                    }}
+                    className="text-white hover:bg-purple-600/20 font-semibold py-3 px-4 rounded-xl text-left transition-colors"
+                  >
+                    Login
+                  </button>
+                  <button
+                    onClick={() => {
+                      router.push("/signup");
+                      setMobileMenuOpen(false);
+                    }}
+                    className="bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold py-3 px-4 rounded-xl hover:from-purple-400 hover:to-pink-400 transition-all shadow-lg shadow-purple-500/30 mx-2 my-1"
+                  >
+                    Get Started
+                  </button>
+                </>
+              ) : (
+                <>
+                  {/* User Info in Mobile */}
+                  <div className="flex items-center gap-3 py-3 px-4 bg-slate-800/50 rounded-xl mx-2 my-1 border border-purple-500/20">
+                    <UserAvatar
+                      photoURL={userProfile?.photoURL}
+                      displayName={userProfile?.displayName}
+                      size="md"
+                    />
+                    <div className="flex flex-col">
+                      <span className="text-sm font-semibold text-white">
+                        {userProfile?.displayName || user?.email?.split("@")[0]}
+                      </span>
+                      <span className="text-xs text-purple-300 capitalize">
+                        {userProfile?.plan || "free"} Plan
+                      </span>
+                    </div>
                   </div>
-                </div>
 
-                <button
-                  onClick={handleSignOut}
-                  className="bg-red-50 text-red-600 hover:bg-red-100 font-semibold py-3 px-4 rounded-xl text-left transition-colors"
-                >
-                  Sign Out
-                </button>
-              </>
-            )}
+                  <button
+                    onClick={handleSignOut}
+                    className="text-red-400 hover:bg-red-500/20 font-semibold py-3 px-4 rounded-xl text-left transition-colors mx-2 my-1"
+                  >
+                    Sign Out
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>
