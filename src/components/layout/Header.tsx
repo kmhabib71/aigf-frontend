@@ -30,13 +30,13 @@ export default function Header() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-30 transition-all duration-500 ${
+        className={`fixed top-0 left-0 right-0 z-30 h-[72px] sm:h-20 lg:h-16 transition-colors duration-500 ${
           scrolled
             ? "bg-black/40 backdrop-blur-2xl shadow-lg shadow-purple-500/20 border-b border-white/10"
             : "bg-transparent"
         }`}
       >
-        <nav className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-3">
+        <nav className="max-w-7xl mx-auto h-full px-4 sm:px-6 py-0">
           <div className="flex items-center justify-between">
             {/* Logo */}
             <Link
