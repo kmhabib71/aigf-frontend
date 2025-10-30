@@ -36,10 +36,13 @@ export default function Header() {
             : "bg-transparent"
         }`}
       >
-        <nav className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-5">
+        <nav className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-3">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-3 cursor-pointer group">
+            <Link
+              href="/"
+              className="flex items-center gap-3 cursor-pointer group"
+            >
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-300 to-pink-300 rounded-2xl blur-md opacity-60 group-hover:opacity-100 transition-opacity"></div>
                 <div className="relative bg-gradient-to-br from-purple-400 to-pink-400 p-2.5 rounded-2xl shadow-lg transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
