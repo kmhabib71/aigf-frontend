@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../../contexts/AuthContext";
 import { backendUrl } from "../../lib/config";
+import AnalyticsTab from "./components/AnalyticsTab";
 interface User {
   uid: string;
   email: string;
@@ -68,7 +69,7 @@ export default function AdminPage() {
   const { user, loading, isAuthenticated } = useAuth();
 
   const [activeTab, setActiveTab] = useState<
-    "dashboard" | "users" | "tiers" | "tokens"
+    "dashboard" | "users" | "tiers" | "tokens" | "analytics"
   >("dashboard");
   const [stats, setStats] = useState<Stats | null>(null);
   const [users, setUsers] = useState<User[]>([]);
@@ -93,6 +94,7 @@ export default function AdminPage() {
   const [creditHistory, setCreditHistory] = useState<CreditHistory[]>([]);
   const [creditAmount, setCreditAmount] = useState<number>(0);
   const [creditReason, setCreditReason] = useState<string>("");
+  const [authToken, setAuthToken] = useState<string | null>(null);
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
@@ -105,6 +107,7 @@ export default function AdminPage() {
   const getAuthHeaders = async () => {
     const { authService } = await import("../../lib/auth/authService");
     const token = await authService.getIdToken();
+    setAuthToken(token); // Store token for analytics tab
     return {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
@@ -535,6 +538,16 @@ export default function AdminPage() {
             }`}
           >
             Token Usage
+          </button>
+          <button
+            onClick={() => setActiveTab("analytics")}
+            className={`px-6 py-3 rounded-full font-semibold transition-all ${
+              activeTab === "analytics"
+                ? "bg-white text-purple-700"
+                : "bg-white/20 text-white hover:bg-white/30"
+            }`}
+          >
+            📊 Analytics
           </button>
         </div>
 
@@ -1490,6 +1503,13 @@ export default function AdminPage() {
               Close
             </button>
           </div>
+        </div>
+      )}
+
+      {/* Analytics Tab */}
+      {activeTab === "analytics" && (
+        <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6">
+          <AnalyticsTab authToken={authToken} />
         </div>
       )}
 

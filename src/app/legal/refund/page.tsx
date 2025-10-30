@@ -31,7 +31,7 @@ const sections = [
   {
     title: "Support",
     details: [
-      "For billing questions, contact hello@romancecanvas.com and include your order ID so we can assist you quickly.",
+      "For billing questions, contact support@romancecanvas.com and include your order ID so we can assist you quickly.",
     ],
   },
 ];
@@ -79,10 +79,10 @@ export default function RefundPolicyPage() {
         <div className="mt-12 text-sm text-purple-200">
           Need help right now? Email{" "}
           <a
-            href="mailto:hello@romancecanvas.com"
+            href="mailto:support@romancecanvas.com"
             className="underline hover:text-pink-200"
           >
-            hello@romancecanvas.com
+            support@romancecanvas.com
           </a>
           .
         </div>

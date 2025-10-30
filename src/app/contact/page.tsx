@@ -59,10 +59,10 @@ export default function ContactPage() {
                 Get in touch via email for general inquiries and support
               </p>
               <a
-                href="mailto:hello@romancecanvas.com"
+                href="mailto:support@romancecanvas.com"
                 className="text-purple-600 hover:text-pink-600 font-semibold underline"
               >
-                hello@romancecanvas.com
+                support@romancecanvas.com
               </a>
             </div>
 
@@ -153,10 +153,10 @@ export default function ContactPage() {
               <p>
                 <span className="font-semibold text-gray-800">Email:</span>{" "}
                 <a
-                  href="mailto:hello@romancecanvas.com"
+                  href="mailto:admin@romancecanvas.com"
                   className="text-purple-600 hover:underline"
                 >
-                  hello@romancecanvas.com
+                  admin@romancecanvas.com
                 </a>
               </p>
               <p>

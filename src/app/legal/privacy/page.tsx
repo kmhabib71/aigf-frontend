@@ -65,7 +65,7 @@ const policies = [
       "Export: Download your stories and data in a portable format.",
       "Objection: Object to certain processing activities where applicable.",
       "Withdraw Consent: Revoke consent for optional data processing.",
-      "To exercise these rights, email hello@romancecanvas.com with your request.",
+      "To exercise these rights, email support@romancecanvas.com with your request.",
     ],
   },
   {
@@ -102,7 +102,7 @@ const policies = [
       "RomanceCanvas is intended exclusively for users 18 years of age and older.",
       "We do not knowingly collect data from individuals under 18.",
       "If we discover a user is under 18, we will immediately terminate their account and delete their data.",
-      "Parents who believe their child has created an account should contact us immediately at hello@romancecanvas.com.",
+      "Parents who believe their child has created an account should contact us immediately at support@romancecanvas.com.",
     ],
   },
   {
@@ -118,7 +118,7 @@ const policies = [
     title: "12. California Privacy Rights (CCPA)",
     points: [
       "California residents have additional rights including: knowing what personal data is collected, requesting deletion, opting out of data sales (we don't sell data), and non-discrimination for exercising privacy rights.",
-      "Contact hello@romancecanvas.com to exercise CCPA rights.",
+      "Contact support@romancecanvas.com to exercise CCPA rights.",
     ],
   },
   {
@@ -126,7 +126,7 @@ const policies = [
     points: [
       "EU/EEA residents have rights including: access, rectification, erasure, data portability, restriction of processing, and objection.",
       "You may lodge complaints with your local data protection authority.",
-      "Our Data Protection Officer can be reached at hello@romancecanvas.com.",
+      "Our Data Protection Officer can be reached at support@romancecanvas.com.",
     ],
   },
   {
@@ -141,7 +141,7 @@ const policies = [
   {
     title: "15. Contact Us",
     points: [
-      "For privacy questions or to exercise your rights, contact: hello@romancecanvas.com",
+      "For privacy questions or to exercise your rights, contact: support@romancecanvas.com",
       "For technical support: support@romancecanvas.com",
       "We aim to respond to all privacy requests within 30 days.",
     ],
@@ -191,10 +191,10 @@ export default function PrivacyPolicyPage() {
         <div className="mt-12 text-sm text-purple-200">
           Questions or requests? Email us at{" "}
           <a
-            href="mailto:hello@romancecanvas.com"
+            href="mailto:support@romancecanvas.com"
             className="underline hover:text-pink-200"
           >
-            hello@romancecanvas.com
+            support@romancecanvas.com
           </a>
           .
         </div>

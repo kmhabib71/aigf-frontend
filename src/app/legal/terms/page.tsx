@@ -74,7 +74,7 @@ const sections = [
   },
   {
     title: "18. Contact Information",
-    body: `For questions about these Terms, please contact us at hello@romancecanvas.com. For technical support, email support@romancecanvas.com. We aim to respond within 24-48 business hours.`,
+    body: `For questions about these Terms, please contact us at support@romancecanvas.com. For technical support, email support@romancecanvas.com. We aim to respond within 24-48 business hours.`,
   },
   {
     title: "19. Severability",

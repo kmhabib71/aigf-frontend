@@ -165,7 +165,7 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  href="mailto:hello@romancecanvas.com"
+                  href="mailto:support@romancecanvas.com"
                   className="text-sm text-white/80 hover:text-white transition-colors"
                 >
                   Email Support

@@ -12,7 +12,7 @@ const faqs: QA[] = [
   },
   {
     q: "Do you offer refunds?",
-    a: "All purchases are final and non‑refundable. We do not accept returns or provide refunds for subscriptions, credits, or digital goods, except where required by law. If you believe you were charged in error (e.g., a duplicate charge), contact hello@romancecanvas.com within 7 days and we will review and correct any confirmed mistakes. See Refund Policy for details.",
+    a: "All purchases are final and non‑refundable. We do not accept returns or provide refunds for subscriptions, credits, or digital goods, except where required by law. If you believe you were charged in error (e.g., a duplicate charge), contact support@romancecanvas.com within 7 days and we will review and correct any confirmed mistakes. See Refund Policy for details.",
   },
   {
     q: "How do subscriptions and billing work?",
@@ -40,7 +40,7 @@ const faqs: QA[] = [
   },
   {
     q: "How do I delete my account or data?",
-    a: "You can delete stories at any time, and you can request full account deletion by contacting hello@romancecanvas.com. We process deletion requests within 30 days, subject to legal retention requirements.",
+    a: "You can delete stories at any time, and you can request full account deletion by contacting support@romancecanvas.com. We process deletion requests within 30 days, subject to legal retention requirements.",
   },
 ];
 
@@ -103,10 +103,10 @@ export default function FAQPage() {
           <p>
             Still have questions? Email{" "}
             <a
-              href="mailto:hello@romancecanvas.com"
+              href="mailto:support@romancecanvas.com"
               className="underline hover:text-pink-200"
             >
-              hello@romancecanvas.com
+              support@romancecanvas.com
             </a>
             .
           </p>
