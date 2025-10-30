@@ -20,19 +20,40 @@ export default function AnalyticsTab({ authToken }: AnalyticsTabProps) {
   }, [period]);
 
   const fetchAnalytics = async () => {
+    if (!authToken) {
+      console.error('No auth token available');
+      return;
+    }
+
     try {
       setLoading(true);
 
+      const [dashboardRes, realtimeRes, costsRes] = await Promise.all([
+        fetch(`${backendUrl}/api/admin/analytics/dashboard?period=${period}`, {
+          headers: { Authorization: `Bearer ${authToken}` },
+        }),
+        fetch(`${backendUrl}/api/admin/analytics/realtime`, {
+          headers: { Authorization: `Bearer ${authToken}` },
+        }),
+        fetch(`${backendUrl}/api/admin/analytics/costs?period=${period}`, {
+          headers: { Authorization: `Bearer ${authToken}` },
+        }),
+      ]);
+
+      // Check if responses are OK
+      if (!dashboardRes.ok || !realtimeRes.ok || !costsRes.ok) {
+        console.error('API Error:', {
+          dashboard: dashboardRes.status,
+          realtime: realtimeRes.status,
+          costs: costsRes.status,
+        });
+        throw new Error('Failed to fetch analytics data');
+      }
+
       const [dashboard, realtime, costs] = await Promise.all([
-        fetch(`${backendUrl}/admin/analytics/dashboard?period=${period}`, {
-          headers: { Authorization: `Bearer ${authToken}` },
-        }).then(r => r.json()),
-        fetch(`${backendUrl}/admin/analytics/realtime`, {
-          headers: { Authorization: `Bearer ${authToken}` },
-        }).then(r => r.json()),
-        fetch(`${backendUrl}/admin/analytics/costs?period=${period}`, {
-          headers: { Authorization: `Bearer ${authToken}` },
-        }).then(r => r.json()),
+        dashboardRes.json(),
+        realtimeRes.json(),
+        costsRes.json(),
       ]);
 
       setDashboardData(dashboard);
@@ -40,6 +61,7 @@ export default function AnalyticsTab({ authToken }: AnalyticsTabProps) {
       setCostData(costs);
     } catch (error) {
       console.error('Failed to fetch analytics:', error);
+      alert('Failed to load analytics. Please check console for details.');
     } finally {
       setLoading(false);
     }
@@ -47,7 +69,7 @@ export default function AnalyticsTab({ authToken }: AnalyticsTabProps) {
 
   const fetchRealtime = async () => {
     try {
-      const response = await fetch(`${backendUrl}/admin/analytics/realtime`, {
+      const response = await fetch(`${backendUrl}/api/admin/analytics/realtime`, {
         headers: { Authorization: `Bearer ${authToken}` },
       });
       const data = await response.json();
@@ -60,7 +82,7 @@ export default function AnalyticsTab({ authToken }: AnalyticsTabProps) {
   const exportData = async (type: 'usage' | 'users' | 'stories') => {
     try {
       const response = await fetch(
-        `${backendUrl}/admin/analytics/export?type=${type}&period=${period}`,
+        `${backendUrl}/api/admin/analytics/export?type=${type}&period=${period}`,
         {
           headers: { Authorization: `Bearer ${authToken}` },
         }
