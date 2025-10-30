@@ -454,7 +454,7 @@ export default function AdminPage() {
 
   if (isLoading || loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-purple-700 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
         <div className="text-white text-xl">Loading Admin Panel...</div>
       </div>
     );
@@ -462,7 +462,7 @@ export default function AdminPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-purple-700 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
         <div className="bg-red-500 text-white px-6 py-4 rounded-lg">
           {error}
         </div>
@@ -471,174 +471,221 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-purple-700">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       {/* Header */}
-      <header className="bg-white/10 backdrop-blur-md border-b border-white/20">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-slate-950/50 backdrop-blur-md border-b border-slate-700/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <h1 className="text-white text-2xl font-bold flex items-center gap-2">
               <span>👑</span>
               <span>Admin Panel</span>
             </h1>
-            <button
-              onClick={() => router.push("/")}
-              className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-full transition-colors"
-            >
-              Back to App
-            </button>
-            <button
-              onClick={() => router.push("/admin/settings")}
-              className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-4 py-2 rounded-full transition-colors ml-3"
-            >
-              ⚙️ Site Settings
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => router.push("/")}
+                className="bg-slate-700/50 hover:bg-slate-600/50 text-white px-4 py-2 rounded-lg transition-all border border-slate-600/50"
+              >
+                Back to App
+              </button>
+              <button
+                onClick={() => router.push("/admin/settings")}
+                className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-4 py-2 rounded-lg transition-all shadow-lg shadow-emerald-500/20"
+              >
+                ⚙️ Site Settings
+              </button>
+            </div>
           </div>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Tabs */}
-        <div className="flex gap-4 mb-8">
-          <button
-            onClick={() => setActiveTab("dashboard")}
-            className={`px-6 py-3 rounded-full font-semibold transition-all ${
-              activeTab === "dashboard"
-                ? "bg-white text-purple-700"
-                : "bg-white/20 text-white hover:bg-white/30"
-            }`}
-          >
-            Dashboard
-          </button>
-          <button
-            onClick={() => setActiveTab("users")}
-            className={`px-6 py-3 rounded-full font-semibold transition-all ${
-              activeTab === "users"
-                ? "bg-white text-purple-700"
-                : "bg-white/20 text-white hover:bg-white/30"
-            }`}
-          >
-            Users ({users.length})
-          </button>
-          <button
-            onClick={() => setActiveTab("tiers")}
-            className={`px-6 py-3 rounded-full font-semibold transition-all ${
-              activeTab === "tiers"
-                ? "bg-white text-purple-700"
-                : "bg-white/20 text-white hover:bg-white/30"
-            }`}
-          >
-            Tier Configuration
-          </button>
-          <button
-            onClick={() => setActiveTab("tokens")}
-            className={`px-6 py-3 rounded-full font-semibold transition-all ${
-              activeTab === "tokens"
-                ? "bg-white text-purple-700"
-                : "bg-white/20 text-white hover:bg-white/30"
-            }`}
-          >
-            Token Usage
-          </button>
-          <button
-            onClick={() => setActiveTab("analytics")}
-            className={`px-6 py-3 rounded-full font-semibold transition-all ${
-              activeTab === "analytics"
-                ? "bg-white text-purple-700"
-                : "bg-white/20 text-white hover:bg-white/30"
-            }`}
-          >
-            📊 Analytics
-          </button>
-        </div>
+      <div className="flex pt-[73px]">
+        {/* Sidebar */}
+        <aside className="fixed left-0 top-[73px] bottom-0 w-64 bg-slate-950/50 backdrop-blur-xl border-r border-slate-700/50 overflow-y-auto">
+          <nav className="p-4 space-y-2">
+            <button
+              onClick={() => setActiveTab("dashboard")}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-semibold transition-all text-left ${
+                activeTab === "dashboard"
+                  ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/20"
+                  : "text-slate-300 hover:bg-slate-800/50 hover:text-white"
+              }`}
+            >
+              <span className="text-xl">📊</span>
+              <span>Dashboard</span>
+            </button>
+            <button
+              onClick={() => setActiveTab("users")}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-semibold transition-all text-left ${
+                activeTab === "users"
+                  ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/20"
+                  : "text-slate-300 hover:bg-slate-800/50 hover:text-white"
+              }`}
+            >
+              <span className="text-xl">👥</span>
+              <span>Users</span>
+              <span className="ml-auto bg-slate-700/50 px-2 py-0.5 rounded-full text-xs">
+                {users.length}
+              </span>
+            </button>
+            <button
+              onClick={() => setActiveTab("tiers")}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-semibold transition-all text-left ${
+                activeTab === "tiers"
+                  ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/20"
+                  : "text-slate-300 hover:bg-slate-800/50 hover:text-white"
+              }`}
+            >
+              <span className="text-xl">⚙️</span>
+              <span>Tier Config</span>
+            </button>
+            <button
+              onClick={() => setActiveTab("tokens")}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-semibold transition-all text-left ${
+                activeTab === "tokens"
+                  ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/20"
+                  : "text-slate-300 hover:bg-slate-800/50 hover:text-white"
+              }`}
+            >
+              <span className="text-xl">🔢</span>
+              <span>Token Usage</span>
+            </button>
+            <button
+              onClick={() => setActiveTab("analytics")}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-semibold transition-all text-left ${
+                activeTab === "analytics"
+                  ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/20"
+                  : "text-slate-300 hover:bg-slate-800/50 hover:text-white"
+              }`}
+            >
+              <span className="text-xl">📈</span>
+              <span>Analytics</span>
+            </button>
+
+            {/* Divider */}
+            <div className="border-t border-slate-700/50 my-4"></div>
+
+            {/* Quick Actions */}
+            <div className="px-2 py-2">
+              <p className="text-xs text-slate-500 uppercase tracking-wider mb-2 px-2">Quick Actions</p>
+              <button
+                onClick={() => router.push("/admin/settings")}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-slate-300 hover:bg-slate-800/50 hover:text-white transition-all text-left text-sm"
+              >
+                <span className="text-lg">⚙️</span>
+                <span>Site Settings</span>
+              </button>
+              <button
+                onClick={() => router.push("/")}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-slate-300 hover:bg-slate-800/50 hover:text-white transition-all text-left text-sm"
+              >
+                <span className="text-lg">🏠</span>
+                <span>Back to App</span>
+              </button>
+            </div>
+          </nav>
+        </aside>
+
+        {/* Main Content */}
+        <main className="flex-1 ml-64 px-8 py-6 overflow-y-auto min-h-[calc(100vh-73px)]">
 
         {/* Dashboard Tab */}
         {activeTab === "dashboard" && stats && (
           <div className="space-y-6">
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="bg-white rounded-2xl p-6 shadow-lg">
-                <div className="text-gray-600 text-sm font-semibold mb-2">
+              <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 shadow-xl shadow-blue-500/20 border border-blue-400/20">
+                <div className="text-blue-100 text-sm font-semibold mb-2 flex items-center gap-2">
+                  <span className="text-xl">👥</span>
                   Total Users
                 </div>
-                <div className="text-4xl font-bold text-gray-900">
+                <div className="text-4xl font-bold text-white">
                   {stats.totalUsers}
                 </div>
               </div>
-              <div className="bg-white rounded-2xl p-6 shadow-lg">
-                <div className="text-gray-600 text-sm font-semibold mb-2">
+              <div className="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl p-6 shadow-xl shadow-emerald-500/20 border border-emerald-400/20">
+                <div className="text-emerald-100 text-sm font-semibold mb-2 flex items-center gap-2">
+                  <span className="text-xl">✓</span>
                   Active Subscriptions
                 </div>
-                <div className="text-4xl font-bold text-green-600">
+                <div className="text-4xl font-bold text-white">
                   {stats.activeSubscriptions}
                 </div>
               </div>
-              <div className="bg-white rounded-2xl p-6 shadow-lg">
-                <div className="text-gray-600 text-sm font-semibold mb-2">
+              <div className="bg-gradient-to-br from-violet-500 to-purple-600 rounded-2xl p-6 shadow-xl shadow-violet-500/20 border border-violet-400/20">
+                <div className="text-violet-100 text-sm font-semibold mb-2 flex items-center gap-2">
+                  <span className="text-xl">💰</span>
                   Monthly Revenue
                 </div>
-                <div className="text-4xl font-bold text-purple-600">
+                <div className="text-4xl font-bold text-white">
                   ${stats.revenue.monthly.toFixed(2)}
                 </div>
               </div>
-              <div className="bg-white rounded-2xl p-6 shadow-lg">
-                <div className="text-gray-600 text-sm font-semibold mb-2">
+              <div className="bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl p-6 shadow-xl shadow-amber-500/20 border border-amber-400/20">
+                <div className="text-amber-100 text-sm font-semibold mb-2 flex items-center gap-2">
+                  <span className="text-xl">🌐</span>
                   Anonymous Sessions
                 </div>
-                <div className="text-4xl font-bold text-orange-600">
+                <div className="text-4xl font-bold text-white">
                   {stats.anonymousSessions}
                 </div>
               </div>
             </div>
 
             {/* Plan Distribution */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">
+            <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-slate-700/50">
+              <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                <span className="text-2xl">📊</span>
                 Plan Distribution
               </h3>
               <div className="grid grid-cols-3 gap-4">
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-gray-600">
+                <div className="bg-slate-900/50 rounded-xl p-4 border border-slate-700/30 text-center">
+                  <div className="text-3xl font-bold text-slate-400 mb-1">
                     {stats.planDistribution.free}
                   </div>
-                  <div className="text-sm text-gray-600">Free</div>
+                  <div className="text-sm text-slate-500 font-medium">Free</div>
                 </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-indigo-600">
+                <div className="bg-gradient-to-br from-blue-500/20 to-indigo-500/20 rounded-xl p-4 border border-blue-500/30 text-center">
+                  <div className="text-3xl font-bold text-blue-400 mb-1">
                     {stats.planDistribution.plus}
                   </div>
-                  <div className="text-sm text-gray-600">Plus</div>
+                  <div className="text-sm text-blue-300 font-medium">Plus</div>
                 </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-purple-600">
+                <div className="bg-gradient-to-br from-purple-500/20 to-violet-500/20 rounded-xl p-4 border border-purple-500/30 text-center">
+                  <div className="text-3xl font-bold text-purple-400 mb-1">
                     {stats.planDistribution.pro}
                   </div>
-                  <div className="text-sm text-gray-600">Pro</div>
+                  <div className="text-sm text-purple-300 font-medium">Pro</div>
                 </div>
               </div>
             </div>
 
             {/* Recent Users */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">
+            <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-slate-700/50">
+              <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                <span className="text-2xl">🆕</span>
                 Recent Sign-ups
               </h3>
               <div className="space-y-3">
                 {stats.recentUsers.map((u) => (
                   <div
                     key={u.uid}
-                    className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0"
+                    className="flex items-center justify-between py-3 px-4 bg-slate-900/30 rounded-xl border border-slate-700/30 hover:bg-slate-900/50 transition-colors"
                   >
                     <div>
-                      <div className="font-semibold text-gray-900">
+                      <div className="font-semibold text-white">
                         {u.displayName}
                       </div>
-                      <div className="text-sm text-gray-600">{u.email}</div>
+                      <div className="text-sm text-slate-400">{u.email}</div>
                     </div>
                     <div className="text-right">
-                      <div className="inline-block px-3 py-1 rounded-full text-xs font-semibold capitalize bg-purple-100 text-purple-700">
+                      <div className={`inline-block px-3 py-1 rounded-full text-xs font-semibold capitalize ${
+                        u.plan === 'free' ? 'bg-slate-700/50 text-slate-300' :
+                        u.plan === 'plus' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' :
+                        'bg-purple-500/20 text-purple-400 border border-purple-500/30'
+                      }`}>
                         {u.plan}
                       </div>
-                      <div className="text-xs text-gray-500 mt-1">
+                      <div className="text-xs text-slate-500 mt-1">
                         {new Date(u.createdAt).toLocaleDateString()}
                       </div>
                     </div>
@@ -651,53 +698,53 @@ export default function AdminPage() {
 
         {/* Users Tab */}
         {activeTab === "users" && (
-          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+          <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-700/50 overflow-hidden">
             {/* Search & Filter */}
-            <div className="p-6 border-b border-gray-200 space-y-4">
+            <div className="p-6 border-b border-slate-700/50 space-y-4">
               <input
                 type="text"
                 placeholder="Search by email or name..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white text-gray-900"
+                className="w-full px-4 py-3 border border-slate-600/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-900/50 text-white placeholder-slate-400"
               />
               <div className="flex gap-2">
                 <button
                   onClick={() => setFilterPlan("")}
-                  className={`px-4 py-2 rounded-lg font-semibold ${
+                  className={`px-4 py-2 rounded-lg font-semibold transition-all ${
                     !filterPlan
-                      ? "bg-purple-600 text-white"
-                      : "bg-gray-200 text-gray-700"
+                      ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/20"
+                      : "bg-slate-700/50 text-slate-300 hover:bg-slate-700"
                   }`}
                 >
                   All
                 </button>
                 <button
                   onClick={() => setFilterPlan("free")}
-                  className={`px-4 py-2 rounded-lg font-semibold ${
+                  className={`px-4 py-2 rounded-lg font-semibold transition-all ${
                     filterPlan === "free"
-                      ? "bg-purple-600 text-white"
-                      : "bg-gray-200 text-gray-700"
+                      ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/20"
+                      : "bg-slate-700/50 text-slate-300 hover:bg-slate-700"
                   }`}
                 >
                   Free
                 </button>
                 <button
                   onClick={() => setFilterPlan("plus")}
-                  className={`px-4 py-2 rounded-lg font-semibold ${
+                  className={`px-4 py-2 rounded-lg font-semibold transition-all ${
                     filterPlan === "plus"
-                      ? "bg-purple-600 text-white"
-                      : "bg-gray-200 text-gray-700"
+                      ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/20"
+                      : "bg-slate-700/50 text-slate-300 hover:bg-slate-700"
                   }`}
                 >
                   Plus
                 </button>
                 <button
                   onClick={() => setFilterPlan("pro")}
-                  className={`px-4 py-2 rounded-lg font-semibold ${
+                  className={`px-4 py-2 rounded-lg font-semibold transition-all ${
                     filterPlan === "pro"
-                      ? "bg-purple-600 text-white"
-                      : "bg-gray-200 text-gray-700"
+                      ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/20"
+                      : "bg-slate-700/50 text-slate-300 hover:bg-slate-700"
                   }`}
                 >
                   Pro
@@ -708,41 +755,41 @@ export default function AdminPage() {
             {/* Users Table */}
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-gray-50">
+                <thead className="bg-slate-900/50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
                       User
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
                       Plan
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
                       Credits
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
                       Usage
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
                       Status
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-slate-800/30 divide-y divide-slate-700/30">
                   {filteredUsers.map((user) => (
-                    <tr key={user.uid} className="hover:bg-gray-50">
+                    <tr key={user.uid} className="hover:bg-slate-700/30 transition-colors">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div>
-                          <div className="font-semibold text-gray-900">
+                          <div className="font-semibold text-white">
                             {user.displayName}
                           </div>
-                          <div className="text-sm text-gray-600">
+                          <div className="text-sm text-slate-400">
                             {user.email}
                           </div>
                           {user.isAdmin && (
-                            <span className="inline-block mt-1 px-2 py-0.5 bg-red-100 text-red-700 text-xs font-semibold rounded">
+                            <span className="inline-block mt-1 px-2 py-0.5 bg-red-500/20 text-red-400 text-xs font-semibold rounded border border-red-500/30">
                               Admin
                             </span>
                           )}
@@ -752,10 +799,10 @@ export default function AdminPage() {
                         <span
                           className={`inline-block px-3 py-1 rounded-full text-xs font-semibold capitalize ${
                             user.plan === "free"
-                              ? "bg-gray-100 text-gray-700"
+                              ? "bg-slate-700/50 text-slate-300"
                               : user.plan === "plus"
-                              ? "bg-indigo-100 text-indigo-700"
-                              : "bg-purple-100 text-purple-700"
+                              ? "bg-blue-500/20 text-blue-400 border border-blue-500/30"
+                              : "bg-purple-500/20 text-purple-400 border border-purple-500/30"
                           }`}
                         >
                           {user.plan}
@@ -765,19 +812,19 @@ export default function AdminPage() {
                         {user.plan !== "free" &&
                         user.creditBalance !== undefined ? (
                           <div className="text-sm">
-                            <div className="font-semibold text-green-600">
+                            <div className="font-semibold text-emerald-400">
                               {user.creditBalance} Credits
                             </div>
-                            <div className="text-xs text-gray-500">
+                            <div className="text-xs text-slate-500">
                               ${(user.creditBalance / 100).toFixed(2)}
                             </div>
                           </div>
                         ) : (
-                          <span className="text-xs text-gray-500">N/A</span>
+                          <span className="text-xs text-slate-500">N/A</span>
                         )}
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-xs space-y-1 text-gray-900">
+                        <div className="text-xs space-y-1 text-slate-300">
                           <div>
                             💬 {user.messagesUsed}/{user.messageLimit}
                           </div>
@@ -792,15 +839,15 @@ export default function AdminPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         {user.isBanned ? (
-                          <span className="px-2 py-1 bg-red-100 text-red-700 text-xs font-semibold rounded">
+                          <span className="px-2 py-1 bg-red-500/20 text-red-400 text-xs font-semibold rounded border border-red-500/30">
                             Banned
                           </span>
                         ) : user.subscriptionStatus === "active" ? (
-                          <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded">
+                          <span className="px-2 py-1 bg-emerald-500/20 text-emerald-400 text-xs font-semibold rounded border border-emerald-500/30">
                             Active
                           </span>
                         ) : (
-                          <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs font-semibold rounded">
+                          <span className="px-2 py-1 bg-slate-700/50 text-slate-400 text-xs font-semibold rounded">
                             Normal
                           </span>
                         )}
@@ -810,13 +857,13 @@ export default function AdminPage() {
                           <div>
                             <button
                               onClick={() => setSelectedUser(user)}
-                              className="text-indigo-600 hover:text-indigo-900 mr-3"
+                              className="text-blue-400 hover:text-blue-300 mr-3"
                             >
                               Edit
                             </button>
                             <button
                               onClick={() => handleResetUsage(user.uid)}
-                              className="text-green-600 hover:text-green-900 mr-3"
+                              className="text-emerald-400 hover:text-emerald-300 mr-3"
                             >
                               Reset
                             </button>
@@ -824,7 +871,7 @@ export default function AdminPage() {
                               onClick={() =>
                                 handleBanUser(user.uid, !user.isBanned)
                               }
-                              className="text-red-600 hover:text-red-900"
+                              className="text-red-400 hover:text-red-300"
                             >
                               {user.isBanned ? "Unban" : "Ban"}
                             </button>
@@ -832,7 +879,7 @@ export default function AdminPage() {
                           {user.plan !== "free" && (
                             <button
                               onClick={() => openCreditManagement(user)}
-                              className="text-purple-600 hover:text-purple-900 text-xs font-semibold"
+                              className="text-purple-400 hover:text-purple-300 text-xs font-semibold"
                             >
                               💳 Manage Credits
                             </button>
@@ -1310,10 +1357,9 @@ export default function AdminPage() {
             )}
           </div>
         )}
-      </div>
 
-      {/* Credit Management Modal */}
-      {showCreditModal && creditUser && (
+        {/* Credit Management Modal */}
+        {showCreditModal && creditUser && (
         <div
           className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
           onClick={() => setShowCreditModal(false)}
@@ -1504,15 +1550,19 @@ export default function AdminPage() {
             </button>
           </div>
         </div>
-      )}
+        )}
 
-      {/* Analytics Tab */}
-      {activeTab === "analytics" && (
-        <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6">
-          <AnalyticsTab authToken={authToken} />
-        </div>
-      )}
+        {/* Analytics Tab */}
+        {activeTab === "analytics" && (
+          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6">
+            <AnalyticsTab authToken={authToken} />
+          </div>
+        )}
 
+        </main>
+      </div>
+
+      {/* Modals - Outside main layout */}
       {/* User Edit Modal */}
       {selectedUser && (
         <div
