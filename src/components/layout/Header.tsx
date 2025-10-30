@@ -57,22 +57,22 @@ export default function Header() {
             <div className="hidden md:flex items-center gap-8">
               {!isAuthenticated && (
                 <>
-                  <a
-                    href="#features"
+                  <button
+                    onClick={() => router.push("/features")}
                     className="text-white hover:text-purple-300 transition-colors font-semibold relative group drop-shadow-lg"
                     style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
                   >
                     Features
                     <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-full transition-all duration-300"></span>
-                  </a>
-                  <a
-                    href="#how-it-works"
+                  </button>
+                  <button
+                    onClick={() => router.push("/how-it-works")}
                     className="text-white hover:text-purple-300 transition-colors font-semibold relative group drop-shadow-lg"
                     style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
                   >
                     How It Works
                     <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-full transition-all duration-300"></span>
-                  </a>
+                  </button>
                 </>
               )}
               <button
@@ -244,22 +244,26 @@ export default function Header() {
             {/* Navigation Links */}
             {!isAuthenticated && (
               <>
-                <a
-                  href="#features"
-                  className="text-white hover:text-purple-300 transition-colors font-semibold py-3 px-4 hover:bg-purple-50 rounded-xl drop-shadow-lg"
+                <button
+                  onClick={() => {
+                    router.push("/features");
+                    setMobileMenuOpen(false);
+                  }}
+                  className="text-white hover:text-purple-300 transition-colors font-semibold py-3 px-4 hover:bg-purple-50 rounded-xl text-left drop-shadow-lg"
                   style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
-                  onClick={() => setMobileMenuOpen(false)}
                 >
                   Features
-                </a>
-                <a
-                  href="#how-it-works"
-                  className="text-white hover:text-purple-300 transition-colors font-semibold py-3 px-4 hover:bg-purple-50 rounded-xl drop-shadow-lg"
+                </button>
+                <button
+                  onClick={() => {
+                    router.push("/how-it-works");
+                    setMobileMenuOpen(false);
+                  }}
+                  className="text-white hover:text-purple-300 transition-colors font-semibold py-3 px-4 hover:bg-purple-50 rounded-xl text-left drop-shadow-lg"
                   style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
-                  onClick={() => setMobileMenuOpen(false)}
                 >
                   How It Works
-                </a>
+                </button>
               </>
             )}
 

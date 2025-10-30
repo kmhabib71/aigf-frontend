@@ -6,7 +6,7 @@ import Footer from "../../../components/layout/Footer";
 const sections = [
   {
     title: "1. Overview",
-    body: `RomanceCanvas is an AI-powered interactive fiction and storytelling platform operated by SnapPair Labs. By creating an account or purchasing a subscription, you agree to these Terms of Service and confirm that you are at least 18 years of age.`,
+    body: `RomanceCanvas is an AI-powered interactive fiction and storytelling platform operated by AIRomanceBuilder Labs. By creating an account or purchasing a subscription, you agree to these Terms of Service and confirm that you are at least 18 years of age.`,
   },
   {
     title: "2. Service Description",
@@ -26,7 +26,7 @@ const sections = [
   },
   {
     title: "6. Content and Intellectual Property",
-    body: `All software, AI models, branding, and platform assets remain the exclusive property of SnapPair Labs. You retain ownership rights to the original prompts and inputs you provide. AI-generated stories and images are licensed to you for personal, non-commercial use. You may download and save your stories for personal use but may not redistribute, sell, or use them for commercial purposes without prior written consent.`,
+    body: `All software, AI models, branding, and platform assets remain the exclusive property of AIRomanceBuilder Labs. You retain ownership rights to the original prompts and inputs you provide. AI-generated stories and images are licensed to you for personal, non-commercial use. You may download and save your stories for personal use but may not redistribute, sell, or use them for commercial purposes without prior written consent.`,
   },
   {
     title: "7. AI-Generated Content Disclaimer",
@@ -82,7 +82,7 @@ const sections = [
   },
   {
     title: "20. Entire Agreement",
-    body: `These Terms, together with our Privacy Policy and Refund Policy, constitute the entire agreement between you and SnapPair Labs regarding the use of RomanceCanvas and supersede all prior agreements and understandings.`,
+    body: `These Terms, together with our Privacy Policy and Refund Policy, constitute the entire agreement between you and AIRomanceBuilder Labs regarding the use of RomanceCanvas and supersede all prior agreements and understandings.`,
   },
 ];
 

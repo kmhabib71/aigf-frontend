@@ -52,7 +52,9 @@ export default function ContactPage() {
               <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-pink-400 rounded-xl flex items-center justify-center text-2xl mb-4">
                 📧
               </div>
-              <h2 className="text-xl font-bold text-gray-800 mb-2">Email Support</h2>
+              <h2 className="text-xl font-bold text-gray-800 mb-2">
+                Email Support
+              </h2>
               <p className="text-gray-600 mb-3">
                 Get in touch via email for general inquiries and support
               </p>
@@ -69,7 +71,9 @@ export default function ContactPage() {
               <div className="w-12 h-12 bg-gradient-to-br from-cyan-400 to-purple-400 rounded-xl flex items-center justify-center text-2xl mb-4">
                 🕒
               </div>
-              <h2 className="text-xl font-bold text-gray-800 mb-2">Response Time</h2>
+              <h2 className="text-xl font-bold text-gray-800 mb-2">
+                Response Time
+              </h2>
               <p className="text-gray-600 mb-3">
                 We typically respond within 24-48 hours
               </p>
@@ -81,34 +85,50 @@ export default function ContactPage() {
 
           {/* Support Topics */}
           <div className="bg-gradient-to-br from-purple-50/50 to-pink-50/50 rounded-2xl p-8 border border-purple-100/50 mb-12">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">How We Can Help</h2>
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">
+              How We Can Help
+            </h2>
             <div className="grid md:grid-cols-2 gap-4">
               <div className="flex items-start gap-3">
                 <span className="text-purple-500 mt-1">✓</span>
                 <div>
-                  <h3 className="font-semibold text-gray-800">Technical Support</h3>
-                  <p className="text-sm text-gray-600">Issues with stories, chat, or features</p>
+                  <h3 className="font-semibold text-gray-800">
+                    Technical Support
+                  </h3>
+                  <p className="text-sm text-gray-600">
+                    Issues with stories, chat, or features
+                  </p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
                 <span className="text-purple-500 mt-1">✓</span>
                 <div>
-                  <h3 className="font-semibold text-gray-800">Billing Questions</h3>
-                  <p className="text-sm text-gray-600">Subscriptions, payments, and refunds</p>
+                  <h3 className="font-semibold text-gray-800">
+                    Billing Questions
+                  </h3>
+                  <p className="text-sm text-gray-600">
+                    Subscriptions, payments, and refunds
+                  </p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
                 <span className="text-purple-500 mt-1">✓</span>
                 <div>
                   <h3 className="font-semibold text-gray-800">Account Help</h3>
-                  <p className="text-sm text-gray-600">Login issues, account deletion</p>
+                  <p className="text-sm text-gray-600">
+                    Login issues, account deletion
+                  </p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
                 <span className="text-purple-500 mt-1">✓</span>
                 <div>
-                  <h3 className="font-semibold text-gray-800">General Inquiries</h3>
-                  <p className="text-sm text-gray-600">Questions about our service</p>
+                  <h3 className="font-semibold text-gray-800">
+                    General Inquiries
+                  </h3>
+                  <p className="text-sm text-gray-600">
+                    Questions about our service
+                  </p>
                 </div>
               </div>
             </div>
@@ -116,23 +136,37 @@ export default function ContactPage() {
 
           {/* Business Information */}
           <div className="border-t border-gray-200 pt-8">
-            <h2 className="text-xl font-bold text-gray-800 mb-4">Business Information</h2>
+            <h2 className="text-xl font-bold text-gray-800 mb-4">
+              Business Information
+            </h2>
             <div className="space-y-3 text-gray-600">
               <p>
-                <span className="font-semibold text-gray-800">Business Name:</span> SnapPair Labs
+                <span className="font-semibold text-gray-800">
+                  Business Name:
+                </span>{" "}
+                AIRomanceBuilder Labs
               </p>
               <p>
-                <span className="font-semibold text-gray-800">Service:</span> RomanceCanvas - AI Interactive Fiction Platform
+                <span className="font-semibold text-gray-800">Service:</span>{" "}
+                RomanceCanvas - AI Interactive Fiction Platform
               </p>
               <p>
                 <span className="font-semibold text-gray-800">Email:</span>{" "}
-                <a href="mailto:hello@romancecanvas.com" className="text-purple-600 hover:underline">
+                <a
+                  href="mailto:hello@romancecanvas.com"
+                  className="text-purple-600 hover:underline"
+                >
                   hello@romancecanvas.com
                 </a>
               </p>
               <p>
-                <span className="font-semibold text-gray-800">Support Email:</span>{" "}
-                <a href="mailto:support@romancecanvas.com" className="text-purple-600 hover:underline">
+                <span className="font-semibold text-gray-800">
+                  Support Email:
+                </span>{" "}
+                <a
+                  href="mailto:support@romancecanvas.com"
+                  className="text-purple-600 hover:underline"
+                >
                   support@romancecanvas.com
                 </a>
               </p>
@@ -141,7 +175,9 @@ export default function ContactPage() {
 
           {/* Quick Links */}
           <div className="mt-8 pt-8 border-t border-gray-200">
-            <p className="text-sm text-gray-500 mb-4">Looking for something else?</p>
+            <p className="text-sm text-gray-500 mb-4">
+              Looking for something else?
+            </p>
             <div className="flex flex-wrap gap-4">
               <Link
                 href="/legal/terms"

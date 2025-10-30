@@ -167,9 +167,9 @@ export default function PrivacyPolicyPage() {
         </p>
 
         <p className="mt-8 text-sm leading-relaxed text-purple-50">
-          SnapPair Labs (“we”, “us”) respects your privacy. This policy explains
-          what information we collect when you use RomanceCanvas and how we
-          protect it.
+          AIRomanceBuilder Labs (“we”, “us”) respects your privacy. This policy
+          explains what information we collect when you use RomanceCanvas and
+          how we protect it.
         </p>
 
         <div className="mt-12 space-y-8">
