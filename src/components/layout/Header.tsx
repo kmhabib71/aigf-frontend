@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useAuth } from "../../contexts/AuthContext";
 import CreditBalance from "../CreditBalance";
 import UserAvatar from "../UserAvatar";
@@ -38,10 +39,7 @@ export default function Header() {
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-5">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <div
-              className="flex items-center gap-3 cursor-pointer group"
-              onClick={() => router.push("/")}
-            >
+            <Link href="/" className="flex items-center gap-3 cursor-pointer group">
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-300 to-pink-300 rounded-2xl blur-md opacity-60 group-hover:opacity-100 transition-opacity"></div>
                 <div className="relative bg-gradient-to-br from-purple-400 to-pink-400 p-2.5 rounded-2xl shadow-lg transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
@@ -51,65 +49,65 @@ export default function Header() {
               <span className="text-xl font-black bg-gradient-to-r from-purple-600 via-pink-500 to-cyan-500 bg-clip-text text-transparent">
                 RomanceCanvas
               </span>
-            </div>
+            </Link>
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-8">
               {!isAuthenticated && (
                 <>
-                  <button
-                    onClick={() => router.push("/features")}
-                    className="text-white hover:text-purple-300 transition-colors font-semibold relative group drop-shadow-lg"
+                  <Link
+                    href="/features"
+                    className="text-white hover:text-purple-300 transition-colors font-semibold relative group drop-shadow-lg cursor-pointer"
                     style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
                   >
                     Features
                     <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-full transition-all duration-300"></span>
-                  </button>
-                  <button
-                    onClick={() => router.push("/how-it-works")}
-                    className="text-white hover:text-purple-300 transition-colors font-semibold relative group drop-shadow-lg"
+                  </Link>
+                  <Link
+                    href="/how-it-works"
+                    className="text-white hover:text-purple-300 transition-colors font-semibold relative group drop-shadow-lg cursor-pointer"
                     style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
                   >
                     How It Works
                     <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-full transition-all duration-300"></span>
-                  </button>
+                  </Link>
                 </>
               )}
-              <button
-                onClick={() => router.push("/pricing")}
-                className="text-white hover:text-purple-300 transition-colors font-semibold relative group drop-shadow-lg"
+              <Link
+                href="/pricing"
+                className="text-white hover:text-purple-300 transition-colors font-semibold relative group drop-shadow-lg cursor-pointer"
                 style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
               >
                 Pricing
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-full transition-all duration-300"></span>
-              </button>
+              </Link>
               {/* Legal links moved to Footer */}
               {isAuthenticated && (
                 <>
-                  <button
-                    onClick={() => router.push("/dashboard")}
-                    className="text-white hover:text-purple-300 transition-colors font-semibold relative group drop-shadow-lg"
+                  <Link
+                    href="/dashboard"
+                    className="text-white hover:text-purple-300 transition-colors font-semibold relative group drop-shadow-lg cursor-pointer"
                     style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
                   >
                     Dashboard
                     <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-full transition-all duration-300"></span>
-                  </button>
-                  <button
-                    onClick={() => router.push("/chat")}
-                    className="text-white hover:text-purple-300 transition-colors font-semibold relative group drop-shadow-lg"
+                  </Link>
+                  <Link
+                    href="/chat"
+                    className="text-white hover:text-purple-300 transition-colors font-semibold relative group drop-shadow-lg cursor-pointer"
                     style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
                   >
                     Chat
                     <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-full transition-all duration-300"></span>
-                  </button>
-                  <button
-                    onClick={() => router.push("/romance/create")}
-                    className="text-white hover:text-purple-300 transition-colors font-semibold relative group drop-shadow-lg"
+                  </Link>
+                  <Link
+                    href="/romance/create"
+                    className="text-white hover:text-purple-300 transition-colors font-semibold relative group drop-shadow-lg cursor-pointer"
                     style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
                   >
                     Story
                     <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-full transition-all duration-300"></span>
-                  </button>
+                  </Link>
                 </>
               )}
             </div>

@@ -40,21 +40,32 @@ export default function RefundPolicyPage() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-rose-900 via-purple-900 to-indigo-900 text-white">
       <section className="max-w-3xl mx-auto px-6 py-16">
-        <Link href="/" className="inline-flex items-center text-sm text-purple-100 hover:text-pink-200">
-          <- Back to RomanceCanvas
+        <Link
+          href="/"
+          className="inline-flex items-center text-sm text-purple-100 hover:text-pink-200"
+        >
+          Back to RomanceCanvas
         </Link>
 
-        <h1 className="mt-6 text-4xl font-black tracking-tight">Refund Policy</h1>
-        <p className="mt-4 text-base text-purple-100">Last updated: {new Date().toLocaleDateString()}</p>
+        <h1 className="mt-6 text-4xl font-black tracking-tight">
+          Refund Policy
+        </h1>
+        <p className="mt-4 text-base text-purple-100">
+          Last updated: {new Date().toLocaleDateString()}
+        </p>
 
         <p className="mt-8 text-sm leading-relaxed text-purple-50">
-          Please note that RomanceCanvas has a no returns and no refunds policy. We strive to provide a great
-          experience and helpful support. If you have a billing concern, contact us and we will review it promptly.
+          Please note that RomanceCanvas has a no returns and no refunds policy.
+          We strive to provide a great experience and helpful support. If you
+          have a billing concern, contact us and we will review it promptly.
         </p>
 
         <div className="mt-12 space-y-8">
           {sections.map(({ title, details }) => (
-            <article key={title} className="bg-white/5 rounded-3xl border border-white/10 p-5 shadow-lg shadow-purple-500/10">
+            <article
+              key={title}
+              className="bg-white/5 rounded-3xl border border-white/10 p-5 shadow-lg shadow-purple-500/10"
+            >
               <h2 className="text-2xl font-semibold text-pink-200">{title}</h2>
               <ul className="mt-3 list-disc list-inside text-sm text-purple-50 space-y-2">
                 {details.map((detail) => (
@@ -66,7 +77,14 @@ export default function RefundPolicyPage() {
         </div>
 
         <div className="mt-12 text-sm text-purple-200">
-          Need help right now? Email <a href="mailto:hello@romancecanvas.com" className="underline hover:text-pink-200">hello@romancecanvas.com</a>.
+          Need help right now? Email{" "}
+          <a
+            href="mailto:hello@romancecanvas.com"
+            className="underline hover:text-pink-200"
+          >
+            hello@romancecanvas.com
+          </a>
+          .
         </div>
       </section>
 
@@ -74,4 +92,3 @@ export default function RefundPolicyPage() {
     </main>
   );
 }
-

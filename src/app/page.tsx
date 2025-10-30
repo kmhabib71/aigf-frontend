@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useAuth } from "../contexts/AuthContext";
 import { authService } from "../lib/auth/authService";
 import Header from "../components/layout/Header";
@@ -160,10 +161,7 @@ export default function LandingPage() {
             {/* Dual Choice Cards */}
             <div className="grid md:grid-cols-2 gap-8 animate-fade-in-up animation-delay-200">
               {/* CHAT CARD */}
-              <div
-                onClick={() => router.push("/chat")}
-                className="group cursor-pointer relative"
-              >
+              <Link href="/chat" className="group cursor-pointer relative block">
                 <div className="absolute -inset-4 bg-gradient-to-r from-purple-300 via-pink-300 to-purple-300 rounded-[3rem] blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-700"></div>
                 <GlassEffect
                   className="relative transform hover:scale-105 hover:-translate-y-2 transition-all duration-500"
@@ -229,13 +227,10 @@ export default function LandingPage() {
                   </div>
                   </div>
                 </GlassEffect>
-              </div>
+              </Link>
 
               {/* STORY CARD */}
-              <div
-                onClick={() => router.push("/romance/create")}
-                className="group cursor-pointer relative"
-              >
+              <Link href="/romance/create" className="group cursor-pointer relative block">
                 <div className="absolute -inset-4 bg-gradient-to-r from-cyan-300 via-purple-300 to-pink-300 rounded-[3rem] blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-700"></div>
                 <GlassEffect
                   className="relative transform hover:scale-105 hover:-translate-y-2 transition-all duration-500"
@@ -301,7 +296,7 @@ export default function LandingPage() {
                   </div>
                   </div>
                 </GlassEffect>
-              </div>
+              </Link>
             </div>
           </div>
         </section>
@@ -323,10 +318,10 @@ export default function LandingPage() {
 
                 <div className="grid md:grid-cols-3 gap-6">
                   {continueStories.map((story) => (
-                    <div
+                    <Link
                       key={story.id}
-                      onClick={() => router.push(`/romance/story/${story.id}`)}
-                      className="group cursor-pointer"
+                      href={`/romance/story/${story.id}`}
+                      className="group cursor-pointer block"
                     >
                       <GlassEffect
                         className="h-full hover:shadow-2xl hover:-translate-y-2 transition-all duration-300"
@@ -374,7 +369,7 @@ export default function LandingPage() {
                       </div>
                         </div>
                       </GlassEffect>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               </div>
@@ -456,14 +451,12 @@ export default function LandingPage() {
 
                           {/* Actions */}
                           <div className="flex gap-2">
-                            <button
-                              onClick={() =>
-                                router.push(`/romance/story/${story.id}`)
-                              }
-                              className="flex-1 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold hover:shadow-lg shadow-purple-500/30 hover:shadow-purple-500/40 transform hover:scale-105 transition-all duration-300"
+                            <Link
+                              href={`/romance/story/${story.id}`}
+                              className="flex-1 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold hover:shadow-lg shadow-purple-500/30 hover:shadow-purple-500/40 transform hover:scale-105 transition-all duration-300 text-center"
                             >
                               Read Story
-                            </button>
+                            </Link>
                             {story.characters.length > 0 && (
                               <button
                                 onClick={() =>
