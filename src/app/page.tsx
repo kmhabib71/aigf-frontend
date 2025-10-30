@@ -201,7 +201,7 @@ export default function LandingPage() {
                   <div className="space-y-3 mb-6">
                     <div className="flex items-center gap-2 text-sm lg:text-base text-white">
                       <span className="text-emerald-400 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">✓</span>
-                      <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">No credit card required</span>
+                      <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">No signup required to start</span>
                     </div>
                     <div className="flex items-center gap-2 text-sm lg:text-base text-white">
                       <span className="text-emerald-400 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">✓</span>
@@ -209,7 +209,7 @@ export default function LandingPage() {
                     </div>
                     <div className="flex items-center gap-2 text-sm lg:text-base text-white">
                       <span className="text-emerald-400 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">✓</span>
-                      <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">Signup for unlimited access</span>
+                      <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">Sign up to continue</span>
                     </div>
                   </div>
 
@@ -219,7 +219,7 @@ export default function LandingPage() {
                   </button>
 
                   {/* Free Badge */}
-                  <div className="mt-4 text-center">
+                  <div className="hidden mt-4 text-center">
                     <span className="inline-block px-4 py-1.5 bg-gradient-to-r from-emerald-400 to-green-500 text-white text-xs font-bold rounded-full shadow-lg shadow-emerald-500/30">
                       3 messages FREE
                     </span>
@@ -287,8 +287,8 @@ export default function LandingPage() {
                     Create Story →
                   </button>
 
-                  {/* Free Badge */}
-                  <div className="mt-4 text-center">
+                  {/* Free Badge hidden to keep copy simple */}
+                  <div className="hidden mt-4 text-center">
                     <span className="inline-block px-4 py-1.5 bg-gradient-to-r from-amber-400 to-orange-500 text-white text-xs font-bold rounded-full shadow-lg shadow-amber-500/30">
                       1 scene FREE
                     </span>
@@ -528,8 +528,7 @@ export default function LandingPage() {
 
                 {/* Subtext */}
                 <p className="text-lg lg:text-xl text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mb-10 max-w-2xl mx-auto">
-                  Start for free. Continue with signup. Unlock unlimited romance
-                  with Pro.
+                  Start for free. Sign up to continue when you’re ready.
                 </p>
 
                 {/* CTA Buttons */}
@@ -555,7 +554,7 @@ export default function LandingPage() {
 
                 {/* Fine Print */}
                 <p className="text-sm text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mt-6">
-                  No credit card required for signup • Cancel anytime
+                  Free signup • Cancel anytime
                 </p>
                 </div>
                 </div>
