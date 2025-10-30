@@ -458,7 +458,7 @@ export default function LandingPage() {
                     onClick={() => router.push("/pricing")}
                     className="px-10 py-5 rounded-2xl font-bold text-lg bg-white border-2 border-purple-300 text-purple-700 hover:bg-purple-50 hover:border-purple-400 transform hover:scale-105 transition-all duration-300"
                   >
-                    ✨ Romance Pro — $9.99/mo
+                    ✨ Romance Plus — $9.99/mo
                   </button>
                 </div>
 
