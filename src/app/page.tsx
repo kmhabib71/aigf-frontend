@@ -161,7 +161,10 @@ export default function LandingPage() {
             {/* Dual Choice Cards */}
             <div className="grid md:grid-cols-2 gap-8 animate-fade-in-up animation-delay-200">
               {/* CHAT CARD */}
-              <Link href="/chat" className="group cursor-pointer relative block">
+              <Link
+                href="/chat"
+                className="group cursor-pointer relative block"
+              >
                 <div className="absolute -inset-4 bg-gradient-to-r from-purple-300 via-fuchsia-300 to-pink-300 rounded-[3rem] blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-700"></div>
                 <GlassEffect
                   className="relative transform hover:scale-105 hover:-translate-y-2 transition-all duration-500"
@@ -175,62 +178,77 @@ export default function LandingPage() {
                   }}
                 >
                   <div className="p-8 lg:p-10">
-                  {/* Dark glossy overlay for glass morphism effect */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/60 rounded-[2.5rem] pointer-events-none"></div>
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[2.5rem] pointer-events-none"></div>
+                    {/* Dark glossy overlay for glass morphism effect */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/60 rounded-[2.5rem] pointer-events-none"></div>
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[2.5rem] pointer-events-none"></div>
 
-                  <div className="relative z-10">
-                  {/* Icon */}
-                  <div className="flex justify-center mb-6">
-                    <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-purple-400 via-fuchsia-400 to-pink-500 flex items-center justify-center text-5xl shadow-xl shadow-purple-500/50 transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
-                      💬
+                    <div className="relative z-10">
+                      {/* Icon */}
+                      <div className="flex justify-center mb-6">
+                        <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-purple-400 via-fuchsia-400 to-pink-500 flex items-center justify-center text-5xl shadow-xl shadow-purple-500/50 transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
+                          💬
+                        </div>
+                      </div>
+
+                      {/* Title */}
+                      <h2 className="text-3xl lg:text-4xl font-black text-center mb-4 text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
+                        Romantic Chat
+                      </h2>
+
+                      {/* Description */}
+                      <p className="text-center text-white text-base lg:text-lg mb-6 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                        Start chatting instantly — no signup needed
+                      </p>
+
+                      {/* Features */}
+                      <div className="space-y-3 mb-6">
+                        <div className="flex items-center gap-2 text-sm lg:text-base text-white">
+                          <span className="text-emerald-400 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                            ✓
+                          </span>
+                          <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                            No signup required to start
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm lg:text-base text-white">
+                          <span className="text-emerald-400 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                            ✓
+                          </span>
+                          <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                            Intelligent AI conversations
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm lg:text-base text-white">
+                          <span className="text-emerald-400 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                            ✓
+                          </span>
+                          <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                            Sign up to continue
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* CTA Button */}
+                      <button className="w-full px-6 py-3 lg:py-4 rounded-2xl font-bold text-base lg:text-lg bg-gradient-to-r from-purple-500 via-fuchsia-500 to-pink-500 text-white shadow-lg shadow-purple-500/30 hover:shadow-xl hover:shadow-purple-500/50 transform hover:scale-105 transition-all duration-300">
+                        Start Chatting →
+                      </button>
+
+                      {/* Free Badge */}
+                      <div className="hidden mt-4 text-center">
+                        <span className="inline-block px-4 py-1.5 bg-gradient-to-r from-emerald-400 to-green-500 text-white text-xs font-bold rounded-full shadow-lg shadow-emerald-500/30">
+                          3 messages FREE
+                        </span>
+                      </div>
                     </div>
-                  </div>
-
-                  {/* Title */}
-                  <h2 className="text-3xl lg:text-4xl font-black text-center mb-4 text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
-                    Romantic Chat
-                  </h2>
-
-                  {/* Description */}
-                  <p className="text-center text-white text-base lg:text-lg mb-6 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-                    Start chatting instantly — no signup needed
-                  </p>
-
-                  {/* Features */}
-                  <div className="space-y-3 mb-6">
-                    <div className="flex items-center gap-2 text-sm lg:text-base text-white">
-                      <span className="text-emerald-400 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">✓</span>
-                      <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">No signup required to start</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm lg:text-base text-white">
-                      <span className="text-emerald-400 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">✓</span>
-                      <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">Intelligent AI conversations</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm lg:text-base text-white">
-                      <span className="text-emerald-400 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">✓</span>
-                      <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">Sign up to continue</span>
-                    </div>
-                  </div>
-
-                  {/* CTA Button */}
-                  <button className="w-full px-6 py-3 lg:py-4 rounded-2xl font-bold text-base lg:text-lg bg-gradient-to-r from-purple-500 via-fuchsia-500 to-pink-500 text-white shadow-lg shadow-purple-500/30 hover:shadow-xl hover:shadow-purple-500/50 transform hover:scale-105 transition-all duration-300">
-                    Start Chatting →
-                  </button>
-
-                  {/* Free Badge */}
-                  <div className="hidden mt-4 text-center">
-                    <span className="inline-block px-4 py-1.5 bg-gradient-to-r from-emerald-400 to-green-500 text-white text-xs font-bold rounded-full shadow-lg shadow-emerald-500/30">
-                      3 messages FREE
-                    </span>
-                  </div>
-                  </div>
                   </div>
                 </GlassEffect>
               </Link>
 
               {/* STORY CARD */}
-              <Link href="/romance/create" className="group cursor-pointer relative block">
+              <Link
+                href="/romance/create"
+                className="group cursor-pointer relative block"
+              >
                 <div className="absolute -inset-4 bg-gradient-to-r from-orange-300 via-rose-300 to-pink-300 rounded-[3rem] blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-700"></div>
                 <GlassEffect
                   className="relative transform hover:scale-105 hover:-translate-y-2 transition-all duration-500"
@@ -244,56 +262,68 @@ export default function LandingPage() {
                   }}
                 >
                   <div className="p-8 lg:p-10">
-                  {/* Dark glossy overlay for glass morphism effect */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/60 rounded-[2.5rem] pointer-events-none"></div>
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[2.5rem] pointer-events-none"></div>
+                    {/* Dark glossy overlay for glass morphism effect */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/60 rounded-[2.5rem] pointer-events-none"></div>
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[2.5rem] pointer-events-none"></div>
 
-                  <div className="relative z-10">
-                  {/* Icon */}
-                  <div className="flex justify-center mb-6">
-                    <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-orange-400 via-rose-400 to-pink-500 flex items-center justify-center text-5xl shadow-xl shadow-orange-500/50 transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
-                      📖
+                    <div className="relative z-10">
+                      {/* Icon */}
+                      <div className="flex justify-center mb-6">
+                        <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-orange-400 via-rose-400 to-pink-500 flex items-center justify-center text-5xl shadow-xl shadow-orange-500/50 transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
+                          📖
+                        </div>
+                      </div>
+
+                      {/* Title */}
+                      <h2 className="text-3xl lg:text-4xl font-black text-center mb-4 text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
+                        Create a Story
+                      </h2>
+
+                      {/* Description */}
+                      <p className="text-center text-white text-base lg:text-lg mb-6 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                        Create your romance story in seconds
+                      </p>
+
+                      {/* Features */}
+                      <div className="space-y-3 mb-6">
+                        <div className="flex items-center gap-2 text-sm lg:text-base text-white">
+                          <span className="text-amber-400 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                            ✓
+                          </span>
+                          <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                            AI writes your story
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm lg:text-base text-white">
+                          <span className="text-amber-400 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                            ✓
+                          </span>
+                          <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                            Custom characters & plot
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm lg:text-base text-white">
+                          <span className="text-amber-400 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                            ✓
+                          </span>
+                          <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                            Choose your spice level
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* CTA Button */}
+                      <button className="w-full px-6 py-3 lg:py-4 rounded-2xl font-bold text-base lg:text-lg bg-gradient-to-r from-orange-500 via-rose-500 to-pink-500 text-white shadow-lg shadow-rose-500/30 hover:shadow-xl hover:shadow-rose-500/50 transform hover:scale-105 transition-all duration-300">
+                        Create Story →
+                      </button>
+
+                      {/* Free Badge hidden to keep copy simple */}
+                      <div className="hidden mt-4 text-center">
+                        <span className="inline-block px-4 py-1.5 bg-gradient-to-r from-amber-400 to-orange-500 text-white text-xs font-bold rounded-full shadow-lg shadow-amber-500/30">
+                          1 scene FREE
+                        </span>
+                      </div>
                     </div>
-                  </div>
-
-                  {/* Title */}
-                  <h2 className="text-3xl lg:text-4xl font-black text-center mb-4 text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
-                    Create a Story
-                  </h2>
-
-                  {/* Description */}
-                  <p className="text-center text-white text-base lg:text-lg mb-6 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-                    Create your romance story in seconds
-                  </p>
-
-                  {/* Features */}
-                  <div className="space-y-3 mb-6">
-                    <div className="flex items-center gap-2 text-sm lg:text-base text-white">
-                      <span className="text-amber-400 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">✓</span>
-                      <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">AI writes your story</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm lg:text-base text-white">
-                      <span className="text-amber-400 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">✓</span>
-                      <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">Custom characters & plot</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm lg:text-base text-white">
-                      <span className="text-amber-400 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">✓</span>
-                      <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">Choose your spice level</span>
-                    </div>
-                  </div>
-
-                  {/* CTA Button */}
-                  <button className="w-full px-6 py-3 lg:py-4 rounded-2xl font-bold text-base lg:text-lg bg-gradient-to-r from-orange-500 via-rose-500 to-pink-500 text-white shadow-lg shadow-rose-500/30 hover:shadow-xl hover:shadow-rose-500/50 transform hover:scale-105 transition-all duration-300">
-                    Create Story →
-                  </button>
-
-                  {/* Free Badge hidden to keep copy simple */}
-                  <div className="hidden mt-4 text-center">
-                    <span className="inline-block px-4 py-1.5 bg-gradient-to-r from-amber-400 to-orange-500 text-white text-xs font-bold rounded-full shadow-lg shadow-amber-500/30">
-                      1 scene FREE
-                    </span>
-                  </div>
-                  </div>
                   </div>
                 </GlassEffect>
               </Link>
@@ -335,38 +365,38 @@ export default function LandingPage() {
                         }}
                       >
                         <div className="p-6">
-                      {/* Dark glossy overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/60 rounded-[1.5rem] pointer-events-none"></div>
-                      <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[1.5rem] pointer-events-none"></div>
+                          {/* Dark glossy overlay */}
+                          <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/60 rounded-[1.5rem] pointer-events-none"></div>
+                          <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[1.5rem] pointer-events-none"></div>
 
-                      <div className="relative z-10">
-                      {story.coverImage && (
-                        <div className="aspect-[16/9] mb-4 rounded-xl overflow-hidden bg-gradient-to-br from-purple-100 to-pink-100">
-                          <img
-                            src={story.coverImage}
-                            alt={story.title}
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                          />
-                        </div>
-                      )}
-                      <h3 className="text-xl font-bold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mb-2">
-                        {story.title}
-                      </h3>
-                      {story.characters.length > 0 && (
-                        <p className="text-sm text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mb-3">
-                          Chat with:{" "}
-                          <span className="font-semibold text-purple-300">
-                            {story.characters[0].name}
-                          </span>
-                        </p>
-                      )}
-                      <div className="flex items-center justify-between text-xs text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-                        <span>{story.sceneCount} scenes</span>
-                        <button className="px-3 py-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full font-semibold hover:shadow-lg hover:shadow-purple-500/30 transition-all">
-                          Resume →
-                        </button>
-                      </div>
-                      </div>
+                          <div className="relative z-10">
+                            {story.coverImage && (
+                              <div className="aspect-[16/9] mb-4 rounded-xl overflow-hidden bg-gradient-to-br from-purple-100 to-pink-100">
+                                <img
+                                  src={story.coverImage}
+                                  alt={story.title}
+                                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                />
+                              </div>
+                            )}
+                            <h3 className="text-xl font-bold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mb-2">
+                              {story.title}
+                            </h3>
+                            {story.characters.length > 0 && (
+                              <p className="text-sm text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mb-3">
+                                Chat with:{" "}
+                                <span className="font-semibold text-purple-300">
+                                  {story.characters[0].name}
+                                </span>
+                              </p>
+                            )}
+                            <div className="flex items-center justify-between text-xs text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                              <span>{story.sceneCount} scenes</span>
+                              <button className="px-3 py-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full font-semibold hover:shadow-lg hover:shadow-purple-500/30 transition-all">
+                                Resume →
+                              </button>
+                            </div>
+                          </div>
                         </div>
                       </GlassEffect>
                     </Link>
@@ -412,65 +442,65 @@ export default function LandingPage() {
                           <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[1.5rem] pointer-events-none"></div>
 
                           <div className="relative z-10">
-                          {/* Cover Image */}
-                          {story.coverImage && (
-                            <div className="aspect-[4/3] mb-4 rounded-2xl overflow-hidden bg-gradient-to-br from-purple-100 to-pink-100">
-                              <img
-                                src={story.coverImage}
-                                alt={story.title}
-                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                              />
-                            </div>
-                          )}
-
-                          {/* Tropes */}
-                          <div className="flex gap-2 mb-3 flex-wrap">
-                            {story.tropes.slice(0, 2).map((trope, i) => (
-                              <span
-                                key={i}
-                                className="px-3 py-1 bg-purple-100 text-purple-700 text-xs font-semibold rounded-full"
-                              >
-                                {trope}
-                              </span>
-                            ))}
-                            <div className="flex items-center gap-1 text-xs text-white">
-                              <span>❤️</span>
-                              <span>{story.heartScore || 0}</span>
-                            </div>
-                          </div>
-
-                          {/* Title */}
-                          <h3 className="text-2xl font-bold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mb-3">
-                            {story.title}
-                          </h3>
-
-                          {/* Description */}
-                          <p className="text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] leading-relaxed mb-4 line-clamp-3">
-                            {story.description}
-                          </p>
-
-                          {/* Actions */}
-                          <div className="flex gap-2">
-                            <Link
-                              href={`/romance/story/${story.id}`}
-                              className="flex-1 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold hover:shadow-lg shadow-purple-500/30 hover:shadow-purple-500/40 transform hover:scale-105 transition-all duration-300 text-center"
-                            >
-                              Read Story
-                            </Link>
-                            {story.characters.length > 0 && (
-                              <button
-                                onClick={() =>
-                                  router.push(
-                                    `/romance/story/${story.id}?chat=${story.characters[0].name}`
-                                  )
-                                }
-                                className="px-4 py-2 bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white rounded-xl font-semibold hover:bg-white/30 transition-all"
-                                title={`Chat with ${story.characters[0].name}`}
-                              >
-                                💬
-                              </button>
+                            {/* Cover Image */}
+                            {story.coverImage && (
+                              <div className="aspect-[4/3] mb-4 rounded-2xl overflow-hidden bg-gradient-to-br from-purple-100 to-pink-100">
+                                <img
+                                  src={story.coverImage}
+                                  alt={story.title}
+                                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                />
+                              </div>
                             )}
-                          </div>
+
+                            {/* Tropes */}
+                            <div className="flex gap-2 mb-3 flex-wrap">
+                              {story.tropes.slice(0, 2).map((trope, i) => (
+                                <span
+                                  key={i}
+                                  className="px-3 py-1 bg-purple-100 text-purple-700 text-xs font-semibold rounded-full"
+                                >
+                                  {trope}
+                                </span>
+                              ))}
+                              <div className="flex items-center gap-1 text-xs text-white">
+                                <span>❤️</span>
+                                <span>{story.heartScore || 0}</span>
+                              </div>
+                            </div>
+
+                            {/* Title */}
+                            <h3 className="text-2xl font-bold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mb-3">
+                              {story.title}
+                            </h3>
+
+                            {/* Description */}
+                            <p className="text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] leading-relaxed mb-4 line-clamp-3">
+                              {story.description}
+                            </p>
+
+                            {/* Actions */}
+                            <div className="flex gap-2">
+                              <Link
+                                href={`/romance/story/${story.id}`}
+                                className="flex-1 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold hover:shadow-lg shadow-purple-500/30 hover:shadow-purple-500/40 transform hover:scale-105 transition-all duration-300 text-center"
+                              >
+                                Read Story
+                              </Link>
+                              {story.characters.length > 0 && (
+                                <button
+                                  onClick={() =>
+                                    router.push(
+                                      `/romance/story/${story.id}?chat=${story.characters[0].name}`
+                                    )
+                                  }
+                                  className="px-4 py-2 bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white rounded-xl font-semibold hover:bg-white/30 transition-all"
+                                  title={`Chat with ${story.characters[0].name}`}
+                                >
+                                  💬
+                                </button>
+                              )}
+                            </div>
                           </div>
                         </div>
                       </GlassEffect>
@@ -499,64 +529,64 @@ export default function LandingPage() {
                 }}
               >
                 <div className="p-10 lg:p-12">
-                {/* Dark glossy overlay */}
-                <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/60 rounded-[3rem] pointer-events-none"></div>
-                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[3rem] pointer-events-none"></div>
+                  {/* Dark glossy overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/60 rounded-[3rem] pointer-events-none"></div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[3rem] pointer-events-none"></div>
 
-                <div className="relative z-10">
-                {/* Animated Hearts */}
-                <div className="mb-6 flex justify-center gap-4">
-                  <span className="text-5xl animate-bounce">💕</span>
-                  <span
-                    className="text-5xl animate-bounce"
-                    style={{ animationDelay: "0.2s" }}
-                  >
-                    ✨
-                  </span>
-                  <span
-                    className="text-5xl animate-bounce"
-                    style={{ animationDelay: "0.4s" }}
-                  >
-                    💫
-                  </span>
-                </div>
+                  <div className="relative z-10">
+                    {/* Animated Hearts */}
+                    <div className="mb-6 flex justify-center gap-4">
+                      <span className="text-5xl animate-bounce">💕</span>
+                      <span
+                        className="text-5xl animate-bounce"
+                        style={{ animationDelay: "0.2s" }}
+                      >
+                        ✨
+                      </span>
+                      <span
+                        className="text-5xl animate-bounce"
+                        style={{ animationDelay: "0.4s" }}
+                      >
+                        💫
+                      </span>
+                    </div>
 
-                {/* Headline */}
-                <h2 className="text-4xl lg:text-5xl font-black text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] mb-4">
-                  Every love story deserves to be finished
-                </h2>
+                    {/* Headline */}
+                    <h2 className="text-4xl lg:text-5xl font-black text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] mb-4">
+                      Every love story deserves to be finished
+                    </h2>
 
-                {/* Subtext */}
-                <p className="text-lg lg:text-xl text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mb-10 max-w-2xl mx-auto">
-                  Start for free. Sign up to continue when you’re ready.
-                </p>
+                    {/* Subtext */}
+                    <p className="text-lg lg:text-xl text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mb-10 max-w-2xl mx-auto">
+                      Start for free. Sign up to continue when you’re ready.
+                    </p>
 
-                {/* CTA Buttons */}
-                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                  <button
-                    onClick={() => router.push("/signup")}
-                    className="group relative px-8 lg:px-10 py-4 lg:py-5 rounded-2xl font-bold text-base lg:text-lg overflow-hidden shadow-2xl shadow-purple-500/40 hover:shadow-purple-400/60 transform hover:scale-105 hover:-translate-y-1 transition-all duration-300"
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500"></div>
-                    <div className="absolute inset-0 bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <span className="relative text-white flex items-center gap-3">
-                      ❤️ Continue Your Story — Free Signup
-                    </span>
-                  </button>
+                    {/* CTA Buttons */}
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                      <button
+                        onClick={() => router.push("/signup")}
+                        className="group relative px-8 lg:px-10 py-4 lg:py-5 rounded-2xl font-bold text-base lg:text-lg overflow-hidden shadow-2xl shadow-purple-500/40 hover:shadow-purple-400/60 transform hover:scale-105 hover:-translate-y-1 transition-all duration-300"
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500"></div>
+                        <div className="absolute inset-0 bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <span className="relative text-white flex items-center gap-3">
+                          ❤️ Continue Your Story — Free Signup
+                        </span>
+                      </button>
 
-                  <button
-                    onClick={() => router.push("/pricing")}
-                    className="px-8 lg:px-10 py-4 lg:py-5 rounded-2xl font-bold text-base lg:text-lg bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white/30 hover:border-white/40 transform hover:scale-105 transition-all duration-300"
-                  >
-                    ✨ Romance Pro — $9.99/mo
-                  </button>
-                </div>
+                      <button
+                        onClick={() => router.push("/pricing")}
+                        className="px-8 lg:px-10 py-4 lg:py-5 rounded-2xl font-bold text-base lg:text-lg bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white/30 hover:border-white/40 transform hover:scale-105 transition-all duration-300"
+                      >
+                        ✨ Romance Plus — $9.99/mo
+                      </button>
+                    </div>
 
-                {/* Fine Print */}
-                <p className="text-sm text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mt-6">
-                  Free signup • Cancel anytime
-                </p>
-                </div>
+                    {/* Fine Print */}
+                    <p className="text-sm text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mt-6">
+                      Free signup • Cancel anytime
+                    </p>
+                  </div>
                 </div>
               </GlassEffect>
             </div>
