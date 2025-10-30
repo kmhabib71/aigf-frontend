@@ -299,7 +299,7 @@ export default function LandingPage() {
                             ✓
                           </span>
                           <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-                            Custom characters & plot
+                            Chat with Character
                           </span>
                         </div>
                         <div className="flex items-center gap-2 text-sm lg:text-base text-white">

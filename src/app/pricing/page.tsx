@@ -39,11 +39,11 @@ export default function PricingPage() {
       highlighted: false,
       cta: "Get Started",
       features: [
-        { name: "Messages", included: true, value: "3 free messages" },
-        { name: "Story Creation", included: true, value: "1 scene only" },
+        { name: "Messages", included: true, value: "100 free messages" },
+        { name: "Story Creation", included: true, value: "5 story creation" },
         { name: "Basic Chat", included: true },
         { name: "Image Generation", included: false },
-        { name: "NSFW Mode", included: false },
+        { name: "NSFW Mode", included: true, value: "Limited" },
         { name: "Credit Rollover", included: false },
         { name: "Priority Support", included: false },
         { name: "Advanced Features", included: false },
@@ -363,7 +363,9 @@ export default function PricingPage() {
         {/* Credit System Explanation */}
         <div className="mt-20 max-w-5xl mx-auto bg-white/10 backdrop-blur-md rounded-3xl p-8 text-white border border-white/20 shadow-2xl">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-black drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mb-3">How Credits Work</h2>
+            <h2 className="text-3xl font-black drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mb-3">
+              How Credits Work
+            </h2>
             <p className="text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)] text-lg">
               Transparent, usage-based pricing that gives you control
             </p>
