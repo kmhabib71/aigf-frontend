@@ -1,5 +1,9 @@
 .scene-block {
-  background: linear-gradient(180deg, rgba(12, 10, 20, 0.65), rgba(12, 10, 20, 0.55));
+  background: linear-gradient(
+    180deg,
+    rgba(12, 10, 20, 0.65),
+    rgba(12, 10, 20, 0.769)
+  );
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 0 10px 30px rgba(10, 6, 20, 0.35);
@@ -11,7 +15,7 @@
 .scene-block:hover {
   transform: translateY(-1px);
   box-shadow: 0 16px 40px rgba(10, 6, 20, 0.45);
-  border-color: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.7);
 }
 
 .scene-header {
@@ -19,14 +23,22 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px 20px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0));
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.04),
+    rgba(255, 255, 255, 0)
+  );
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   cursor: pointer;
   user-select: none;
 }
 
 .scene-header:hover {
-  background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0));
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.07),
+    rgba(255, 255, 255, 0)
+  );
 }
 
 .scene-header-left {
@@ -68,7 +80,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(180deg, rgba(12,10,20,0.6), rgba(12,10,20,0.35));
+  background: linear-gradient(
+    180deg,
+    rgba(12, 10, 20, 0.6),
+    rgba(12, 10, 20, 0.35)
+  );
 }
 
 /* Soft vignette overlay to blend image with the story background */
@@ -77,11 +93,28 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background:
-    radial-gradient(140% 90% at 50% 0%, rgba(12,10,20,0.55) 0%, rgba(12,10,20,0.25) 30%, transparent 55%),
-    radial-gradient(140% 90% at 50% 100%, rgba(12,10,20,0.55) 0%, rgba(12,10,20,0.25) 30%, transparent 55%),
-    radial-gradient(120% 120% at 0% 50%, rgba(12,10,20,0.55) 0%, transparent 55%),
-    radial-gradient(120% 120% at 100% 50%, rgba(12,10,20,0.55) 0%, transparent 55%);
+  background: radial-gradient(
+      140% 90% at 50% 0%,
+      rgba(12, 10, 20, 0.55) 0%,
+      rgba(12, 10, 20, 0.25) 30%,
+      transparent 55%
+    ),
+    radial-gradient(
+      140% 90% at 50% 100%,
+      rgba(12, 10, 20, 0.55) 0%,
+      rgba(12, 10, 20, 0.25) 30%,
+      transparent 55%
+    ),
+    radial-gradient(
+      120% 120% at 0% 50%,
+      rgba(12, 10, 20, 0.55) 0%,
+      transparent 55%
+    ),
+    radial-gradient(
+      120% 120% at 100% 50%,
+      rgba(12, 10, 20, 0.55) 0%,
+      transparent 55%
+    );
 }
 
 .scene-image {
@@ -92,8 +125,20 @@
   object-fit: cover;
   border-radius: 18px;
   /* Fade edges gently so the image feels part of the canvas */
-  -webkit-mask-image: radial-gradient(ellipse 120% 120% at 50% 50%, #000 60%, rgba(0,0,0,0.7) 78%, rgba(0,0,0,0.35) 88%, transparent 100%);
-  mask-image: radial-gradient(ellipse 120% 120% at 50% 50%, #000 60%, rgba(0,0,0,0.7) 78%, rgba(0,0,0,0.35) 88%, transparent 100%);
+  -webkit-mask-image: radial-gradient(
+    ellipse 120% 120% at 50% 50%,
+    #000 60%,
+    rgba(0, 0, 0, 0.7) 78%,
+    rgba(0, 0, 0, 0.35) 88%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    ellipse 120% 120% at 50% 50%,
+    #000 60%,
+    rgba(0, 0, 0, 0.7) 78%,
+    rgba(0, 0, 0, 0.35) 88%,
+    transparent 100%
+  );
 }
 
 .scene-image-prompt-hint {

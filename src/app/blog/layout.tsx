@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     siteName: 'RomanceCanvas',
     images: [
       {
-        url: 'https://romancecanvas.com/og-blog.jpg',
+        url: 'https://romancecanvas.com/og-blog.png',
         width: 1200,
         height: 630,
         alt: 'RomanceCanvas Blog',
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Blog - Romance Writing Tips & AI Storytelling | RomanceCanvas',
     description: 'Explore guides on romance writing and AI storytelling',
-    images: ['https://romancecanvas.com/twitter-blog.jpg'],
+    images: ['https://romancecanvas.com/twitter-blog.png'],
   },
   alternates: {
     canonical: 'https://romancecanvas.com/blog',

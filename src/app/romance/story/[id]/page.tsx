@@ -8,6 +8,7 @@ import StoryCanvas from "@/components/RomanceCanvas/StoryCanvas";
 import ChatWithCharacter from "@/components/RomanceCanvas/ChatWithCharacter";
 import GlassEffect from "@/components/GlassEffect";
 import Header from "@/components/layout/Header";
+import StorySchema from "@/components/StorySchema";
 import { auth } from "@/lib/firebase";
 import { backendUrl } from "@/lib/config";
 
@@ -611,6 +612,8 @@ export default function StoryViewPage() {
         backgroundAttachment: "fixed",
       }}
     >
+      {/* SEO Schema Markup */}
+      {story && <StorySchema story={story} />}
       {isEditing && editedStory && (
         <div className="fixed inset-0 z-[80] flex items-center justify-center bg-black/70 backdrop-blur-sm px-4 py-6">
           <div className="w-full max-w-5xl max-h-full overflow-y-auto">

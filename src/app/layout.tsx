@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     default: 'RomanceCanvas - AI-Powered Interactive Romance Stories & Chat',
     template: '%s | RomanceCanvas',
   },
-  description: 'Create immersive AI-powered romance stories with RomanceCanvas. Experience romantic AI chat, interactive storytelling, character dialogue, and personalized narratives. Start free today!',
+  description: 'AI-powered interactive fiction platform. Create and experience infinite stories. Product: Romantic Chat · Create Story. Start free today!',
   keywords: ['AI romance', 'interactive romance stories', 'romantic AI chat', 'AI girlfriend chat', 'romance story generator', 'AI storytelling', 'romantic chatbot', 'interactive fiction'],
   authors: [{ name: 'RomanceCanvas' }],
   creator: 'RomanceCanvas',
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     description: 'Create immersive AI-powered romance stories with interactive choices and romantic AI chat. Personalized narratives await.',
     images: [
       {
-        url: '/og-image.jpg',
+        url: '/og-image.png',
         width: 1200,
         height: 630,
         alt: 'RomanceCanvas - Interactive Romance Stories',
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'RomanceCanvas - AI-Powered Interactive Romance Stories & Chat',
     description: 'Create immersive AI-powered romance stories with interactive choices and romantic AI chat',
-    images: ['/twitter-image.jpg'],
+    images: ['/twitter-image.png'],
   },
   robots: {
     index: true,

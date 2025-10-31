@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     siteName: 'RomanceCanvas',
     images: [
       {
-        url: 'https://romancecanvas.com/og-create.jpg',
+        url: 'https://romancecanvas.com/og-create.png',
         width: 1200,
         height: 630,
         alt: 'RomanceCanvas - Create Your Romance Story',
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Create Your Romance Story - RomanceCanvas',
     description: 'Create your own interactive romance story with AI-powered storytelling',
-    images: ['https://romancecanvas.com/twitter-create.jpg'],
+    images: ['https://romancecanvas.com/twitter-create.png'],
   },
   alternates: {
     canonical: 'https://romancecanvas.com/romance/create',

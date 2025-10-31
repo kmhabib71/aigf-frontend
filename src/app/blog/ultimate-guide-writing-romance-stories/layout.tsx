@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     siteName: 'RomanceCanvas',
     images: [
       {
-        url: 'https://romancecanvas.com/blog/romance-writing-guide.jpg',
+        url: 'https://romancecanvas.com/blog/romance-writing-guide.png',
         width: 1200,
         height: 630,
         alt: 'Ultimate Guide to Writing Romance Stories',
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'The Ultimate Guide to Writing Romance Stories with AI',
     description: 'Discover proven techniques to craft compelling romance narratives using AI',
-    images: ['https://romancecanvas.com/blog/romance-writing-guide.jpg'],
+    images: ['https://romancecanvas.com/blog/romance-writing-guide.png'],
   },
   alternates: {
     canonical: 'https://romancecanvas.com/blog/ultimate-guide-writing-romance-stories',
@@ -46,7 +46,7 @@ export default function BlogPostLayout({
     '@type': 'Article',
     headline: 'The Ultimate Guide to Writing Romance Stories with AI',
     description: 'Discover proven techniques to craft compelling romance narratives using AI. Learn about character development, plot structures, and emotional arcs that captivate readers.',
-    image: 'https://romancecanvas.com/blog/romance-writing-guide.jpg',
+    image: 'https://romancecanvas.com/blog/romance-writing-guide.png',
     author: {
       '@type': 'Organization',
       name: 'RomanceCanvas Team',

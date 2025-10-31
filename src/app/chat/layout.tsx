@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     siteName: 'RomanceCanvas',
     images: [
       {
-        url: 'https://romancecanvas.com/og-chat.jpg',
+        url: 'https://romancecanvas.com/og-chat.png',
         width: 1200,
         height: 630,
         alt: 'RomanceCanvas - AI Romantic Chat',
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'AI Romantic Chat - RomanceCanvas',
     description: 'Experience immersive AI romantic conversations with custom personas',
-    images: ['https://romancecanvas.com/twitter-chat.jpg'],
+    images: ['https://romancecanvas.com/twitter-chat.png'],
   },
   alternates: {
     canonical: 'https://romancecanvas.com/chat',
