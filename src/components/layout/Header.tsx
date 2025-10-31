@@ -30,7 +30,7 @@ export default function Header() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-30 h-[72px] sm:h-20 lg:h-16 transition-colors duration-500 ${
+        className={`fixed top-0 left-0 right-0 z-30 md:h-[72px] lg:h-[72px] h-auto md:pt-1 lg:pt-1 py-4  sm:h-20 lg:h-16 transition-colors duration-500 ${
           scrolled
             ? "bg-black/40 backdrop-blur-2xl shadow-lg shadow-purple-500/20 border-b border-white/10"
             : "bg-transparent"
@@ -43,13 +43,21 @@ export default function Header() {
               href="/"
               className="flex items-center gap-3 cursor-pointer group"
             >
-              <div className="relative">
+              <div className="relative hidden">
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-300 to-pink-300 rounded-2xl blur-md opacity-60 group-hover:opacity-100 transition-opacity"></div>
                 <div className="relative bg-gradient-to-br from-purple-400 to-pink-400 p-2.5 rounded-2xl shadow-lg transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
                   <span className="text-2xl">💕</span>
                 </div>
               </div>
-              <span className="text-xl font-black bg-gradient-to-r from-purple-600 via-pink-500 to-cyan-500 bg-clip-text text-transparent">
+              <div className="w-10 h-10 shrink-0 rounded-2xl bg-white/75 backdrop-blur-md border border-white/30 shadow-lg overflow-hidden flex items-center justify-center">
+                <img
+                  src="/logo.png"
+                  alt="RomanceCanvas logo"
+                  className="w-8 h-8 object-contain [filter:drop-shadow(0_1px_1px_rgba(0,0,0,0.25))]"
+                  decoding="async"
+                />
+              </div>
+              <span className="text-xl sm:text-2xl font-extrabold tracking-tight premium-gradient-text drop-shadow-[0_1px_1px_rgba(0,0,0,0.35)]">
                 RomanceCanvas
               </span>
             </Link>
