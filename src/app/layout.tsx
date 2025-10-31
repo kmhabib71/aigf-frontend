@@ -114,6 +114,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* Facebook App ID - Add your actual app ID from Facebook Developer Console */}
+        <meta property="fb:app_id" content={process.env.NEXT_PUBLIC_FB_APP_ID || "YOUR_FB_APP_ID_HERE"} />
+
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
