@@ -16,12 +16,58 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "RomanceCanvas",
-  description: "AI romance chat and stories",
+  metadataBase: new URL('https://romancecanvas.com'),
+  title: {
+    default: 'RomanceCanvas - AI-Powered Interactive Romance Stories & Chat',
+    template: '%s | RomanceCanvas',
+  },
+  description: 'Create immersive AI-powered romance stories with RomanceCanvas. Experience romantic AI chat, interactive storytelling, character dialogue, and personalized narratives. Start free today!',
+  keywords: ['AI romance', 'interactive romance stories', 'romantic AI chat', 'AI girlfriend chat', 'romance story generator', 'AI storytelling', 'romantic chatbot', 'interactive fiction'],
+  authors: [{ name: 'RomanceCanvas' }],
+  creator: 'RomanceCanvas',
+  publisher: 'RomanceCanvas',
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://romancecanvas.com',
+    siteName: 'RomanceCanvas',
+    title: 'RomanceCanvas - AI-Powered Interactive Romance Stories & Chat',
+    description: 'Create immersive AI-powered romance stories with interactive choices and romantic AI chat. Personalized narratives await.',
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'RomanceCanvas - Interactive Romance Stories',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'RomanceCanvas - AI-Powered Interactive Romance Stories & Chat',
+    description: 'Create immersive AI-powered romance stories with interactive choices and romantic AI chat',
+    images: ['/twitter-image.jpg'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   icons: {
     icon: "/logo-ico.ico",
     shortcut: "/logo-ico.ico",
     apple: "/logo.png",
+  },
+  verification: {
+    // Add your verification codes when available
+    // google: 'your-google-verification-code',
+    // yandex: 'your-yandex-verification-code',
   },
 };
 
@@ -30,8 +76,53 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const organizationSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'RomanceCanvas',
+    url: 'https://romancecanvas.com',
+    logo: 'https://romancecanvas.com/logo.png',
+    description: 'AI-powered interactive romance story and chat platform',
+    sameAs: [
+      // Add your social media URLs when available
+      // 'https://twitter.com/romancecanvas',
+      // 'https://facebook.com/romancecanvas',
+    ],
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'Customer Service',
+      email: 'support@romancecanvas.com',
+    },
+  };
+
+  const websiteSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'RomanceCanvas',
+    url: 'https://romancecanvas.com',
+    description: 'Create immersive AI-powered romance stories and experience romantic AI chat',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: 'https://romancecanvas.com/search?q={search_term_string}',
+      },
+      'query-input': 'required name=search_term_string',
+    },
+  };
+
   return (
     <html lang="en">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        />
+      </head>
       <body
         suppressHydrationWarning={true}
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

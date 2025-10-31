@@ -1,0 +1,21 @@
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Disallow admin and user-specific pages
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /api/
+Disallow: /login
+Disallow: /signup
+
+# Allow specific public routes
+Allow: /features
+Allow: /how-it-works
+Allow: /pricing
+Allow: /chat
+Allow: /romance/create
+Allow: /romance/story/*
+
+# Sitemap location
+Sitemap: https://romancecanvas.com/sitemap.xml
