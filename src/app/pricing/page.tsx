@@ -43,7 +43,7 @@ export default function PricingPage() {
         { name: "Story Creation", included: true, value: "5 story creation" },
         { name: "Basic Chat", included: true },
         { name: "Image Generation", included: false },
-        { name: "NSFW Mode", included: true, value: "Limited" },
+        { name: "Mature Content", included: true, value: "Limited" },
         { name: "Credit Rollover", included: false },
         { name: "Priority Support", included: false },
         { name: "Advanced Features", included: false },
@@ -66,7 +66,7 @@ export default function PricingPage() {
         { name: "Unlimited Chat", included: true },
         { name: "Unlimited Stories", included: true },
         { name: "Image Generation", included: true, value: "~3 credits/image" },
-        { name: "NSFW Mode", included: true },
+        { name: "Mature Content", included: true },
         {
           name: "Credit Rollover",
           included: true,
@@ -93,7 +93,7 @@ export default function PricingPage() {
         { name: "Unlimited Chat", included: true },
         { name: "Unlimited Stories", included: true },
         { name: "Image Generation", included: true, value: "~3 credits/image" },
-        { name: "NSFW Mode", included: true },
+        { name: "Mature Content", included: true },
         {
           name: "Credit Rollover",
           included: true,

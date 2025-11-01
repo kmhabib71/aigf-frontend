@@ -95,7 +95,7 @@ export default function ChatPage() {
     message: "",
   });
 
-  // ROMANTIC MODE STATE (Always enabled)
+  // MATURE CONTENT MODE STATE (Always enabled - Creative Freedom)
   const [nsfwMode, setNsfwMode] = useState(true);
 
   // PERSONA STATE
@@ -615,10 +615,10 @@ export default function ChatPage() {
         if (response.ok) {
           const data = await response.json();
           console.log(
-            `🔍 Backend NSFW mode: ${data.nsfwMode ? "ENABLED" : "DISABLED"}`
+            `🔍 Backend Mature Content mode: ${data.nsfwMode ? "ENABLED" : "DISABLED"}`
           );
           if (!data.nsfwMode) {
-            console.log(`🔥 Enabling romantic mode`);
+            console.log(`🔥 Enabling creative freedom mode`);
             fetch(
               `${backendUrl}/api/conversations/${conversationId}/nsfw-mode`,
               {
@@ -630,7 +630,7 @@ export default function ChatPage() {
           }
         }
       } catch (error) {
-        console.error("Failed to fetch NSFW mode:", error);
+        console.error("Failed to fetch Mature Content mode:", error);
       }
     };
 
