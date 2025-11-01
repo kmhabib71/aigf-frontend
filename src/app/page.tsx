@@ -1,14 +1,25 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, lazy, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
+import dynamic from "next/dynamic";
 import { useAuth } from "../contexts/AuthContext";
 import { authService } from "../lib/auth/authService";
-import Header from "../components/layout/Header";
-import Footer from "../components/layout/Footer";
-import GlassEffect from "../components/GlassEffect";
 import { backendUrl } from "../lib/config";
+
+// Lazy load heavy components
+const Header = dynamic(() => import("../components/layout/Header"), {
+  ssr: true,
+});
+const Footer = dynamic(() => import("../components/layout/Footer"), {
+  ssr: true,
+});
+const GlassEffect = dynamic(() => import("../components/GlassEffect"), {
+  ssr: false,
+  loading: () => <div className="animate-pulse bg-white/10 rounded-3xl" />,
+});
 interface TrendingStory {
   id: string;
   title: string;
@@ -229,7 +240,10 @@ export default function LandingPage() {
                       </div>
 
                       {/* CTA Button */}
-                      <button className="w-full px-6 py-3 lg:py-4 rounded-2xl font-bold text-base lg:text-lg bg-gradient-to-r from-purple-500 via-fuchsia-500 to-pink-500 text-white shadow-lg shadow-purple-500/30 hover:shadow-xl hover:shadow-purple-500/50 transform hover:scale-105 transition-all duration-300">
+                      <button
+                        className="w-full px-6 py-3 lg:py-4 rounded-2xl font-bold text-base lg:text-lg bg-gradient-to-r from-purple-500 via-fuchsia-500 to-pink-500 text-white shadow-lg shadow-purple-500/30 hover:shadow-xl hover:shadow-purple-500/50 transform hover:scale-105 transition-all duration-300"
+                        aria-label="Start chatting with AI"
+                      >
                         Start Chatting →
                       </button>
 
@@ -313,7 +327,10 @@ export default function LandingPage() {
                       </div>
 
                       {/* CTA Button */}
-                      <button className="w-full px-6 py-3 lg:py-4 rounded-2xl font-bold text-base lg:text-lg bg-gradient-to-r from-orange-500 via-rose-500 to-pink-500 text-white shadow-lg shadow-rose-500/30 hover:shadow-xl hover:shadow-rose-500/50 transform hover:scale-105 transition-all duration-300">
+                      <button
+                        className="w-full px-6 py-3 lg:py-4 rounded-2xl font-bold text-base lg:text-lg bg-gradient-to-r from-orange-500 via-rose-500 to-pink-500 text-white shadow-lg shadow-rose-500/30 hover:shadow-xl hover:shadow-rose-500/50 transform hover:scale-105 transition-all duration-300"
+                        aria-label="Create your romance story"
+                      >
                         Create Story →
                       </button>
 
@@ -372,10 +389,13 @@ export default function LandingPage() {
                           <div className="relative z-10">
                             {story.coverImage && (
                               <div className="aspect-[16/9] mb-4 rounded-xl overflow-hidden bg-gradient-to-br from-purple-100 to-pink-100">
-                                <img
+                                <Image
                                   src={story.coverImage}
                                   alt={story.title}
+                                  width={400}
+                                  height={225}
                                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                  loading="lazy"
                                 />
                               </div>
                             )}
@@ -392,7 +412,10 @@ export default function LandingPage() {
                             )}
                             <div className="flex items-center justify-between text-xs text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
                               <span>{story.sceneCount} scenes</span>
-                              <button className="px-3 py-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full font-semibold hover:shadow-lg hover:shadow-purple-500/30 transition-all">
+                              <button
+                                className="px-3 py-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full font-semibold hover:shadow-lg hover:shadow-purple-500/30 transition-all"
+                                aria-label={`Resume story: ${story.title}`}
+                              >
                                 Resume →
                               </button>
                             </div>
@@ -445,10 +468,13 @@ export default function LandingPage() {
                             {/* Cover Image */}
                             {story.coverImage && (
                               <div className="aspect-[4/3] mb-4 rounded-2xl overflow-hidden bg-gradient-to-br from-purple-100 to-pink-100">
-                                <img
+                                <Image
                                   src={story.coverImage}
                                   alt={story.title}
+                                  width={400}
+                                  height={300}
                                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                  loading="lazy"
                                 />
                               </div>
                             )}
@@ -495,6 +521,7 @@ export default function LandingPage() {
                                     )
                                   }
                                   className="px-4 py-2 bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white rounded-xl font-semibold hover:bg-white/30 transition-all"
+                                  aria-label={`Chat with ${story.characters[0].name}`}
                                   title={`Chat with ${story.characters[0].name}`}
                                 >
                                   💬
@@ -566,6 +593,7 @@ export default function LandingPage() {
                       <button
                         onClick={() => router.push("/signup")}
                         className="group relative px-8 lg:px-10 py-4 lg:py-5 rounded-2xl font-bold text-base lg:text-lg overflow-hidden shadow-2xl shadow-purple-500/40 hover:shadow-purple-400/60 transform hover:scale-105 hover:-translate-y-1 transition-all duration-300"
+                        aria-label="Sign up for free to continue your story"
                       >
                         <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500"></div>
                         <div className="absolute inset-0 bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -577,6 +605,7 @@ export default function LandingPage() {
                       <button
                         onClick={() => router.push("/pricing")}
                         className="px-8 lg:px-10 py-4 lg:py-5 rounded-2xl font-bold text-base lg:text-lg bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white/30 hover:border-white/40 transform hover:scale-105 transition-all duration-300"
+                        aria-label="View Romance Plus pricing at $9.99 per month"
                       >
                         ✨ Romance Plus — $9.99/mo
                       </button>
