@@ -243,7 +243,7 @@ export default function LandingPage() {
                       {/* CTA Button */}
                       <button
                         className="w-full px-6 py-3 lg:py-4 rounded-2xl font-bold text-base lg:text-lg bg-gradient-to-r from-purple-500 via-fuchsia-500 to-pink-500 text-white shadow-lg shadow-purple-500/30 hover:shadow-xl hover:shadow-purple-500/50 transform hover:scale-105 transition-all duration-300"
-                        aria-label="Start chatting with AI"
+                        aria-label="Start chatting with AI pointer cursor-pointer"
                       >
                         Start Chatting →
                       </button>
@@ -330,7 +330,7 @@ export default function LandingPage() {
                       {/* CTA Button */}
                       <button
                         className="w-full px-6 py-3 lg:py-4 rounded-2xl font-bold text-base lg:text-lg bg-gradient-to-r from-orange-500 via-rose-500 to-pink-500 text-white shadow-lg shadow-rose-500/30 hover:shadow-xl hover:shadow-rose-500/50 transform hover:scale-105 transition-all duration-300"
-                        aria-label="Create your romance story"
+                        aria-label="Create your romance story pointer cursor-pointer"
                       >
                         Create Story →
                       </button>
