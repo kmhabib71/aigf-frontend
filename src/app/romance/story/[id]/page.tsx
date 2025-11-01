@@ -61,7 +61,7 @@ interface Story {
 export default function StoryViewPage() {
   const params = useParams();
   const router = useRouter();
-  const { user, isAuthenticated, userProfile } = useAuth();
+  const { user, isAuthenticated, userProfile, loading: authLoading } = useAuth();
   const storyId = params.id as string;
 
   const [story, setStory] = useState<(Story & { isOwner?: boolean }) | null>(
@@ -69,6 +69,8 @@ export default function StoryViewPage() {
   );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
+  // Auth readiness is tied to AuthContext.loading
   const [socket, setSocket] = useState<Socket | null>(null);
   const [idToken, setIdToken] = useState<string>("");
   const [visibilityUpdating, setVisibilityUpdating] = useState(false);
@@ -120,9 +122,10 @@ export default function StoryViewPage() {
   }, [isAuthenticated]);
 
   useEffect(() => {
-    if (!storyId) return;
+    // Only load story after AuthContext finished determining auth state
+    if (!storyId || authLoading) return;
     loadStory();
-  }, [storyId, isAuthenticated]);
+  }, [storyId, isAuthenticated, authLoading]);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -159,24 +162,17 @@ export default function StoryViewPage() {
     setError("");
 
     try {
-      const currentUser = auth.currentUser;
+      // Try to include token as early as possible if available
       let token = "";
-
+      const currentUser = auth.currentUser;
       if (currentUser) {
-        token = await currentUser.getIdToken();
+        token = await currentUser.getIdToken(true);
         setIdToken(token);
-      } else {
-        setIdToken("");
       }
 
-      const response = await fetch(
-        `${backendUrl}/api/romance/story/${storyId}`,
+      let response = await fetch(`/api/romance/story/${storyId}`,
         {
-          headers: token
-            ? {
-                Authorization: `Bearer ${token}`,
-              }
-            : undefined,
+          headers: token ? { Authorization: `Bearer ${token}` } : undefined,
         }
       );
 
@@ -188,9 +184,29 @@ export default function StoryViewPage() {
         }
 
         if (response.status === 403) {
-          setStory(null);
-          setError("This story is private or you do not have access.");
-          return;
+          // Retry once with a fresh token if available
+          if (auth.currentUser && !token) {
+            try {
+              const retryToken = await auth.currentUser.getIdToken(true);
+              setIdToken(retryToken);
+              response = await fetch(`/api/romance/story/${storyId}`,
+                { headers: { Authorization: `Bearer ${retryToken}` } }
+              );
+              if (!response.ok) {
+                setStory(null);
+                setError("This story is private or you do not have access.");
+                return;
+              }
+            } catch (_) {
+              setStory(null);
+              setError("This story is private or you do not have access.");
+              return;
+            }
+          } else {
+            setStory(null);
+            setError("This story is private or you do not have access.");
+            return;
+          }
         }
 
         throw new Error("Failed to load story");
@@ -205,6 +221,7 @@ export default function StoryViewPage() {
       setStory(null);
     } finally {
       setLoading(false);
+      setHasLoadedOnce(true);
     }
   };
 
@@ -233,7 +250,7 @@ export default function StoryViewPage() {
         story.visibility === "public" ? "private" : "public";
 
       const response = await fetch(
-        `${backendUrl}/api/romance/story/${storyId}/visibility`,
+        `/api/romance/story/${storyId}/visibility`,
         {
           method: "PATCH",
           headers: {
@@ -339,7 +356,7 @@ export default function StoryViewPage() {
       const token = await currentUser.getIdToken();
 
       const response = await fetch(
-        `${backendUrl}/api/romance/story/${storyId}`,
+        `/api/romance/story/${storyId}`,
         {
           method: "PATCH",
           headers: {
@@ -418,7 +435,7 @@ export default function StoryViewPage() {
       setIdToken(token);
 
       const response = await fetch(
-        `${backendUrl}/api/romance/story/${storyId}/react`,
+        `/api/romance/story/${storyId}/react`,
         {
           method: "POST",
           headers: {
@@ -492,7 +509,8 @@ export default function StoryViewPage() {
     );
   }
 
-  if (error || !story) {
+  // Only show error if we've loaded at least once AND there's an actual error or no story
+  if (hasLoadedOnce && !loading && (error || !story)) {
     return (
       <div
         className="min-h-screen flex items-center justify-center relative overflow-hidden"
