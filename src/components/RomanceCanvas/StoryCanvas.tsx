@@ -59,6 +59,7 @@ interface StoryCanvasProps {
   onRequireAuth?: () => void;
   chatButton?: React.ReactNode;
   userPlan?: string;
+  onImageClick?: (url: string, alt: string, type: "scene" | "line", sceneNumber: number, lineNumber?: number) => void;
 }
 
 // Spice level display mapping
@@ -79,6 +80,7 @@ export default function StoryCanvas({
   onRequireAuth,
   chatButton,
   userPlan = 'free',
+  onImageClick,
 }: StoryCanvasProps) {
   const [localStory, setLocalStory] = useState<Story>(story);
   const [isContinuing, setIsContinuing] = useState(false);
@@ -320,6 +322,7 @@ export default function StoryCanvas({
             allowInteractions={allowInteractions}
             onRequireAuth={onRequireAuth}
             userPlan={userPlan}
+            onImageClick={onImageClick}
           />
         ))}
 

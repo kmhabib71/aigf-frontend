@@ -29,6 +29,7 @@ interface StoryLineProps {
   line: string;
   lineIdx: number;
   sceneIdx: number;
+  sceneNumber: number;
   storyId: string;
   idToken: string;
   socket: Socket | null;
@@ -37,12 +38,14 @@ interface StoryLineProps {
   allowInteractions: boolean;
   onRequireAuth?: () => void;
   userPlan?: string;
+  onImageClick?: (url: string, alt: string, type: "scene" | "line", sceneNumber: number, lineNumber?: number) => void;
 }
 
 export default function StoryLine({
   line,
   lineIdx,
   sceneIdx,
+  sceneNumber,
   storyId,
   idToken,
   socket,
@@ -51,6 +54,7 @@ export default function StoryLine({
   allowInteractions,
   onRequireAuth,
   userPlan = "free",
+  onImageClick,
 }: StoryLineProps) {
   const [showActions, setShowActions] = useState(false);
   const [showComments, setShowComments] = useState(false);
@@ -231,6 +235,8 @@ export default function StoryLine({
                 src={vm.imageUrl}
                 alt={`Visual for: ${vm.context.substring(0, 50)}...`}
                 className="inline-visual"
+                onClick={() => onImageClick?.(vm.imageUrl, `Line ${lineIdx + 1}: ${vm.context}`, "line", sceneNumber, lineIdx)}
+                style={{ cursor: onImageClick ? 'pointer' : 'default' }}
               />
               {/* {vm.imagePrompt && (
                 <div className="visual-prompt-hint" title={vm.imagePrompt}>

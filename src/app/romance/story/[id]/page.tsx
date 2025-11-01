@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { io, Socket } from "socket.io-client";
@@ -61,7 +61,12 @@ interface Story {
 export default function StoryViewPage() {
   const params = useParams();
   const router = useRouter();
-  const { user, isAuthenticated, userProfile, loading: authLoading } = useAuth();
+  const {
+    user,
+    isAuthenticated,
+    userProfile,
+    loading: authLoading,
+  } = useAuth();
   const storyId = params.id as string;
 
   const [story, setStory] = useState<(Story & { isOwner?: boolean }) | null>(
@@ -88,6 +93,19 @@ export default function StoryViewPage() {
   const [savingEdits, setSavingEdits] = useState(false);
   const [editError, setEditError] = useState("");
   const [reactionUpdating, setReactionUpdating] = useState(false);
+  const [imagePreview, setImagePreview] = useState<{
+    url: string;
+    alt?: string;
+  } | null>(null);
+  const [imageReplacing, setImageReplacing] = useState(false);
+  const [imageUploading, setImageUploading] = useState(false);
+  const [imageDeleting, setImageDeleting] = useState(false);
+  const [imageReplaceTarget, setImageReplaceTarget] = useState<{
+    type: "scene" | "line";
+    sceneNumber: number;
+    lineNumber?: number;
+  } | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -170,11 +188,9 @@ export default function StoryViewPage() {
         setIdToken(token);
       }
 
-      let response = await fetch(`/api/romance/story/${storyId}`,
-        {
-          headers: token ? { Authorization: `Bearer ${token}` } : undefined,
-        }
-      );
+      let response = await fetch(`/api/romance/story/${storyId}`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      });
 
       if (!response.ok) {
         if (response.status === 401) {
@@ -189,9 +205,9 @@ export default function StoryViewPage() {
             try {
               const retryToken = await auth.currentUser.getIdToken(true);
               setIdToken(retryToken);
-              response = await fetch(`/api/romance/story/${storyId}`,
-                { headers: { Authorization: `Bearer ${retryToken}` } }
-              );
+              response = await fetch(`/api/romance/story/${storyId}`, {
+                headers: { Authorization: `Bearer ${retryToken}` },
+              });
               if (!response.ok) {
                 setStory(null);
                 setError("This story is private or you do not have access.");
@@ -249,17 +265,14 @@ export default function StoryViewPage() {
       const nextVisibility =
         story.visibility === "public" ? "private" : "public";
 
-      const response = await fetch(
-        `/api/romance/story/${storyId}/visibility`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ visibility: nextVisibility }),
-        }
-      );
+      const response = await fetch(`/api/romance/story/${storyId}/visibility`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ visibility: nextVisibility }),
+      });
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
@@ -355,25 +368,22 @@ export default function StoryViewPage() {
     try {
       const token = await currentUser.getIdToken();
 
-      const response = await fetch(
-        `/api/romance/story/${storyId}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            title: trimmedTitle,
-            scenes: editedStory.scenes.map((scene) => ({
-              sceneNumber: scene.sceneNumber,
-              index: scene.index,
-              headline: scene.headline,
-              content: scene.content,
-            })),
-          }),
-        }
-      );
+      const response = await fetch(`/api/romance/story/${storyId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          title: trimmedTitle,
+          scenes: editedStory.scenes.map((scene) => ({
+            sceneNumber: scene.sceneNumber,
+            index: scene.index,
+            headline: scene.headline,
+            content: scene.content,
+          })),
+        }),
+      });
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
@@ -434,16 +444,13 @@ export default function StoryViewPage() {
       const token = await currentUser.getIdToken();
       setIdToken(token);
 
-      const response = await fetch(
-        `/api/romance/story/${storyId}/react`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await fetch(`/api/romance/story/${storyId}/react`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
@@ -473,6 +480,276 @@ export default function StoryViewPage() {
       alert(err?.message || "Failed to update reaction");
     } finally {
       setReactionUpdating(false);
+    }
+  };
+
+  // Image modal handlers (same as chat page)
+  const handleImagePreviewClose = () => {
+    setImagePreview(null);
+  };
+
+  const handleImagePreviewOverlayClick = (
+    event: React.MouseEvent<HTMLDivElement>
+  ) => {
+    if (event.target === event.currentTarget) {
+      handleImagePreviewClose();
+    }
+  };
+
+  // Close image preview on Escape key
+  useEffect(() => {
+    if (!imagePreview) return;
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setImagePreview(null);
+      }
+    };
+
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [imagePreview]);
+
+  // Image regeneration handler
+  const handleRegenerateImage = async () => {
+    if (!imageReplaceTarget) return;
+
+    try {
+      setImageReplacing(true);
+      const currentUser = auth.currentUser;
+      if (!currentUser) {
+        requireAuth();
+        return;
+      }
+
+      const token = await currentUser.getIdToken();
+
+      // Call backend API to regenerate image
+      const response = await fetch(
+        `/api/romance/story/${storyId}/regenerate-image`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            type: imageReplaceTarget.type,
+            sceneNumber: imageReplaceTarget.sceneNumber,
+            lineNumber: imageReplaceTarget.lineNumber,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || "Failed to regenerate image");
+      }
+
+      const data = await response.json();
+
+      // Update story with new image
+      setStory((prev) => {
+        if (!prev) return prev;
+
+        const updatedScenes = prev.scenes.map((scene) => {
+          if (scene.sceneNumber === imageReplaceTarget.sceneNumber) {
+            if (imageReplaceTarget.type === "scene") {
+              return { ...scene, sceneImageUrl: data.imageUrl };
+            } else if (imageReplaceTarget.type === "line") {
+              const updatedVisualMoments = scene.visualMoments.map((vm) =>
+                vm.lineNumber === imageReplaceTarget.lineNumber
+                  ? { ...vm, imageUrl: data.imageUrl }
+                  : vm
+              );
+              return { ...scene, visualMoments: updatedVisualMoments };
+            }
+          }
+          return scene;
+        });
+
+        return { ...prev, scenes: updatedScenes };
+      });
+
+      // Close modal and reset state
+      setImagePreview(null);
+      setImageReplaceTarget(null);
+    } catch (err: any) {
+      console.error("Regenerate image error:", err);
+      alert(err?.message || "Failed to regenerate image");
+    } finally {
+      setImageReplacing(false);
+    }
+  };
+
+  // Image upload handler
+  const handleUploadImage = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (!imageReplaceTarget) return;
+
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith("image/")) {
+      alert("Please select an image file");
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Image size must be less than 5MB");
+      return;
+    }
+
+    try {
+      setImageUploading(true);
+      const currentUser = auth.currentUser;
+      if (!currentUser) {
+        requireAuth();
+        return;
+      }
+
+      const token = await currentUser.getIdToken();
+
+      // Create form data
+      const formData = new FormData();
+      formData.append("image", file);
+      formData.append("type", imageReplaceTarget.type);
+      formData.append("sceneNumber", imageReplaceTarget.sceneNumber.toString());
+      if (imageReplaceTarget.lineNumber !== undefined) {
+        formData.append("lineNumber", imageReplaceTarget.lineNumber.toString());
+      }
+
+      // Call backend API to upload image
+      const response = await fetch(
+        `/api/romance/story/${storyId}/upload-image`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || "Failed to upload image");
+      }
+
+      const data = await response.json();
+
+      // Update story with new image
+      setStory((prev) => {
+        if (!prev) return prev;
+
+        const updatedScenes = prev.scenes.map((scene) => {
+          if (scene.sceneNumber === imageReplaceTarget.sceneNumber) {
+            if (imageReplaceTarget.type === "scene") {
+              return { ...scene, sceneImageUrl: data.imageUrl };
+            } else if (imageReplaceTarget.type === "line") {
+              const updatedVisualMoments = scene.visualMoments.map((vm) =>
+                vm.lineNumber === imageReplaceTarget.lineNumber
+                  ? { ...vm, imageUrl: data.imageUrl }
+                  : vm
+              );
+              return { ...scene, visualMoments: updatedVisualMoments };
+            }
+          }
+          return scene;
+        });
+
+        return { ...prev, scenes: updatedScenes };
+      });
+
+      // Close modal and reset state
+      setImagePreview(null);
+      setImageReplaceTarget(null);
+
+      // Reset file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    } catch (err: any) {
+      console.error("Upload image error:", err);
+      alert(err?.message || "Failed to upload image");
+    } finally {
+      setImageUploading(false);
+    }
+  };
+
+  // Image delete handler
+  const handleDeleteImage = async () => {
+    if (!imageReplaceTarget) return;
+
+    // Confirm deletion
+    if (!confirm("Are you sure you want to delete this image?")) {
+      return;
+    }
+
+    try {
+      setImageDeleting(true);
+      const currentUser = auth.currentUser;
+      if (!currentUser) {
+        requireAuth();
+        return;
+      }
+
+      const token = await currentUser.getIdToken();
+
+      // Call backend API to delete image
+      const response = await fetch(
+        `/api/romance/story/${storyId}/delete-image`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            type: imageReplaceTarget.type,
+            sceneNumber: imageReplaceTarget.sceneNumber,
+            lineNumber: imageReplaceTarget.lineNumber,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || "Failed to delete image");
+      }
+
+      // Update story - remove image
+      setStory((prev) => {
+        if (!prev) return prev;
+
+        const updatedScenes = prev.scenes.map((scene) => {
+          if (scene.sceneNumber === imageReplaceTarget.sceneNumber) {
+            if (imageReplaceTarget.type === "scene") {
+              return { ...scene, sceneImageUrl: undefined };
+            } else if (imageReplaceTarget.type === "line") {
+              const updatedVisualMoments = scene.visualMoments.filter(
+                (vm) => vm.lineNumber !== imageReplaceTarget.lineNumber
+              );
+              return { ...scene, visualMoments: updatedVisualMoments };
+            }
+          }
+          return scene;
+        });
+
+        return { ...prev, scenes: updatedScenes };
+      });
+
+      // Close modal and reset state
+      setImagePreview(null);
+      setImageReplaceTarget(null);
+    } catch (err: any) {
+      console.error("Delete image error:", err);
+      alert(err?.message || "Failed to delete image");
+    } finally {
+      setImageDeleting(false);
     }
   };
 
@@ -856,8 +1133,96 @@ export default function StoryViewPage() {
           onRequireAuth={!canUseInteractiveFeatures ? requireAuth : undefined}
           chatButton={chatButtonNode}
           userPlan={userProfile?.plan || "free"}
+          onImageClick={(url, alt, type, sceneNumber, lineNumber) => {
+            setImagePreview({ url, alt });
+            setImageReplaceTarget({ type, sceneNumber, lineNumber });
+          }}
         />
       </div>
+
+      {/* Image Preview Modal (exactly like chat page) */}
+      {imagePreview && (
+        <div
+          className="fixed inset-0 z-[999] flex items-center justify-center bg-black/75 backdrop-blur-sm px-4"
+          onMouseDown={handleImagePreviewOverlayClick}
+        >
+          <div className="relative max-w-5xl w-auto flex flex-col items-center gap-3">
+            <div className="flex flex-wrap items-center gap-2 justify-end w-full">
+              {/* Image Actions (only for owners) */}
+              {isOwner && imageReplaceTarget && (
+                <>
+                  {/* Upload Button */}
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={imageUploading || imageReplacing || imageDeleting}
+                    className="px-3 py-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-lg text-xs sm:text-sm font-bold hover:shadow-lg hover:shadow-blue-500/40 transform hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {imageUploading ? "Uploading..." : "📤 Upload"}
+                  </button>
+
+                  {/* Regenerate Button */}
+                  <button
+                    onClick={handleRegenerateImage}
+                    disabled={imageReplacing || imageUploading || imageDeleting}
+                    className="hidden px-3 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg text-xs sm:text-sm font-bold hover:shadow-lg hover:shadow-purple-500/40 transform hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {imageReplacing ? "Regenerating..." : "🔄 Regenerate"}
+                  </button>
+
+                  {/* Delete Button */}
+                  <button
+                    onClick={handleDeleteImage}
+                    disabled={imageDeleting || imageUploading || imageReplacing}
+                    className="px-3 py-2 bg-gradient-to-r from-red-500 to-rose-500 text-white rounded-lg text-xs sm:text-sm font-bold hover:shadow-lg hover:shadow-red-500/40 transform hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {imageDeleting ? "Deleting..." : "🗑️ Delete"}
+                  </button>
+
+                  {/* Hidden File Input */}
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleUploadImage}
+                    className="hidden"
+                  />
+                </>
+              )}
+
+              {/* Close Button */}
+              <button
+                onClick={handleImagePreviewClose}
+                className="text-white/80 hover:text-white transition-colors ml-2"
+                aria-label="Close image preview"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 sm:h-7 sm:w-7"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+            <img
+              src={imagePreview.url}
+              alt={imagePreview.alt || "Preview"}
+              className="max-h-[80vh] max-w-[90vw] w-auto rounded-3xl border border-white/20 shadow-2xl shadow-black/40"
+            />
+            {/* {imagePreview.alt && (
+              <p className="text-sm text-white/80">{imagePreview.alt}</p>
+            )} */}
+          </div>
+        </div>
+      )}
+
       {/* Phase 2 Feature Showcase */}
       {/* Animations */}
       <style jsx>{`

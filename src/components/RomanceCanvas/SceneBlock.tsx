@@ -42,6 +42,7 @@ interface SceneBlockProps {
   allowInteractions: boolean;
   onRequireAuth?: () => void;
   userPlan?: string;
+  onImageClick?: (url: string, alt: string, type: "scene" | "line", sceneNumber: number, lineNumber?: number) => void;
 }
 
 export default function SceneBlock({
@@ -53,6 +54,7 @@ export default function SceneBlock({
   allowInteractions,
   onRequireAuth,
   userPlan = "free",
+  onImageClick,
 }: SceneBlockProps) {
   const [expanded, setExpanded] = useState(true);
 
@@ -87,6 +89,10 @@ export default function SceneBlock({
               src={scene.sceneImageUrl}
               alt={`Scene ${scene.sceneNumber}`}
               className="scene-image"
+              onClick={() => {
+                onImageClick?.(scene.sceneImageUrl!, `Scene ${scene.sceneNumber}`, "scene", scene.sceneNumber);
+              }}
+              style={{ cursor: onImageClick ? 'pointer' : 'default' }}
             />
             {/* {scene.sceneImagePrompt && (
               <div className="scene-image-prompt-hint" title={scene.sceneImagePrompt}>
@@ -114,6 +120,7 @@ export default function SceneBlock({
               line={line}
               lineIdx={lineIdx}
               sceneIdx={sceneIdx}
+              sceneNumber={scene.sceneNumber}
               storyId={storyId}
               idToken={idToken}
               socket={socket}
@@ -124,6 +131,7 @@ export default function SceneBlock({
               allowInteractions={allowInteractions}
               onRequireAuth={onRequireAuth}
               userPlan={userPlan}
+              onImageClick={onImageClick}
             />
           ))}
         </div>
