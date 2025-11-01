@@ -4,6 +4,5 @@ Disallow: /dashboard/
 Disallow: /api/
 Disallow: /login
 Disallow: /signup
-Allow: /
 
 Sitemap: https://romancecanvas.com/sitemap.xml
