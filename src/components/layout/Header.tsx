@@ -144,12 +144,14 @@ export default function Header() {
                     onClick={() => router.push("/login")}
                     className="px-6 py-2.5 text-white hover:text-purple-300 font-semibold transition-colors rounded-xl hover:bg-purple-50 drop-shadow-lg"
                     style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
+                    aria-label="Login to your account"
                   >
                     Login
                   </button>
                   <button
                     onClick={() => router.push("/signup")}
                     className="group relative overflow-hidden px-6 py-2.5 rounded-xl font-semibold transform hover:scale-105 transition-transform shadow-lg shadow-purple-200/50 hover:shadow-purple-300/60"
+                    aria-label="Get started with RomanceCanvas"
                   >
                     <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500"></div>
                     <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-pink-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -180,6 +182,7 @@ export default function Header() {
                     onClick={handleSignOut}
                     className="px-4 py-2 text-white hover:text-red-300 font-semibold transition-colors rounded-xl hover:bg-red-50 drop-shadow-lg"
                     style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
+                    aria-label="Sign out of your account"
                   >
                     Sign Out
                   </button>
@@ -191,6 +194,8 @@ export default function Header() {
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="md:hidden p-2 rounded-lg hover:bg-purple-50 transition-colors"
+              aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+              aria-expanded={mobileMenuOpen}
             >
               <svg
                 className="w-6 h-6 text-white drop-shadow-lg"
@@ -260,6 +265,7 @@ export default function Header() {
                       setMobileMenuOpen(false);
                     }}
                     className="text-white hover:bg-purple-600/20 transition-colors font-semibold py-3 px-4 rounded-xl text-left"
+                    aria-label="Navigate to Features page"
                   >
                     Features
                   </button>
@@ -269,6 +275,7 @@ export default function Header() {
                       setMobileMenuOpen(false);
                     }}
                     className="text-white hover:bg-purple-600/20 transition-colors font-semibold py-3 px-4 rounded-xl text-left"
+                    aria-label="Navigate to How It Works page"
                   >
                     How It Works
                   </button>
@@ -281,6 +288,7 @@ export default function Header() {
                   setMobileMenuOpen(false);
                 }}
                 className="text-white hover:bg-purple-600/20 transition-colors font-semibold py-3 px-4 rounded-xl text-left"
+                aria-label="Navigate to Pricing page"
               >
                 Pricing
               </button>
@@ -293,6 +301,7 @@ export default function Header() {
                       setMobileMenuOpen(false);
                     }}
                     className="text-white hover:bg-purple-600/20 transition-colors font-semibold py-3 px-4 rounded-xl text-left"
+                    aria-label="Navigate to Dashboard"
                   >
                     Dashboard
                   </button>
@@ -302,6 +311,7 @@ export default function Header() {
                       setMobileMenuOpen(false);
                     }}
                     className="text-white hover:bg-purple-600/20 transition-colors font-semibold py-3 px-4 rounded-xl text-left"
+                    aria-label="Navigate to Chat"
                   >
                     Chat
                   </button>
@@ -311,6 +321,7 @@ export default function Header() {
                       setMobileMenuOpen(false);
                     }}
                     className="text-white hover:bg-purple-600/20 transition-colors font-semibold py-3 px-4 rounded-xl text-left"
+                    aria-label="Navigate to Create Story"
                   >
                     Story
                   </button>
@@ -329,6 +340,7 @@ export default function Header() {
                       setMobileMenuOpen(false);
                     }}
                     className="text-white hover:bg-purple-600/20 font-semibold py-3 px-4 rounded-xl text-left transition-colors"
+                    aria-label="Login to your account"
                   >
                     Login
                   </button>
@@ -338,6 +350,7 @@ export default function Header() {
                       setMobileMenuOpen(false);
                     }}
                     className="bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold py-3 px-4 rounded-xl hover:from-purple-400 hover:to-pink-400 transition-all shadow-lg shadow-purple-500/30 mx-2 my-1"
+                    aria-label="Get started with RomanceCanvas"
                   >
                     Get Started
                   </button>
@@ -364,6 +377,7 @@ export default function Header() {
                   <button
                     onClick={handleSignOut}
                     className="text-red-400 hover:bg-red-500/20 font-semibold py-3 px-4 rounded-xl text-left transition-colors mx-2 my-1"
+                    aria-label="Sign out of your account"
                   >
                     Sign Out
                   </button>

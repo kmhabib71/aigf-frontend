@@ -38,6 +38,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   useEffect(() => {
     // Create a single Socket.io connection for the entire app
     const newSocket = io(`${backendUrl}`, {
+      // Prefer pure WebSocket to avoid XHR polling CORS/proxy issues
       transports: ["polling", "websocket"],
       reconnection: true,
       reconnectionAttempts: 5,

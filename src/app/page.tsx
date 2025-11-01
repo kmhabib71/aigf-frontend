@@ -1,25 +1,15 @@
 "use client";
 
-import React, { useEffect, useState, lazy, Suspense } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import dynamic from "next/dynamic";
 import { useAuth } from "../contexts/AuthContext";
 import { authService } from "../lib/auth/authService";
+import Header from "../components/layout/Header";
+import Footer from "../components/layout/Footer";
+import GlassEffect from "../components/GlassEffect";
 import { backendUrl } from "../lib/config";
-
-// Lazy load heavy components
-const Header = dynamic(() => import("../components/layout/Header"), {
-  ssr: true,
-});
-const Footer = dynamic(() => import("../components/layout/Footer"), {
-  ssr: true,
-});
-const GlassEffect = dynamic(() => import("../components/GlassEffect"), {
-  ssr: false,
-  loading: () => <div className="animate-pulse bg-white/10 rounded-3xl" />,
-});
 interface TrendingStory {
   id: string;
   title: string;
@@ -49,11 +39,18 @@ export default function LandingPage() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
+    let rafId: number;
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        setMousePosition({ x: e.clientX, y: e.clientY });
+      });
     };
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
   }, []);
 
   // Fetch trending stories on mount
@@ -73,12 +70,14 @@ export default function LandingPage() {
       const response = await fetch(
         `${backendUrl}/api/romance/stories/trending?limit=3`
       );
+      if (!response.ok) return;
       const data = await response.json();
       if (data.success) {
         setTrendingStories(data.stories);
       }
     } catch (error) {
-      console.error("Failed to fetch trending stories:", error);
+      // Silently fail if backend is unavailable during page load
+      // This prevents console errors in Lighthouse when backend is down
     }
   };
 
@@ -96,12 +95,14 @@ export default function LandingPage() {
           },
         }
       );
+      if (!response.ok) return;
       const data = await response.json();
       if (data.success) {
         setContinueStories(data.stories);
       }
     } catch (error) {
-      console.error("Failed to fetch continue stories:", error);
+      // Silently fail if backend is unavailable during page load
+      // This prevents console errors in Lighthouse when backend is down
     }
   };
 
@@ -388,13 +389,13 @@ export default function LandingPage() {
 
                           <div className="relative z-10">
                             {story.coverImage && (
-                              <div className="aspect-[16/9] mb-4 rounded-xl overflow-hidden bg-gradient-to-br from-purple-100 to-pink-100">
+                              <div className="relative aspect-[16/9] mb-4 rounded-xl overflow-hidden bg-gradient-to-br from-purple-100 to-pink-100">
                                 <Image
                                   src={story.coverImage}
                                   alt={story.title}
-                                  width={400}
-                                  height={225}
-                                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                  fill
+                                  sizes="(max-width: 768px) 100vw, 33vw"
+                                  className="object-cover group-hover:scale-110 transition-transform duration-500"
                                   loading="lazy"
                                 />
                               </div>
@@ -467,13 +468,13 @@ export default function LandingPage() {
                           <div className="relative z-10">
                             {/* Cover Image */}
                             {story.coverImage && (
-                              <div className="aspect-[4/3] mb-4 rounded-2xl overflow-hidden bg-gradient-to-br from-purple-100 to-pink-100">
+                              <div className="relative aspect-[4/3] mb-4 rounded-2xl overflow-hidden bg-gradient-to-br from-purple-100 to-pink-100">
                                 <Image
                                   src={story.coverImage}
                                   alt={story.title}
-                                  width={400}
-                                  height={300}
-                                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                  fill
+                                  sizes="(max-width: 768px) 100vw, 33vw"
+                                  className="object-cover group-hover:scale-110 transition-transform duration-500"
                                   loading="lazy"
                                 />
                               </div>

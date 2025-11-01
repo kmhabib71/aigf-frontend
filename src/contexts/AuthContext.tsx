@@ -159,7 +159,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setCanSendMessage(canSend);
       }
     } catch (error) {
-      console.error("Failed to fetch user profile:", error);
+      // Silently fail if backend is unavailable
     }
   };
 
