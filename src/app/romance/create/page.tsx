@@ -686,12 +686,12 @@ export default function CreateStoryPage() {
                           <span className="text-base font-semibold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
                             Generate Scene Images 🎨
                           </span>
-                          {userProfile?.plan === "free" && generateImages && (
+                          {/* {userProfile?.plan === "free" && generateImages && (
                             <p className="text-sm text-green-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mt-1">
                               ✨ FREE: You'll get 1 preview image (first scene).
                               Upgrade for images on all scenes!
                             </p>
-                          )}
+                          )} */}
                         </div>
                       </label>
                     </div>
