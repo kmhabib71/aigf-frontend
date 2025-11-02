@@ -118,6 +118,19 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* Google Analytics */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-4DH87KX6NV"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-4DH87KX6NV');
+            `,
+          }}
+        />
+
         {/* Facebook App ID - Add your actual app ID from Facebook Developer Console */}
         <meta property="fb:app_id" content={process.env.NEXT_PUBLIC_FB_APP_ID || "YOUR_FB_APP_ID_HERE"} />
 
