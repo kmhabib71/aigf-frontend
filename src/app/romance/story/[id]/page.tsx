@@ -132,12 +132,29 @@ export default function StoryViewPage() {
       console.log("❌ Socket.io disconnected");
     });
 
+    // Listen for image updates to update the preview modal in real-time
+    newSocket.on("story:updated", (update: any) => {
+      if (update.type === "image_updated" && imageReplaceTarget) {
+        // Update image preview if modal is open and showing this image
+        if (update.sceneIdx !== undefined && update.lineIdx !== undefined) {
+          const sceneIdx = story?.scenes.findIndex(
+            (s) => s.sceneNumber === imageReplaceTarget.sceneNumber
+          );
+          if (sceneIdx === update.sceneIdx && update.visualMoment) {
+            setImagePreview((prev) =>
+              prev ? { ...prev, url: update.visualMoment.imageUrl } : prev
+            );
+          }
+        }
+      }
+    });
+
     setSocket(newSocket);
 
     return () => {
       newSocket.disconnect();
     };
-  }, [isAuthenticated]);
+  }, [isAuthenticated, imageReplaceTarget, story]);
 
   useEffect(() => {
     // Only load story after AuthContext finished determining auth state
@@ -524,8 +541,8 @@ export default function StoryViewPage() {
 
       const token = await currentUser.getIdToken();
 
-      // Call backend API to regenerate image
-      const response = await fetch(
+      // Fire the regeneration request (don't wait for response - Socket.io will update UI)
+      fetch(
         `/api/romance/story/${storyId}/regenerate-image`,
         {
           method: "POST",
@@ -539,39 +556,12 @@ export default function StoryViewPage() {
             lineNumber: imageReplaceTarget.lineNumber,
           }),
         }
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || "Failed to regenerate image");
-      }
-
-      const data = await response.json();
-
-      // Update story with new image
-      setStory((prev) => {
-        if (!prev) return prev;
-
-        const updatedScenes = prev.scenes.map((scene) => {
-          if (scene.sceneNumber === imageReplaceTarget.sceneNumber) {
-            if (imageReplaceTarget.type === "scene") {
-              return { ...scene, sceneImageUrl: data.imageUrl };
-            } else if (imageReplaceTarget.type === "line") {
-              const updatedVisualMoments = scene.visualMoments.map((vm) =>
-                vm.lineNumber === imageReplaceTarget.lineNumber
-                  ? { ...vm, imageUrl: data.imageUrl }
-                  : vm
-              );
-              return { ...scene, visualMoments: updatedVisualMoments };
-            }
-          }
-          return scene;
-        });
-
-        return { ...prev, scenes: updatedScenes };
+      ).catch((err) => {
+        console.error("Regenerate image request error:", err);
+        // Don't show error - Socket.io will handle the update
       });
 
-      // Close modal and reset state
+      // Close modal immediately - Socket.io events will update the image
       setImagePreview(null);
       setImageReplaceTarget(null);
     } catch (err: any) {
@@ -1164,7 +1154,7 @@ export default function StoryViewPage() {
                   <button
                     onClick={handleRegenerateImage}
                     disabled={imageReplacing || imageUploading || imageDeleting}
-                    className="hidden px-3 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg text-xs sm:text-sm font-bold hover:shadow-lg hover:shadow-purple-500/40 transform hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className=" px-3 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg text-xs sm:text-sm font-bold hover:shadow-lg hover:shadow-purple-500/40 transform hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {imageReplacing ? "Regenerating..." : "🔄 Regenerate"}
                   </button>
