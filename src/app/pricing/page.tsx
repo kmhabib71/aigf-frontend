@@ -133,34 +133,9 @@ export default function PricingPage() {
       setLoading(planId);
       setError(null);
 
-      // Determine provider (use LemonSqueezy as default, can be made dynamic)
-      const provider = "lemonsqueezy";
+      // Redirect to payment page with selected plan
+      router.push(`/checkout?plan=${planId}`);
 
-      // Create checkout session
-      const response = await fetch(
-        `${backendUrl}/api/subscription/create-checkout`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            uid: user?.uid,
-            email: user?.email,
-            plan: planId,
-            provider: provider,
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to create checkout session");
-      }
-
-      const data = await response.json();
-
-      // Redirect to checkout
-      window.location.href = data.checkoutUrl;
     } catch (err: any) {
       console.error("Checkout error:", err);
       setError(err.message || "Failed to start checkout");

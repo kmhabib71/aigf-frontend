@@ -30,6 +30,7 @@ export default function Header() {
   return (
     <>
       <header
+        suppressHydrationWarning
         className={`fixed top-0 left-0 right-0 z-30 md:h-[72px] lg:h-[72px] h-auto md:pt-1 lg:pt-1 py-4  sm:h-20 lg:h-16 transition-colors duration-500 ${
           scrolled
             ? "bg-black/40 backdrop-blur-2xl shadow-lg shadow-purple-500/20 border-b border-white/10"
