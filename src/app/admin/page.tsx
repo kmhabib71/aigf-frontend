@@ -229,6 +229,22 @@ export default function AdminPage() {
     }
   };
 
+  const handleVerifyEmail = async (uid: string) => {
+    try {
+      const headers = await getAuthHeaders();
+      const res = await fetch(`${backendUrl}/api/admin/users/${uid}/verify-email`, {
+        method: "POST",
+        headers,
+      });
+      if (!res.ok) throw new Error("Failed to verify email");
+      // Refresh users list to reflect status
+      await loadData();
+      alert("User marked as verified in Firebase and DB.");
+    } catch (err: any) {
+      alert(err.message || "Failed to verify email");
+    }
+  };
+
   const handleUpdateUserLimits = async (
     uid: string,
     limits: { messageLimit: number; imageLimit: number; voiceCharLimit: number }
@@ -861,6 +877,14 @@ export default function AdminPage() {
                             >
                               Edit
                             </button>
+                            {!user.emailVerified && (
+                              <button
+                                onClick={() => handleVerifyEmail(user.uid)}
+                                className="text-amber-400 hover:text-amber-300 mr-3"
+                              >
+                                Verify Email
+                              </button>
+                            )}
                             <button
                               onClick={() => handleResetUsage(user.uid)}
                               className="text-emerald-400 hover:text-emerald-300 mr-3"

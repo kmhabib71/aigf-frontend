@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "../../contexts/AuthContext";
 import CreditBalance from "../../components/CreditBalance";
 import GlassEffect from "../../components/GlassEffect";
@@ -10,6 +10,7 @@ import { auth } from "@/lib/firebase";
 import { backendUrl } from "@/lib/config";
 export default function DashboardPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const {
     user,
     userProfile,
@@ -25,6 +26,8 @@ export default function DashboardPage() {
   const [stories, setStories] = useState<any[]>([]);
   const [storiesLoading, setStoriesLoading] = useState(true);
   const [creditMultiplier, setCreditMultiplier] = useState<number>(3); // Default 3x
+  const [showPaymentBanner, setShowPaymentBanner] = useState<{status: 'pending'|'activated'|'none', plan?: string}>({ status: 'none' });
+  const [polling, setPolling] = useState(false);
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
@@ -39,6 +42,35 @@ export default function DashboardPage() {
       fetchUserStories();
     }
   }, [isAuthenticated]);
+
+  // Detect payment success param and poll until plan flips
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    const p = searchParams?.get('payment');
+    const targetPlan = searchParams?.get('plan') || undefined;
+    if (p === 'success') {
+      setShowPaymentBanner({ status: 'pending', plan: targetPlan });
+      if (!polling) {
+        setPolling(true);
+        let tries = 0;
+        const intv = setInterval(async () => {
+          tries += 1;
+          await refreshUserProfile();
+          if (targetPlan ? userProfile?.plan === targetPlan : (userProfile?.plan && userProfile.plan !== 'free')) {
+            setShowPaymentBanner({ status: 'activated', plan: targetPlan });
+            clearInterval(intv);
+            setPolling(false);
+            router.replace('/dashboard');
+          }
+          if (tries >= 24) { // ~2 minutes
+            clearInterval(intv);
+            setPolling(false);
+          }
+        }, 5000);
+        return () => clearInterval(intv);
+      }
+    }
+  }, [isAuthenticated, searchParams, refreshUserProfile, polling, router, userProfile?.plan]);
 
   // Fetch tier config when userProfile is loaded
   useEffect(() => {
@@ -282,6 +314,25 @@ export default function DashboardPage() {
 
       {/* Main Content */}
       <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-24">
+        {showPaymentBanner.status !== 'none' && (
+          <div className={`mb-4 rounded-xl border px-4 py-3 ${showPaymentBanner.status === 'pending' ? 'bg-amber-50 border-amber-200 text-amber-900' : 'bg-emerald-50 border-emerald-200 text-emerald-900'}`}>
+            {showPaymentBanner.status === 'pending' ? (
+              <div className="flex items-center justify-between">
+                <div>
+                  Payment received. Activating {showPaymentBanner.plan || ''}… this can take up to 1–2 minutes.
+                </div>
+                <div className="animate-spin h-5 w-5 border-2 border-amber-400 border-t-transparent rounded-full" />
+              </div>
+            ) : (
+              <div className="flex items-center justify-between">
+                <div>
+                  Your {showPaymentBanner.plan || ''} plan is active. Enjoy!
+                </div>
+                <button onClick={() => setShowPaymentBanner({ status: 'none' })} className="text-emerald-800/70 hover:text-emerald-900">Dismiss</button>
+              </div>
+            )}
+          </div>
+        )}
         {/* Welcome Section */}
         <div className="mb-8">
           <h1 className="text-4xl font-black text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] mb-2">
