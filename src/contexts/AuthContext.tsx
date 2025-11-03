@@ -1,7 +1,9 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useRef } from "react";
 import { authService, AuthUser } from "../lib/auth/authService";
+import { auth } from "@/lib/firebase";
+import { onIdTokenChanged } from "firebase/auth";
 import { sessionService, AnonymousSession } from "../lib/auth/sessionService";
 import { backendUrl } from "@/lib/config";
 interface UserProfile {
@@ -57,6 +59,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [canSendMessage, setCanSendMessage] = useState(true);
   const [remainingFreeMessages, setRemainingFreeMessages] = useState(5);
+  const lastReloadAtRef = useRef<number>(0);
 
   // Initialize auth state
   useEffect(() => {
@@ -79,6 +82,74 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     return unsubscribe;
+  }, []);
+
+  // Keep Firebase user fresh when ID token changes (e.g., after email verification)
+  useEffect(() => {
+    const unsubscribe = onIdTokenChanged(auth, async (firebaseUser) => {
+      if (!firebaseUser) return;
+      // Important: do NOT call reload() here to avoid an event loop
+      const updated = authService.getCurrentUser();
+      setUser((prev) => {
+        if (
+          prev?.uid === updated?.uid &&
+          prev?.email === updated?.email &&
+          prev?.displayName === updated?.displayName &&
+          prev?.photoURL === updated?.photoURL &&
+          prev?.emailVerified === updated?.emailVerified
+        ) {
+          return prev;
+        }
+        return updated;
+      });
+
+      // Only refresh profile when UID changes
+      if (updated && updated.uid !== user?.uid) {
+        fetchUserProfile(updated.uid);
+      }
+    });
+
+    return unsubscribe;
+  }, []);
+
+  // Also refresh on window focus to quickly pick up verification state
+  useEffect(() => {
+    const onFocus = async () => {
+      const firebaseUser = auth.currentUser;
+      if (!firebaseUser) return;
+      const now = Date.now();
+      if (now - lastReloadAtRef.current < 10000) {
+        // Throttle reloads to once per 10s
+        return;
+      }
+      lastReloadAtRef.current = now;
+      try {
+        await firebaseUser.reload();
+      } catch (e) {
+        // ignore reload errors
+      }
+      const updated = authService.getCurrentUser();
+      setUser((prev) => {
+        if (
+          prev?.uid === updated?.uid &&
+          prev?.email === updated?.email &&
+          prev?.displayName === updated?.displayName &&
+          prev?.photoURL === updated?.photoURL &&
+          prev?.emailVerified === updated?.emailVerified
+        ) {
+          return prev;
+        }
+        return updated;
+      });
+      if (updated) {
+        fetchUserProfile(updated.uid);
+      }
+    };
+
+    if (typeof window !== "undefined") {
+      window.addEventListener("focus", onFocus);
+      return () => window.removeEventListener("focus", onFocus);
+    }
   }, []);
 
   // Sync user to database (create or update)

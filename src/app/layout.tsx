@@ -150,7 +150,7 @@ export default function RootLayout({
         <AuthProvider>
           <SocketProvider>
             <SiteSettingsProvider>
-            {children}
+              {children}
             </SiteSettingsProvider>
           </SocketProvider>
         </AuthProvider>

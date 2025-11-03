@@ -2,11 +2,10 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '../../contexts/AuthContext';
+import { backendUrl } from '@/lib/config';
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
-  const { resetPassword } = useAuth();
 
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
@@ -24,7 +23,21 @@ export default function ForgotPasswordPage() {
     try {
       setIsLoading(true);
       setError('');
-      await resetPassword(email);
+
+      const response = await fetch(`${backendUrl}/api/auth/forgot-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to send reset email');
+      }
+
       setSuccess(true);
     } catch (err: any) {
       setError(err.message || 'Failed to send reset email');
@@ -63,7 +76,10 @@ export default function ForgotPasswordPage() {
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">Check your email</h3>
               <p className="text-gray-600 mb-6">
-                We've sent a password reset link to <span className="font-semibold">{email}</span>
+                If an account exists for <span className="font-semibold">{email}</span>, we've sent a password reset link.
+              </p>
+              <p className="text-sm text-gray-500 mb-6">
+                The link will expire in 1 hour for security reasons.
               </p>
               <button
                 onClick={() => router.push('/login')}

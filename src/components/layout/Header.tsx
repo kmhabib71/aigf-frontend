@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useAuth } from "../../contexts/AuthContext";
 import CreditBalance from "../CreditBalance";
 import UserAvatar from "../UserAvatar";
+import EmailVerificationHeaderBanner from "../EmailVerificationHeaderBanner";
 
 export default function Header() {
   const router = useRouter();
@@ -29,6 +30,7 @@ export default function Header() {
 
   return (
     <>
+      <EmailVerificationHeaderBanner />
       <header
         suppressHydrationWarning
         className={`fixed top-0 left-0 right-0 z-30 md:h-[72px] lg:h-[72px] h-auto md:pt-1 lg:pt-1 py-4  sm:h-20 lg:h-16 transition-colors duration-500 ${
