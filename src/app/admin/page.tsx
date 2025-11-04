@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "../../contexts/AuthContext";
 import { backendUrl } from "../../lib/config";
 import AnalyticsTab from "./components/AnalyticsTab";
+import FeedbackTab from "./components/FeedbackTab";
 interface User {
   uid: string;
   email: string;
@@ -69,7 +70,7 @@ export default function AdminPage() {
   const { user, loading, isAuthenticated } = useAuth();
 
   const [activeTab, setActiveTab] = useState<
-    "dashboard" | "users" | "tiers" | "tokens" | "analytics"
+    "dashboard" | "users" | "tiers" | "tokens" | "analytics" | "feedback"
   >("dashboard");
   const [stats, setStats] = useState<Stats | null>(null);
   const [users, setUsers] = useState<User[]>([]);
@@ -577,6 +578,18 @@ export default function AdminPage() {
               <span>Analytics</span>
             </button>
 
+            <button
+              onClick={() => setActiveTab("feedback")}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-semibold transition-all text-left ${
+                activeTab === "feedback"
+                  ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/20"
+                  : "text-slate-300 hover:bg-slate-800/50 hover:text-white"
+              }`}
+            >
+              <span className="text-xl">★</span>
+              <span>Feedback</span>
+            </button>
+
             {/* Divider */}
             <div className="border-t border-slate-700/50 my-4"></div>
 
@@ -916,6 +929,10 @@ export default function AdminPage() {
               </table>
             </div>
           </div>
+        )}
+
+        {activeTab === "feedback" && (
+          <FeedbackTab authToken={authToken} />
         )}
 
         {/* Tiers Tab */}

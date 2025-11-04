@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import TawkChat from "@/components/Tawk/TawkChat";
 import Header from "../../components/layout/Header";
 
 export default function ContactPage() {
@@ -228,6 +229,8 @@ export default function ContactPage() {
           animation-delay: 2s;
         }
       `}</style>
+      {/* Tawk.to live chat (strictly scoped to contact page) */}
+      <TawkChat propertyId="6909d6cf9147b8194cd10f2f" widgetId="1j976u72q" />
     </div>
   );
 }

@@ -4,53 +4,66 @@ import "./globals.css";
 import { AuthProvider } from "../contexts/AuthContext";
 import { SocketProvider } from "../contexts/SocketContext";
 import { SiteSettingsProvider } from "../contexts/SiteSettingsContext";
+import FeedbackWidget from "@/components/Feedback/FeedbackWidget";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
-  display: 'swap',
+  display: "swap",
   preload: true,
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
-  display: 'swap',
+  display: "swap",
   preload: true,
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://romancecanvas.com'),
+  metadataBase: new URL("https://romancecanvas.com"),
   title: {
-    default: 'RomanceCanvas - AI-Powered Interactive Romance Stories & Chat',
-    template: '%s | RomanceCanvas',
+    default: "RomanceCanvas - AI-Powered Interactive Romance Stories & Chat",
+    template: "%s | RomanceCanvas",
   },
-  description: 'AI-powered interactive fiction platform. Create and experience infinite stories. Product: Romantic Chat · Create Story. Start free today!',
-  keywords: ['AI romance', 'interactive romance stories', 'romantic AI chat', 'AI girlfriend chat', 'romance story generator', 'AI storytelling', 'romantic chatbot', 'interactive fiction'],
-  authors: [{ name: 'RomanceCanvas' }],
-  creator: 'RomanceCanvas',
-  publisher: 'RomanceCanvas',
+  description:
+    "AI-powered interactive fiction platform. Create and experience infinite stories. Product: Romantic Chat · Create Story. Start free today!",
+  keywords: [
+    "AI romance",
+    "interactive romance stories",
+    "romantic AI chat",
+    "AI girlfriend chat",
+    "romance story generator",
+    "AI storytelling",
+    "romantic chatbot",
+    "interactive fiction",
+  ],
+  authors: [{ name: "RomanceCanvas" }],
+  creator: "RomanceCanvas",
+  publisher: "RomanceCanvas",
   openGraph: {
-    type: 'website',
-    locale: 'en_US',
-    url: 'https://romancecanvas.com',
-    siteName: 'RomanceCanvas',
-    title: 'RomanceCanvas - AI-Powered Interactive Romance Stories & Chat',
-    description: 'Create immersive AI-powered romance stories with interactive choices and romantic AI chat. Personalized narratives await.',
+    type: "website",
+    locale: "en_US",
+    url: "https://romancecanvas.com",
+    siteName: "RomanceCanvas",
+    title: "RomanceCanvas - AI-Powered Interactive Romance Stories & Chat",
+    description:
+      "Create immersive AI-powered romance stories with interactive choices and romantic AI chat. Personalized narratives await.",
     images: [
       {
-        url: '/og-image.png',
+        url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: 'RomanceCanvas - Interactive Romance Stories',
+        alt: "RomanceCanvas - Interactive Romance Stories",
       },
     ],
   },
   twitter: {
-    card: 'summary_large_image',
-    title: 'RomanceCanvas - AI-Powered Interactive Romance Stories & Chat',
-    description: 'Create immersive AI-powered romance stories with interactive choices and romantic AI chat',
-    images: ['/twitter-image.png'],
+    card: "summary_large_image",
+    title: "RomanceCanvas - AI-Powered Interactive Romance Stories & Chat",
+    description:
+      "Create immersive AI-powered romance stories with interactive choices and romantic AI chat",
+    images: ["/twitter-image.png"],
   },
   robots: {
     index: true,
@@ -58,9 +71,9 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
     },
   },
   icons: {
@@ -81,37 +94,38 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const organizationSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'Organization',
-    name: 'RomanceCanvas',
-    url: 'https://romancecanvas.com',
-    logo: 'https://romancecanvas.com/logo.png',
-    description: 'AI-powered interactive romance story and chat platform',
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "RomanceCanvas",
+    url: "https://romancecanvas.com",
+    logo: "https://romancecanvas.com/logo.png",
+    description: "AI-powered interactive romance story and chat platform",
     sameAs: [
       // Add your social media URLs when available
       // 'https://twitter.com/romancecanvas',
       // 'https://facebook.com/romancecanvas',
     ],
     contactPoint: {
-      '@type': 'ContactPoint',
-      contactType: 'Customer Service',
-      email: 'support@romancecanvas.com',
+      "@type": "ContactPoint",
+      contactType: "Customer Service",
+      email: "support@romancecanvas.com",
     },
   };
 
   const websiteSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: 'RomanceCanvas',
-    url: 'https://romancecanvas.com',
-    description: 'Create immersive AI-powered romance stories and experience romantic AI chat',
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "RomanceCanvas",
+    url: "https://romancecanvas.com",
+    description:
+      "Create immersive AI-powered romance stories and experience romantic AI chat",
     potentialAction: {
-      '@type': 'SearchAction',
+      "@type": "SearchAction",
       target: {
-        '@type': 'EntryPoint',
-        urlTemplate: 'https://romancecanvas.com/search?q={search_term_string}',
+        "@type": "EntryPoint",
+        urlTemplate: "https://romancecanvas.com/search?q={search_term_string}",
       },
-      'query-input': 'required name=search_term_string',
+      "query-input": "required name=search_term_string",
     },
   };
 
@@ -119,24 +133,32 @@ export default function RootLayout({
     <html lang="en">
       <head>
         {/* Google Analytics */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-4DH87KX6NV"></script>
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-84XJEFQDL7"
+        ></script>
         <script
           dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
-              gtag('config', 'G-4DH87KX6NV');
+              gtag('config', 'G-84XJEFQDL7');
             `,
           }}
         />
 
         {/* Facebook App ID - Add your actual app ID from Facebook Developer Console */}
-        <meta property="fb:app_id" content={process.env.NEXT_PUBLIC_FB_APP_ID || "YOUR_FB_APP_ID_HERE"} />
+        <meta
+          property="fb:app_id"
+          content={process.env.NEXT_PUBLIC_FB_APP_ID || "YOUR_FB_APP_ID_HERE"}
+        />
 
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationSchema),
+          }}
         />
         <script
           type="application/ld+json"
@@ -151,6 +173,8 @@ export default function RootLayout({
           <SocketProvider>
             <SiteSettingsProvider>
               {children}
+              {/* Floating site-wide feedback button */}
+              <FeedbackWidget />
             </SiteSettingsProvider>
           </SocketProvider>
         </AuthProvider>
