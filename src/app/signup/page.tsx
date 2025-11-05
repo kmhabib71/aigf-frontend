@@ -237,8 +237,10 @@ function SignupContent() {
                   <button
                     type="button"
                     onClick={() => setShowPassword((s) => !s)}
-                    className="absolute inset-y-0 right-0 mt-7 mr-2 flex items-center px-2 text-gray-500 hover:text-gray-700 focus:outline-none"
-                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    className="absolute inset-y-0 right-0 mt-3 mr-2 flex items-center px-2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
                     title={showPassword ? "Hide password" : "Show password"}
                   >
                     {showPassword ? (
@@ -305,8 +307,12 @@ function SignupContent() {
                     type="button"
                     onClick={() => setShowConfirmPassword((s) => !s)}
                     className="absolute inset-y-0 right-0 mt-7 mr-2 flex items-center px-2 text-gray-500 hover:text-gray-700 focus:outline-none"
-                    aria-label={showConfirmPassword ? "Hide password" : "Show password"}
-                    title={showConfirmPassword ? "Hide password" : "Show password"}
+                    aria-label={
+                      showConfirmPassword ? "Hide password" : "Show password"
+                    }
+                    title={
+                      showConfirmPassword ? "Hide password" : "Show password"
+                    }
                   >
                     {showConfirmPassword ? (
                       <svg

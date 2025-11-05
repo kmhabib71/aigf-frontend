@@ -6,17 +6,7 @@ primary_region = "sin"
   [build.args]
     NODE_VERSION = "20"
 
-[env]
-  PORT = "3000"
-  NODE_ENV = "production"
-  NEXT_PUBLIC_FIREBASE_API_KEY = "AIzaSyC1kVpiaC5nJgnAyG8iYO2fsjeYwp35fJ0"
-  NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN = "romance-canvas.firebaseapp.com"
-  NEXT_PUBLIC_FIREBASE_PROJECT_ID = "romance-canvas"
-  NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET = "romance-canvas.firebasestorage.app"
-  NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID = "299645987783"
-  NEXT_PUBLIC_FIREBASE_APP_ID = "1:299645987783:web:f1ae149e10faf3eedd07e2"
-  NEXT_PUBLIC_BACKEND_URL = "https://aigf-backend.fly.dev"
-  BACKEND_URL = "https://aigf-backend.fly.dev"
+
 [http_service]
   internal_port = 3000
   force_https = true
