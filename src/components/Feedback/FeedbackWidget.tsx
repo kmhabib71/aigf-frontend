@@ -15,7 +15,7 @@ export default function FeedbackWidget() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [showTip, setShowTip] = useState(false);
-  const hiddenOn = useMemo(() => ["/checkout"], []);
+  const hiddenOn = useMemo(() => ["/checkout", "/pitch"], []);
   const hide = hiddenOn.some((p) => pathname?.startsWith(p));
 
   useEffect(() => {
