@@ -8,7 +8,6 @@ import ConversationSidebar from "@/components/ConversationSidebar";
 import { StreamingChat } from "@/components/StreamingChat";
 import SoftGateModal from "@/components/SoftGateModal";
 import Header from "@/components/layout/Header";
-import CharacterCreationModal from "@/components/CharacterCreationModal";
 
 import GlassEffect from "@/components/GlassEffect";
 import { sessionService } from "@/lib/auth/sessionService";
@@ -103,7 +102,6 @@ export default function ChatPage() {
   const [persona, setPersona] = useState("");
   const [isPersonaExpanded, setIsPersonaExpanded] = useState(true);
   const [isPersonaMinimized, setIsPersonaMinimized] = useState(false);
-  const [showCharacterModal, setShowCharacterModal] = useState(false);
 
   // SOFT GATE STATE
   const [showSoftGate, setShowSoftGate] = useState(false);
@@ -754,12 +752,6 @@ export default function ChatPage() {
     }
   };
 
-  const handleCharacterSelect = (personaText: string) => {
-    handlePersonaUpdate(personaText);
-    setIsPersonaExpanded(true);
-    setIsPersonaMinimized(false);
-  };
-
   useEffect(() => {
     if (!isPersonaExpanded) return;
 
@@ -874,60 +866,39 @@ export default function ChatPage() {
                 </button>
 
                 {/* Persona Button */}
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => {
-                      if (isPersonaMinimized) {
-                        setIsPersonaMinimized(false);
-                        setIsPersonaExpanded(true);
-                      } else if (isPersonaExpanded) {
-                        setIsPersonaExpanded(false);
-                        setIsPersonaMinimized(true);
-                      }
-                    }}
-                    className={`${
-                      isPersonaExpanded
-                        ? "bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500"
-                        : "bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400"
-                    } text-white p-2 rounded-full shadow-lg active:scale-95 transition-all ${
-                      persona ? "ring-2 ring-white/50" : ""
-                    }`}
-                    title="Persona"
+                <button
+                  onClick={() => {
+                    if (isPersonaMinimized) {
+                      setIsPersonaMinimized(false);
+                      setIsPersonaExpanded(true);
+                    } else if (isPersonaExpanded) {
+                      setIsPersonaExpanded(false);
+                      setIsPersonaMinimized(true);
+                    }
+                  }}
+                  className={`${
+                    isPersonaExpanded
+                      ? "bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500"
+                      : "bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400"
+                  } text-white p-2 rounded-full shadow-lg active:scale-95 transition-all ${
+                    persona ? "ring-2 ring-white/50" : ""
+                  }`}
+                  title="Persona"
+                >
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
                   >
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                      />
-                    </svg>
-                  </button>
-                  <button
-                    onClick={() => setShowCharacterModal(true)}
-                    className="bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 text-white p-2 rounded-full shadow-lg active:scale-95 transition-all"
-                    title="Create Character"
-                  >
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 4v16m8-8H4"
-                      />
-                    </svg>
-                  </button>
-                </div>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                    />
+                  </svg>
+                </button>
               </div>
             </div>
 
@@ -1170,14 +1141,6 @@ export default function ChatPage() {
           </div>
         </div>
       )}
-
-      {/* Character Creation Modal */}
-      <CharacterCreationModal
-        isOpen={showCharacterModal}
-        onClose={() => setShowCharacterModal(false)}
-        onSelectCharacter={handleCharacterSelect}
-        currentPersona={persona}
-      />
 
       {/* Streaming Chat Component */}
       <StreamingChat
