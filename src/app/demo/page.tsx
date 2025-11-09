@@ -131,7 +131,8 @@ export default function DemoLandingPage() {
                       Meet Sophia, Your AI Companion - Always Available
                     </h3>
                     <p className="text-gray-300/70 text-[11px] leading-relaxed">
-                      Chat 24/7. Request custom stories. Build a real connection. All in complete privacy.
+                      Chat 24/7. Request custom stories. Build a real
+                      connection. All in complete privacy.
                     </p>
                   </div>
 
@@ -187,7 +188,9 @@ export default function DemoLandingPage() {
                         </svg>
                       </div>
                       <span className="font-medium text-white/90 text-[10px] leading-tight">
-                        24/7 Always<br />Online
+                        24/7 Always
+                        <br />
+                        Online
                       </span>
                     </div>
                     <div className="flex flex-col items-center gap-1 text-center">
@@ -201,7 +204,9 @@ export default function DemoLandingPage() {
                         </svg>
                       </div>
                       <span className="font-medium text-white/90 text-[10px] leading-tight">
-                        Stories<br />Available
+                        Stories
+                        <br />
+                        Available
                       </span>
                     </div>
                     <div className="flex flex-col items-center gap-1 text-center">
@@ -219,7 +224,9 @@ export default function DemoLandingPage() {
                         </svg>
                       </div>
                       <span className="font-medium text-white/90 text-[10px] leading-tight">
-                        100%<br />Private
+                        100%
+                        <br />
+                        Private
                       </span>
                     </div>
                   </div>
