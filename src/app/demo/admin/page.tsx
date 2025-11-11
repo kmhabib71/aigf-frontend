@@ -27,14 +27,14 @@ interface User {
 
 export default function AdminDashboardPage() {
   const [stats, setStats] = useState<DemoStats>({
-    totalUsers: 127,
-    activeUsers: 89,
-    totalRevenue: 12450,
-    monthlyRecurring: 10350,
-    growthRate: 23.5,
-    totalStories: 1543,
-    totalChats: 8921,
-    avgSessionTime: 34
+    totalUsers: 1047,
+    activeUsers: 723,
+    totalRevenue: 89750,
+    monthlyRecurring: 10470,
+    growthRate: 34.2,
+    totalStories: 12847,
+    totalChats: 89521,
+    avgSessionTime: 47
   });
 
   const [users, setUsers] = useState<User[]>([
@@ -45,17 +45,17 @@ export default function AdminDashboardPage() {
       plan: "Premium",
       joinedDate: new Date("2024-01-15"),
       lastActive: new Date(),
-      totalSpent: 150,
+      totalSpent: 225,
       status: "active"
     },
     {
       id: "2",
       name: "James Chen",
       email: "j.chen@example.com",
-      plan: "Basic",
+      plan: "Premium",
       joinedDate: new Date("2024-02-01"),
-      lastActive: new Date(Date.now() - 86400000),
-      totalSpent: 90,
+      lastActive: new Date(Date.now() - 3600000),
+      totalSpent: 195,
       status: "active"
     },
     {
@@ -64,29 +64,79 @@ export default function AdminDashboardPage() {
       email: "sarah.m@example.com",
       plan: "Premium",
       joinedDate: new Date("2024-01-20"),
-      lastActive: new Date(Date.now() - 172800000),
-      totalSpent: 180,
+      lastActive: new Date(Date.now() - 7200000),
+      totalSpent: 210,
       status: "active"
     },
     {
       id: "4",
       name: "Michael Brown",
       email: "m.brown@example.com",
-      plan: "Trial",
-      joinedDate: new Date("2024-03-10"),
-      lastActive: new Date(Date.now() - 259200000),
-      totalSpent: 0,
-      status: "trial"
+      plan: "Basic",
+      joinedDate: new Date("2024-02-28"),
+      lastActive: new Date(Date.now() - 86400000),
+      totalSpent: 120,
+      status: "active"
     },
     {
       id: "5",
       name: "Lisa Anderson",
       email: "lisa.a@example.com",
       plan: "Basic",
-      joinedDate: new Date("2024-02-15"),
-      lastActive: new Date(Date.now() - 604800000),
-      totalSpent: 60,
-      status: "inactive"
+      joinedDate: new Date("2024-03-05"),
+      lastActive: new Date(Date.now() - 172800000),
+      totalSpent: 100,
+      status: "active"
+    },
+    {
+      id: "6",
+      name: "David Martinez",
+      email: "d.martinez@example.com",
+      plan: "Premium",
+      joinedDate: new Date("2024-01-10"),
+      lastActive: new Date(Date.now() - 14400000),
+      totalSpent: 240,
+      status: "active"
+    },
+    {
+      id: "7",
+      name: "Jessica Lee",
+      email: "jessica.l@example.com",
+      plan: "Basic",
+      joinedDate: new Date("2024-02-20"),
+      lastActive: new Date(Date.now() - 28800000),
+      totalSpent: 110,
+      status: "active"
+    },
+    {
+      id: "8",
+      name: "Robert Taylor",
+      email: "r.taylor@example.com",
+      plan: "Premium",
+      joinedDate: new Date("2024-01-05"),
+      lastActive: new Date(Date.now() - 43200000),
+      totalSpent: 255,
+      status: "active"
+    },
+    {
+      id: "9",
+      name: "Amanda White",
+      email: "a.white@example.com",
+      plan: "Trial",
+      joinedDate: new Date("2024-03-15"),
+      lastActive: new Date(Date.now() - 86400000),
+      totalSpent: 0,
+      status: "trial"
+    },
+    {
+      id: "10",
+      name: "Chris Johnson",
+      email: "c.johnson@example.com",
+      plan: "Basic",
+      joinedDate: new Date("2024-03-01"),
+      lastActive: new Date(Date.now() - 259200000),
+      totalSpent: 90,
+      status: "active"
     }
   ]);
 
@@ -222,6 +272,18 @@ export default function AdminDashboardPage() {
           {selectedTab === "overview" && (
             <div className="space-y-8">
               <div>
+                <div className="mb-6 p-4 bg-gradient-to-r from-purple-900/30 to-pink-900/30 border border-purple-500/30 rounded-xl">
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl">📊</span>
+                    <div>
+                      <div className="font-bold text-white">Demo Dashboard - Sample Data</div>
+                      <div className="text-sm text-gray-400">
+                        This shows what YOUR dashboard will look like with 1,000+ subscribers generating $10K+/month
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 <h1 className="text-3xl font-black text-white mb-2">
                   Dashboard Overview
                 </h1>
@@ -554,22 +616,64 @@ export default function AdminDashboardPage() {
               <h1 className="text-3xl font-black text-white mb-2">
                 Content Analytics
               </h1>
+              <p className="text-gray-400 mb-6">
+                Track story generation, chat activity, and interactive feature usage
+              </p>
+
+              {/* Interactive Features Stats */}
+              <div className="grid md:grid-cols-4 gap-6">
+                <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6">
+                  <div className="text-sm text-gray-400 mb-2">Stories Generated</div>
+                  <div className="text-3xl font-black text-white mb-1">
+                    {stats.totalStories.toLocaleString()}
+                  </div>
+                  <div className="text-xs text-green-400">+42% this month</div>
+                </div>
+
+                <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6">
+                  <div className="text-sm text-gray-400 mb-2">Line Images</div>
+                  <div className="text-3xl font-black text-purple-400 mb-1">
+                    24,892
+                  </div>
+                  <div className="text-xs text-green-400">Interactive feature</div>
+                </div>
+
+                <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6">
+                  <div className="text-sm text-gray-400 mb-2">Character Chats</div>
+                  <div className="text-3xl font-black text-pink-400 mb-1">
+                    15,247
+                  </div>
+                  <div className="text-xs text-green-400">After story reads</div>
+                </div>
+
+                <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6">
+                  <div className="text-sm text-gray-400 mb-2">Story Continues</div>
+                  <div className="text-3xl font-black text-cyan-400 mb-1">
+                    8,394
+                  </div>
+                  <div className="text-xs text-green-400">User-extended</div>
+                </div>
+              </div>
 
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6">
-                  <h3 className="text-lg font-semibold text-white mb-4">Popular Content</h3>
+                  <h3 className="text-lg font-semibold text-white mb-4">Content Breakdown</h3>
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
                       <span className="text-gray-400">Romantic Stories</span>
-                      <span className="text-white font-semibold">892</span>
+                      <span className="text-white font-semibold">7,892</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-gray-400">Adventure Stories</span>
-                      <span className="text-white font-semibold">651</span>
+                      <span className="text-white font-semibold">3,251</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-400">Chat Sessions</span>
-                      <span className="text-white font-semibold">8,921</span>
+                      <span className="text-gray-400">Fantasy Stories</span>
+                      <span className="text-white font-semibold">1,704</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-400">Regular Chat Sessions</span>
+                      <span className="text-white font-semibold">89,521</span>
                     </div>
                   </div>
                 </div>
@@ -579,17 +683,45 @@ export default function AdminDashboardPage() {
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
                       <span className="text-gray-400">Avg Messages/User</span>
-                      <span className="text-white font-semibold">127</span>
+                      <span className="text-white font-semibold">347</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-gray-400">Avg Stories/User</span>
-                      <span className="text-white font-semibold">23</span>
+                      <span className="text-white font-semibold">12</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-400">Retention Rate</span>
-                      <span className="text-green-400 font-semibold">87%</span>
+                      <span className="text-gray-400">Avg Session Time</span>
+                      <span className="text-white font-semibold">{stats.avgSessionTime} min</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-400">12-Month Retention</span>
+                      <span className="text-green-400 font-semibold">91%</span>
                     </div>
                   </div>
+                </div>
+              </div>
+
+              {/* Interactive Features Impact */}
+              <div className="bg-gradient-to-br from-purple-900/20 to-pink-900/20 border border-purple-500/30 rounded-2xl p-6">
+                <h3 className="text-lg font-semibold text-white mb-4">
+                  🎯 Interactive Features Impact
+                </h3>
+                <div className="grid md:grid-cols-3 gap-4">
+                  <div className="text-center">
+                    <div className="text-3xl font-black text-purple-400 mb-1">6.2x</div>
+                    <div className="text-sm text-gray-300">Engagement increase with line images</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-black text-pink-400 mb-1">4.7x</div>
+                    <div className="text-sm text-gray-300">Session time with character chat</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-black text-cyan-400 mb-1">91%</div>
+                    <div className="text-sm text-gray-300">Users who continue stories</div>
+                  </div>
+                </div>
+                <div className="mt-4 pt-4 border-t border-purple-500/20 text-center text-gray-400 text-sm">
+                  Interactive features drive 12+ month retention vs 2-3 months industry average
                 </div>
               </div>
             </div>
