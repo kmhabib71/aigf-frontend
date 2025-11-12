@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Video Screens - Navigation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            padding: 40px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 48px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #10B981, #06B6D4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+
+        .subtitle {
+            font-size: 20px;
+            color: #6B7280;
+            margin-bottom: 40px;
+        }
+
+        .screens {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .screen-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid #374151;
+            border-radius: 20px;
+            padding: 30px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .screen-card:hover {
+            border-color: #10B981;
+            background: rgba(16, 185, 129, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .screen-number {
+            font-size: 24px;
+            color: #10B981;
+            font-weight: 900;
+            margin-bottom: 10px;
+        }
+
+        .screen-title {
+            font-size: 28px;
+            color: #ffffff;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .screen-time {
+            font-size: 16px;
+            color: #6B7280;
+            margin-bottom: 15px;
+        }
+
+        .screen-desc {
+            font-size: 14px;
+            color: #9CA3AF;
+            line-height: 1.6;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #10B981, #06B6D4);
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+        }
+
+        .instructions {
+            background: rgba(16, 185, 129, 0.1);
+            border: 2px solid #10B981;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .instructions h2 {
+            color: #10B981;
+            margin-bottom: 15px;
+        }
+
+        .instructions ol {
+            margin-left: 20px;
+            line-height: 2;
+        }
+
+        .instructions li {
+            color: #ffffff;
+        }
+
+        .keyboard {
+            background: rgba(6, 182, 212, 0.1);
+            border: 2px solid #06B6D4;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .keyboard h3 {
+            color: #06B6D4;
+            margin-bottom: 10px;
+        }
+
+        .key {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #06B6D4;
+            border-radius: 5px;
+            padding: 5px 15px;
+            margin: 5px;
+            font-weight: 700;
+            color: #06B6D4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎬 Demo Video Screens</h1>
+        <p class="subtitle">Navigate these screens during your video recording</p>
+
+        <div class="instructions">
+            <h2>📋 Recording Instructions:</h2>
+            <ol>
+                <li>Open each screen in a new browser tab (full screen F11)</li>
+                <li>Start screen recording (OBS or Loom)</li>
+                <li>Navigate between tabs using Ctrl+Tab or clicking</li>
+                <li>Hold each black screen for its full duration (see timestamps)</li>
+                <li>Mix black screens with your platform pages (/pitch, /demo/admin, etc.)</li>
+                <li>Match your voiceover to the screen timestamps below</li>
+            </ol>
+
+            <div style="margin-top: 20px; padding: 20px; background: rgba(255, 215, 0, 0.1); border: 2px solid #FFD700; border-radius: 15px;">
+                <h3 style="color: #FFD700; margin-bottom: 10px;">💡 Pro Tip:</h3>
+                <p style="color: #ffffff; line-height: 1.8;">
+                    <strong>Alternate between black screens and platform pages:</strong><br>
+                    Black Screen 00 → Black Screen 00B → Platform (/pitch) → Black Screen 01 → Platform (/demo/chat) → etc.
+                </p>
+            </div>
+
+            <div class="keyboard">
+                <h3>⌨️ Keyboard Shortcuts:</h3>
+                <span class="key">F11</span> Full screen browser
+                <span class="key">Ctrl + Tab</span> Switch tabs
+                <span class="key">Esc</span> Exit full screen
+            </div>
+        </div>
+
+        <div class="screens">
+            <div class="screen-card" onclick="window.open('00-opening.html', '_blank')">
+                <div class="screen-number">00</div>
+                <div class="screen-title">Opening Hook</div>
+                <div class="screen-time">0:00 - 0:05</div>
+                <div class="screen-desc">
+                    Black screen with animated text hook: "What if your fans paid you $10/month..."
+                </div>
+                <a href="00-opening.html" class="btn" target="_blank">Open Screen →</a>
+            </div>
+
+            <div class="screen-card" onclick="window.open('00b-hook-continuation.html', '_blank')">
+                <div class="screen-number">00B</div>
+                <div class="screen-title">Hook Continuation</div>
+                <div class="screen-time">0:05 - 0:22</div>
+                <div class="screen-desc">
+                    "$5K-$50K/month with AI" + 3 audience cards (OnlyFans Creators, Authors, Entrepreneurs)
+                </div>
+                <a href="00b-hook-continuation.html" class="btn" target="_blank">Open Screen →</a>
+            </div>
+
+            <div class="screen-card" onclick="window.open('01-problem.html', '_blank')">
+                <div class="screen-number">01</div>
+                <div class="screen-title">The Problem</div>
+                <div class="screen-time">0:22 - 0:28</div>
+                <div class="screen-desc">
+                    Red-themed problem section highlighting OnlyFans fees, Amazon KDP, and competition
+                </div>
+                <a href="01-problem.html" class="btn" target="_blank">Open Screen →</a>
+            </div>
+
+            <div class="screen-card" onclick="window.open('02-interactive-features.html', '_blank')">
+                <div class="screen-number">02</div>
+                <div class="screen-title">Interactive Features</div>
+                <div class="screen-time">1:38 - 1:50</div>
+                <div class="screen-desc">
+                    Purple gradient showcasing your killer differentiators: 4 interactive features + stats (6.2x, 4.7x, 12+)
+                </div>
+                <a href="02-interactive-features.html" class="btn" target="_blank">Open Screen →</a>
+            </div>
+
+            <div class="screen-card" onclick="window.open('03-revenue.html', '_blank')">
+                <div class="screen-number">03</div>
+                <div class="screen-title">Revenue Math</div>
+                <div class="screen-time">2:07 - 2:15</div>
+                <div class="screen-desc">
+                    Gold-themed calculation: 1,000 subscribers × $10 = $10K/month. YOU KEEP 100%
+                </div>
+                <a href="03-revenue.html" class="btn" target="_blank">Open Screen →</a>
+            </div>
+
+            <div class="screen-card" onclick="window.open('04-packages.html', '_blank')">
+                <div class="screen-number">04</div>
+                <div class="screen-title">Pricing Packages</div>
+                <div class="screen-time">2:51 - 3:00</div>
+                <div class="screen-desc">
+                    3 packages side-by-side: Audit ($197), MVP ($3K), Full Platform ($6K) with features
+                </div>
+                <a href="04-packages.html" class="btn" target="_blank">Open Screen →</a>
+            </div>
+
+            <div class="screen-card" onclick="window.open('05-cta.html', '_blank')">
+                <div class="screen-number">05</div>
+                <div class="screen-title">Call to Action</div>
+                <div class="screen-time">3:30 - 3:40</div>
+                <div class="screen-desc">
+                    Final CTA screen with contact info, urgency (2 projects/month), and resource links
+                </div>
+                <a href="05-cta.html" class="btn" target="_blank">Open Screen →</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

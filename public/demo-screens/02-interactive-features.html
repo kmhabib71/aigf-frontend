@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Features - Demo Video</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000000;
+            color: #ffffff;
+            font-family: 'Arial Black', 'Helvetica', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 1400px;
+            padding: 60px;
+        }
+
+        .title {
+            font-size: 64px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #A855F7, #EC4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+
+        .subtitle {
+            font-size: 42px;
+            color: #ffffff;
+            margin-bottom: 60px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+        }
+
+        .feature {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(236, 72, 153, 0.2));
+            border: 3px solid #A855F7;
+            border-radius: 30px;
+            padding: 50px;
+            animation: float 3s ease-in-out infinite;
+            transition: transform 0.3s;
+        }
+
+        .feature:nth-child(1) { animation-delay: 0s; }
+        .feature:nth-child(2) { animation-delay: 0.5s; }
+        .feature:nth-child(3) { animation-delay: 1s; }
+        .feature:nth-child(4) { animation-delay: 1.5s; }
+
+        .feature:hover {
+            transform: scale(1.05);
+            border-color: #EC4899;
+        }
+
+        .feature-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 40px;
+            color: #A855F7;
+            margin-bottom: 15px;
+        }
+
+        .feature-text {
+            font-size: 28px;
+            color: #ffffff;
+            line-height: 1.4;
+        }
+
+        .stats {
+            margin-top: 60px;
+            display: flex;
+            justify-content: space-around;
+            gap: 40px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 72px;
+            font-weight: 900;
+            color: #10B981;
+            text-shadow: 0 0 30px rgba(16, 185, 129, 0.8);
+        }
+
+        .stat-label {
+            font-size: 24px;
+            color: #ffffff;
+            margin-top: 10px;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">🎯 YOUR COMPETITIVE ADVANTAGE</div>
+        <div class="subtitle">Interactive Features NO OTHER PLATFORM Has</div>
+
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🖼️</div>
+                <div class="feature-title">Line-by-Line Images</div>
+                <div class="feature-text">Fans click any line<br>Generate custom visuals</div>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">💬</div>
+                <div class="feature-title">Chat With Characters</div>
+                <div class="feature-text">Talk to story characters<br>After reading</div>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">📚</div>
+                <div class="feature-title">Continue Stories</div>
+                <div class="feature-text">Extend storylines<br>Add chapters</div>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">💭</div>
+                <div class="feature-title">Community Comments</div>
+                <div class="feature-text">Line-by-line engagement<br>Social experience</div>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-number">6.2x</div>
+                <div class="stat-label">Engagement Increase</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">4.7x</div>
+                <div class="stat-label">Session Time</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">12+</div>
+                <div class="stat-label">Month Retention</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

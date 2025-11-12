@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Packages - Demo Video</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000000;
+            color: #ffffff;
+            font-family: 'Arial Black', 'Helvetica', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 1600px;
+            padding: 60px;
+        }
+
+        .title {
+            font-size: 64px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #10B981, #06B6D4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 80px;
+        }
+
+        .packages {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+        }
+
+        .package {
+            background: rgba(255, 255, 255, 0.05);
+            border: 3px solid #6B7280;
+            border-radius: 30px;
+            padding: 50px 30px;
+            transition: all 0.3s;
+        }
+
+        .package:hover {
+            transform: translateY(-10px);
+            border-color: #10B981;
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .package.featured {
+            border-color: #10B981;
+            border-width: 5px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(6, 182, 212, 0.2));
+            transform: scale(1.05);
+        }
+
+        .package-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .package-name {
+            font-size: 42px;
+            color: #ffffff;
+            margin-bottom: 20px;
+        }
+
+        .package-price {
+            font-size: 72px;
+            color: #10B981;
+            font-weight: 900;
+            margin-bottom: 10px;
+        }
+
+        .package-duration {
+            font-size: 28px;
+            color: #6B7280;
+            margin-bottom: 30px;
+        }
+
+        .package-features {
+            text-align: left;
+            font-size: 24px;
+            color: #ffffff;
+            line-height: 2;
+        }
+
+        .feature {
+            margin: 10px 0;
+        }
+
+        .check {
+            color: #10B981;
+            margin-right: 10px;
+        }
+
+        .badge {
+            background: #FFD700;
+            color: #000000;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 20px;
+            font-weight: 900;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">🚀 CHOOSE YOUR PACKAGE</div>
+
+        <div class="packages">
+            <div class="package">
+                <div class="package-icon">📋</div>
+                <div class="package-name">Technical Audit</div>
+                <div class="package-price">$197</div>
+                <div class="package-duration">2 days</div>
+                <div class="package-features">
+                    <div class="feature"><span class="check">✓</span>Requirements analysis</div>
+                    <div class="feature"><span class="check">✓</span>Architecture plan</div>
+                    <div class="feature"><span class="check">✓</span>Cost estimate</div>
+                    <div class="feature"><span class="check">✓</span>No obligation</div>
+                </div>
+            </div>
+
+            <div class="package featured">
+                <div class="badge">POPULAR</div>
+                <div class="package-icon">⚡</div>
+                <div class="package-name">MVP Clone</div>
+                <div class="package-price">$3,000</div>
+                <div class="package-duration">14 days</div>
+                <div class="package-features">
+                    <div class="feature"><span class="check">✓</span>Core features</div>
+                    <div class="feature"><span class="check">✓</span>1 payment method</div>
+                    <div class="feature"><span class="check">✓</span>Your branding</div>
+                    <div class="feature"><span class="check">✓</span>1 custom feature</div>
+                    <div class="feature"><span class="check">✓</span>Test the market</div>
+                </div>
+            </div>
+
+            <div class="package">
+                <div class="package-icon">🎯</div>
+                <div class="package-name">Full Platform</div>
+                <div class="package-price">$6,000</div>
+                <div class="package-duration">30 days</div>
+                <div class="package-features">
+                    <div class="feature"><span class="check">✓</span>Everything you saw</div>
+                    <div class="feature"><span class="check">✓</span>Multi-payment</div>
+                    <div class="feature"><span class="check">✓</span>Admin dashboard</div>
+                    <div class="feature"><span class="check">✓</span>2 custom features</div>
+                    <div class="feature"><span class="check">✓</span>Full source code</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

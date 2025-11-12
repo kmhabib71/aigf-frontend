@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Problem - Demo Video</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000000;
+            color: #ffffff;
+            font-family: 'Arial Black', 'Helvetica', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 1200px;
+            padding: 60px;
+        }
+
+        .title {
+            font-size: 72px;
+            font-weight: 900;
+            color: #EF4444;
+            margin-bottom: 60px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .problems {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .problem {
+            background: rgba(239, 68, 68, 0.1);
+            border: 3px solid #EF4444;
+            border-radius: 20px;
+            padding: 40px;
+            animation: slideIn 1s ease-out;
+        }
+
+        .problem-title {
+            font-size: 48px;
+            color: #EF4444;
+            margin-bottom: 20px;
+        }
+
+        .problem-text {
+            font-size: 36px;
+            color: #ffffff;
+            line-height: 1.4;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">⚠️ THE PROBLEM</div>
+
+        <div class="problems">
+            <div class="problem">
+                <div class="problem-title">OnlyFans: 20% Fee</div>
+                <div class="problem-text">You're LOSING $2,000/month<br>on $10K revenue</div>
+            </div>
+
+            <div class="problem">
+                <div class="problem-title">Amazon KDP: 30-70%</div>
+                <div class="problem-text">Your income has a ceiling</div>
+            </div>
+
+            <div class="problem">
+                <div class="problem-title">CrushOn.ai: $50M in 18 months</div>
+                <div class="problem-text">You're watching competitors WIN</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -553,25 +553,15 @@ export default function PitchPage() {
           <p className="text-lg text-gray-300 mb-6">
             5-minute walkthrough of the platform capabilities
           </p>
-          <div className="bg-gray-900 rounded-2xl overflow-hidden aspect-video flex items-center justify-center">
-            {/* Replace with actual video embed */}
-            <div className="text-center text-white p-8">
-              <div className="text-6xl mb-4">🎥</div>
-              <p className="text-lg">Demo video coming soon</p>
-              <p className="text-sm text-gray-400 mt-2">
-                Watch how AI chat, story generation, payment system, and admin
-                dashboard work together
-              </p>
-            </div>
-            {/* When you have video, replace with:
+          <div className="bg-gray-900 rounded-2xl overflow-hidden aspect-video">
             <iframe
-              src="YOUR_YOUTUBE_EMBED_URL"
+              src="https://www.youtube.com/embed/N-_cCxwKYOA"
               className="w-full h-full"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
+              title="RomanceCanvas Platform Demo"
             />
-            */}
           </div>
         </section>
 
