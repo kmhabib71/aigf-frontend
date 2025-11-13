@@ -12,6 +12,10 @@ RUN npm ci
 # Copy application files
 COPY . .
 
+# Pass build-time environment variables
+ARG NEXT_PUBLIC_CONTENTSQUARE_SCRIPT
+ENV NEXT_PUBLIC_CONTENTSQUARE_SCRIPT=$NEXT_PUBLIC_CONTENTSQUARE_SCRIPT
+
 # Build Next.js app
 RUN npm run build
 
