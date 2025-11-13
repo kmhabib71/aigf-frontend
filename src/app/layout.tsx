@@ -149,12 +149,10 @@ export default function RootLayout({
         />
 
         {/* Contentsquare (Hotjar) Tracking */}
-        {process.env.NEXT_PUBLIC_CONTENTSQUARE_SCRIPT && (
-          <script
-            async
-            src={process.env.NEXT_PUBLIC_CONTENTSQUARE_SCRIPT}
-          ></script>
-        )}
+        <script
+          async
+          src="https://t.contentsquare.net/uxa/9add644d75460.js"
+        ></script>
 
         {/* Facebook App ID - Add your actual app ID from Facebook Developer Console */}
         <meta
