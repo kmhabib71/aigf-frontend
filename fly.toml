@@ -1,5 +1,5 @@
 # fly.toml for AI Girlfriend Frontend
-app = "ai-girlfriend-frontend"
+app = "aigf-frontend"
 primary_region = "sin"
 
 [build]
