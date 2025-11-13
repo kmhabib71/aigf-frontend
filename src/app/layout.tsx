@@ -148,6 +148,14 @@ export default function RootLayout({
           }}
         />
 
+        {/* Contentsquare (Hotjar) Tracking */}
+        {process.env.NEXT_PUBLIC_CONTENTSQUARE_SCRIPT && (
+          <script
+            async
+            src={process.env.NEXT_PUBLIC_CONTENTSQUARE_SCRIPT}
+          ></script>
+        )}
+
         {/* Facebook App ID - Add your actual app ID from Facebook Developer Console */}
         <meta
           property="fb:app_id"
