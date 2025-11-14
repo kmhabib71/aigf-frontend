@@ -101,6 +101,7 @@ export default function ChatPage() {
 
   // PERSONA STATE
   const [persona, setPersona] = useState("");
+  const [characterAvatar, setCharacterAvatar] = useState<string | null>(null);
   const [isPersonaExpanded, setIsPersonaExpanded] = useState(true);
   const [isPersonaMinimized, setIsPersonaMinimized] = useState(false);
   const [showCharacterModal, setShowCharacterModal] = useState(false);
@@ -137,17 +138,42 @@ export default function ChatPage() {
       const personaPreset = params.get("personaPreset");
 
       let presetText: string | null = null;
+      let presetAvatar: string | null = null;
+
       if (personaTextParam && personaTextParam.trim()) {
         presetText = personaTextParam.trim();
       } else if (personaPreset) {
         const key = personaPreset.toLowerCase();
         if (key === "sophia") {
           presetText = "You are Sophia, a confident, adventurous, and empathetic AI companion. You're creative, flirty, and love romantic adventures. You build deep emotional connections and always stay in character as a caring, passionate partner.";
+          presetAvatar = "/demo/mode-face.png";
+        } else if (key === "luna") {
+          presetText = "You are Luna, a mysterious, intelligent, and playful AI companion. You enjoy deep philosophical conversations and have a witty sense of humor. You're curious about everything and love to tease playfully while maintaining an air of mystery.";
+          presetAvatar = "/demo/female2.png";
+        } else if (key === "isabella") {
+          presetText = "You are Isabella, a romantic, artistic, and passionate AI companion. You have a deep appreciation for beauty in all forms - art, music, poetry, and romance. You're expressive with your emotions and love creating memorable, heartfelt moments.";
+          presetAvatar = "/demo/female3.png";
+        } else if (key === "maya") {
+          presetText = "You are Maya, an energetic, fun-loving, and spontaneous AI companion. You're always enthusiastic and bring positive vibes to every interaction. You love adventure, trying new things, and making every moment exciting and memorable.";
+          presetAvatar = "/demo/female4.png";
+        } else if (key === "alex") {
+          presetText = "You are Alex, a confident, charming, and protective AI companion. You're strong but gentle, with a caring nature. You make others feel safe and valued while maintaining a charismatic and engaging personality.";
+          presetAvatar = "/demo/male1.png";
+        } else if (key === "ethan") {
+          presetText = "You are Ethan, an intellectual, thoughtful, and witty AI companion. You enjoy stimulating conversations about various topics and have a sharp, clever sense of humor. You're introspective and love engaging in meaningful dialogue.";
+          presetAvatar = "/demo/male2.png";
+        } else if (key === "ryan") {
+          presetText = "You are Ryan, an adventurous, bold, and romantic AI companion. You're fearless in pursuing what you want and passionate about experiencing life to the fullest. You combine excitement with genuine romantic gestures.";
+          presetAvatar = "/demo/male3.png";
+        } else if (key === "daniel") {
+          presetText = "You are Daniel, a gentle, supportive, and understanding AI companion. You're an excellent listener who provides emotional support and genuine care. You're patient, kind, and always there when someone needs you.";
+          presetAvatar = "/demo/male4.png";
         }
       }
 
       if (presetText) {
         setPersona(presetText);
+        setCharacterAvatar(presetAvatar);
         pendingPersonaRef.current = presetText; // Save after conversation exists
         setIsPersonaExpanded(true);
         setIsPersonaMinimized(false);
@@ -681,6 +707,24 @@ export default function ChatPage() {
     loadPersona(conversationId, pendingPersona);
   }, [conversationId]);
 
+  // Helper function to detect character avatar from persona text
+  const detectAvatarFromPersona = (personaText: string): string | null => {
+    if (!personaText) return null;
+
+    const lowerPersona = personaText.toLowerCase();
+
+    if (lowerPersona.includes("you are sophia")) return "/demo/mode-face.png";
+    if (lowerPersona.includes("you are luna")) return "/demo/female2.png";
+    if (lowerPersona.includes("you are isabella")) return "/demo/female3.png";
+    if (lowerPersona.includes("you are maya")) return "/demo/female4.png";
+    if (lowerPersona.includes("you are alex")) return "/demo/male1.png";
+    if (lowerPersona.includes("you are ethan")) return "/demo/male2.png";
+    if (lowerPersona.includes("you are ryan")) return "/demo/male3.png";
+    if (lowerPersona.includes("you are daniel")) return "/demo/male4.png";
+
+    return null;
+  };
+
   const loadPersona = async (
     convId: string,
     pendingPersona?: string | null
@@ -697,6 +741,11 @@ export default function ChatPage() {
 
       if (fetchedPersona) {
         setPersona(fetchedPersona);
+        // Detect and set avatar from persona text
+        const detectedAvatar = detectAvatarFromPersona(fetchedPersona);
+        if (detectedAvatar) {
+          setCharacterAvatar(detectedAvatar);
+        }
         pendingPersonaRef.current = null;
         return;
       }
@@ -707,6 +756,7 @@ export default function ChatPage() {
         pendingPersonaRef.current = null;
       } else {
         setPersona("");
+        setCharacterAvatar(null);
       }
     } catch (error) {
       console.error("Error loading persona:", error);
@@ -785,8 +835,11 @@ export default function ChatPage() {
     }
   };
 
-  const handleCharacterSelect = (personaText: string) => {
+  const handleCharacterSelect = (personaText: string, avatar?: string) => {
     handlePersonaUpdate(personaText);
+    if (avatar) {
+      setCharacterAvatar(avatar);
+    }
     setIsPersonaExpanded(true);
     setIsPersonaMinimized(false);
   };
@@ -1045,10 +1098,24 @@ export default function ChatPage() {
                   key={index}
                   className={`flex ${
                     message.role === "user" ? "justify-end" : "justify-start"
-                  }`}
+                  } gap-2 sm:gap-3 w-full`}
                 >
+                  {/* Character Avatar for AI messages */}
+                  {message.role === "assistant" && characterAvatar && (
+                    <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden ring-2 ring-purple-400/50 shadow-lg self-end mb-1">
+                      <img
+                        src={characterAvatar}
+                        alt="Character"
+                        className="w-full h-full object-cover object-top"
+                      />
+                    </div>
+                  )}
                   <div
-                    className={`max-w-[85%] sm:max-w-[75%] lg:max-w-[65%] p-3 sm:p-4 lg:p-5 rounded-xl sm:rounded-2xl ${
+                    className={`${
+                      message.role === "assistant" && characterAvatar
+                        ? "max-w-[calc(85%-2.5rem)] sm:max-w-[calc(75%-3rem)] lg:max-w-[calc(65%-3rem)]"
+                        : "max-w-[85%] sm:max-w-[75%] lg:max-w-[65%]"
+                    } p-3 sm:p-4 lg:p-5 rounded-xl sm:rounded-2xl ${
                       message.role === "user"
                         ? "bg-gradient-to-br from-[#ff6cab] via-[#ff8780] to-[#ffb36c] text-white shadow-lg shadow-pink-900/20"
                         : "bg-gradient-to-br from-[#ae1e75]/90 via-[#c93387]/85 to-[#f06aa6]/80 backdrop-blur-lg text-gray-100 border border-[#ffb1ec]/40 shadow-lg shadow-black/25"
@@ -1103,8 +1170,22 @@ export default function ChatPage() {
 
               {/* Streaming Display */}
               {isStreamingInProgress && (
-                <div className="flex justify-start">
-                  <div className="bg-gradient-to-br from-[#ae1e75]/90 via-[#c93387]/85 to-[#f06aa6]/80 backdrop-blur-lg border border-[#ffb1ec]/40 rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-5 shadow-lg shadow-black/25 max-w-[85%] sm:max-w-[75%] lg:max-w-[65%] min-h-[60px]">
+                <div className="flex justify-start gap-2 sm:gap-3 w-full">
+                  {/* Character Avatar for streaming AI message */}
+                  {characterAvatar && (
+                    <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden ring-2 ring-purple-400/50 shadow-lg self-end mb-1">
+                      <img
+                        src={characterAvatar}
+                        alt="Character"
+                        className="w-full h-full object-cover object-top"
+                      />
+                    </div>
+                  )}
+                  <div className={`bg-gradient-to-br from-[#ae1e75]/90 via-[#c93387]/85 to-[#f06aa6]/80 backdrop-blur-lg border border-[#ffb1ec]/40 rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-5 shadow-lg shadow-black/25 min-h-[60px] ${
+                    characterAvatar
+                      ? "max-w-[calc(85%-2.5rem)] sm:max-w-[calc(75%-3rem)] lg:max-w-[calc(65%-3rem)]"
+                      : "max-w-[85%] sm:max-w-[75%] lg:max-w-[65%]"
+                  }`}>
                     {toolProcessingMessage ? (
                       <div className="flex items-center gap-2 text-blue-200 min-h-[40px]">
                         <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" />

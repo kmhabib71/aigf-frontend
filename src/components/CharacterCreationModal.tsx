@@ -16,7 +16,7 @@ interface CharacterPreset {
 interface CharacterCreationModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSelectCharacter: (persona: string) => void;
+  onSelectCharacter: (persona: string, avatar?: string) => void;
   currentPersona: string;
 }
 
@@ -122,11 +122,38 @@ export default function CharacterCreationModal({
   const [selectedPreset, setSelectedPreset] = useState<string | null>(null);
   const [customName, setCustomName] = useState("");
   const [customTraits, setCustomTraits] = useState<string[]>([]);
+  const [customInterests, setCustomInterests] = useState<string[]>([]);
   const [customDescription, setCustomDescription] = useState("");
   const [newTrait, setNewTrait] = useState("");
   const [selectedGender, setSelectedGender] = useState<"female" | "male">(
     "female"
   );
+
+  const personalityTraits = [
+    "Adventurous",
+    "Creative",
+    "Empathetic",
+    "Witty",
+    "Mysterious",
+    "Confident",
+    "Playful",
+    "Intelligent",
+    "Caring",
+    "Passionate",
+  ];
+
+  const interests = [
+    "Art",
+    "Music",
+    "Travel",
+    "Fitness",
+    "Cooking",
+    "Reading",
+    "Gaming",
+    "Nature",
+    "Technology",
+    "Fashion",
+  ];
 
   if (!isOpen) return null;
 
@@ -144,7 +171,7 @@ export default function CharacterCreationModal({
   const handleSelectPreset = (preset: CharacterPreset) => {
     setSelectedPreset(preset.id);
     if (preset.id !== "custom") {
-      onSelectCharacter(preset.personaTemplate);
+      onSelectCharacter(preset.personaTemplate, preset.avatar);
       onClose();
     }
   };
@@ -155,14 +182,13 @@ export default function CharacterCreationModal({
       return;
     }
 
-    const customPersona = `You are ${customName}, ${
-      customTraits.length > 0
-        ? "a " + customTraits.join(", ") + " AI companion. "
-        : ""
-    }${
-      customDescription ||
-      "You stay in character and build meaningful connections."
-    }`;
+    const traitsPart = customTraits.length > 0 ? customTraits.join(", ") : "kind, engaging";
+    const interestsPart = customInterests.length > 0 ? ` You enjoy ${customInterests.join(", ")}.` : "";
+    const extra = customDescription
+      ? ` ${customDescription.trim()}`
+      : " You build deep emotional connections, flirt playfully, and always stay in character as a caring, passionate partner.";
+
+    const customPersona = `You are ${customName}, a ${selectedGender} AI companion. Your core traits are ${traitsPart}.${interestsPart}${extra}`;
 
     onSelectCharacter(customPersona);
 
@@ -170,6 +196,7 @@ export default function CharacterCreationModal({
     setCustomName("");
     setCustomTraits([]);
     setCustomDescription("");
+    setCustomInterests([]);
     setNewTrait("");
     setSelectedPreset(null);
 
@@ -177,22 +204,22 @@ export default function CharacterCreationModal({
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="relative bg-gradient-to-br from-purple-50 via-pink-50 to-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+      <div className="relative rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden bg-gradient-to-br from-purple-900/30 to-black border-2 border-purple-500/30">
         {/* Header */}
-        <div className="bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 p-6 text-white">
+        <div className="p-6 text-white border-b border-purple-500/30 bg-black/60 backdrop-blur-sm">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-2xl sm:text-3xl font-black">
                 Create Your Character
               </h2>
-              <p className="text-sm sm:text-base text-purple-100 mt-1">
+              <p className="text-sm sm:text-base text-purple-200 mt-1">
                 Choose a preset or customize your own
               </p>
             </div>
             <button
               onClick={onClose}
-              className="text-white hover:text-purple-200 transition-colors"
+              className="text-white hover:text-purple-300 transition-colors"
             >
               <svg
                 className="w-6 h-6"
@@ -212,25 +239,25 @@ export default function CharacterCreationModal({
         </div>
 
         {/* Content */}
-        <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+        <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)] text-white">
           {/* Gender Filter */}
           <div className="flex justify-center gap-3 mb-6">
             <button
               onClick={() => setSelectedGender("female")}
-              className={`px-6 py-2 rounded-full font-semibold transition-all ${
+              className={`px-6 py-2 rounded-full font-semibold transition-all border ${
                 selectedGender === "female"
-                  ? "bg-gradient-to-r from-pink-500 to-purple-500 text-white shadow-lg"
-                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                  ? "bg-gradient-to-r from-pink-600 to-purple-600 text-white border-white/20 shadow-lg shadow-pink-500/30"
+                  : "bg-black/40 text-white border-white/20 hover:bg-white/10"
               }`}
             >
               Female Characters
             </button>
             <button
               onClick={() => setSelectedGender("male")}
-              className={`px-6 py-2 rounded-full font-semibold transition-all ${
+              className={`px-6 py-2 rounded-full font-semibold transition-all border ${
                 selectedGender === "male"
-                  ? "bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg"
-                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                  ? "bg-gradient-to-r from-blue-500 to-cyan-500 text-white border-white/20 shadow-lg shadow-cyan-500/30"
+                  : "bg-black/40 text-white border-white/20 hover:bg-white/10"
               }`}
             >
               Male Characters
@@ -245,10 +272,10 @@ export default function CharacterCreationModal({
               <div
                 key={preset.id}
                 onClick={() => handleSelectPreset(preset)}
-                className={`cursor-pointer p-6 rounded-2xl border-2 transition-all ${
+                className={`cursor-pointer p-6 rounded-2xl border-2 transition-all bg-black/30 backdrop-blur-sm ${
                   selectedPreset === preset.id
-                    ? "border-purple-500 bg-purple-50 shadow-lg"
-                    : "border-gray-200 hover:border-purple-300 hover:shadow-md"
+                    ? "border-pink-500/50 shadow-lg shadow-pink-500/30"
+                    : "border-white/15 hover:border-pink-500/40 hover:shadow-md"
                 }`}
               >
                 {/* Preset Character Card */}
@@ -264,20 +291,20 @@ export default function CharacterCreationModal({
                       />
                     </div>
                   </div>
-                  <h3 className="text-xl font-black text-gray-900 mb-2">
+                  <h3 className="text-xl font-black text-white mb-2">
                     {preset.name}
                   </h3>
                   <div className="flex flex-wrap justify-center gap-2 mb-3">
                     {preset.traits.map((trait, idx) => (
                       <span
                         key={idx}
-                        className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium"
+                        className="px-3 py-1 bg-purple-500/15 border border-purple-400/30 text-purple-200 rounded-full text-xs font-medium"
                       >
                         {trait}
                       </span>
                     ))}
                   </div>
-                  <p className="text-sm text-gray-600">{preset.description}</p>
+                  <p className="text-sm text-white/70">{preset.description}</p>
                 </div>
               </div>
             ))}
@@ -285,10 +312,10 @@ export default function CharacterCreationModal({
             {/* Custom Character Option */}
             <div
               onClick={() => setSelectedPreset("custom")}
-              className={`cursor-pointer p-6 rounded-2xl border-2 transition-all ${
+              className={`cursor-pointer p-6 rounded-2xl border-2 transition-all bg-black/30 backdrop-blur-sm ${
                 selectedPreset === "custom"
-                  ? "border-purple-500 bg-purple-50 shadow-lg"
-                  : "border-gray-200 hover:border-purple-300 hover:shadow-md"
+                  ? "border-pink-500/50 shadow-lg shadow-pink-500/30"
+                  : "border-white/15 hover:border-pink-500/40 hover:shadow-md"
               }`}
             >
               <div className="flex flex-col items-center text-center">
@@ -307,10 +334,10 @@ export default function CharacterCreationModal({
                     />
                   </svg>
                 </div>
-                <h3 className="text-xl font-black text-gray-900 mb-2">
+                <h3 className="text-xl font-black text-white mb-2">
                   Custom Character
                 </h3>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-white/70">
                   Create your own unique character with custom traits and
                   personality
                 </p>
@@ -320,14 +347,14 @@ export default function CharacterCreationModal({
 
           {/* Custom Character Creation Form */}
           {selectedPreset === "custom" && (
-            <div className="mt-6 p-6 bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl border-2 border-purple-200 text-gray-900">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">
+            <div className="mt-6 p-6 bg-gradient-to-br from-purple-900/30 to-black rounded-2xl border-2 border-purple-500/30 text-white">
+              <h3 className="text-xl font-bold text-white mb-4">
                 Customize Your Character
               </h3>
 
               {/* Name Input */}
               <div className="mb-4">
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-white/80 mb-2">
                   Character Name *
                 </label>
                 <input
@@ -335,13 +362,13 @@ export default function CharacterCreationModal({
                   value={customName}
                   onChange={(e) => setCustomName(e.target.value)}
                   placeholder="e.g., Luna, Alex, Maya..."
-                  className="w-full px-4 py-2 border-2 border-purple-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400 bg-white"
+                  className="w-full px-4 py-3 bg-gradient-to-br from-purple-900/20 to-black border-2 border-purple-500/30 rounded-xl text-white placeholder-white/60 focus:border-purple-500 focus:outline-none focus:shadow-lg focus:shadow-purple-500/20"
                 />
               </div>
 
               {/* Personality Traits */}
               <div className="mb-4">
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-white/80 mb-2">
                   Personality Traits (up to 5)
                 </label>
                 <div className="flex gap-2 mb-2">
@@ -354,12 +381,12 @@ export default function CharacterCreationModal({
                       (e.preventDefault(), handleAddTrait())
                     }
                     placeholder="e.g., Confident, Playful, Caring..."
-                    className="flex-1 px-4 py-2 border-2 border-purple-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400 bg-white"
+                    className="flex-1 px-4 py-3 bg-gradient-to-br from-purple-900/20 to-black border-2 border-purple-500/30 rounded-xl text-white placeholder-white/60 focus:border-purple-500 focus:outline-none focus:shadow-lg focus:shadow-purple-500/20"
                   />
                   <button
                     onClick={handleAddTrait}
                     disabled={customTraits.length >= 5}
-                    className="px-4 py-2 bg-purple-500 text-white rounded-xl hover:bg-purple-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl hover:shadow-lg hover:shadow-pink-500/40 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Add
                   </button>
@@ -368,23 +395,76 @@ export default function CharacterCreationModal({
                   {customTraits.map((trait, idx) => (
                     <span
                       key={idx}
-                      className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium flex items-center gap-2"
+                      className="px-3 py-1 bg-purple-500/15 border border-purple-400/30 text-purple-200 rounded-full text-sm font-medium flex items-center gap-2"
                     >
                       {trait}
                       <button
                         onClick={() => handleRemoveTrait(idx)}
-                        className="text-purple-500 hover:text-purple-700"
+                        className="text-purple-300 hover:text-purple-200"
+                        aria-label={`Remove trait ${trait}`}
                       >
                         ×
                       </button>
                     </span>
                   ))}
                 </div>
+
+                {/* Quick-select traits */}
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {personalityTraits.map((trait) => {
+                    const active = customTraits.includes(trait);
+                    return (
+                      <button
+                        key={trait}
+                        type="button"
+                        onClick={() =>
+                          setCustomTraits((prev) =>
+                            active ? prev.filter((t) => t !== trait) : [...prev, trait]
+                          )
+                        }
+                        className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all border ${
+                          active
+                            ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white border-white/20 shadow-lg shadow-pink-500/30"
+                            : "bg-black/30 text-white border-white/20 hover:bg-white/10"
+                        }`}
+                      >
+                        {trait}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
 
+              {/* Interests */}
+              <div className="mb-6">
+                <label className="block text-sm font-semibold text-white/80 mb-2">Interests</label>
+                <div className="flex flex-wrap gap-2">
+                  {interests.map((interest) => {
+                    const active = customInterests.includes(interest);
+                    return (
+                      <button
+                        key={interest}
+                        type="button"
+                        onClick={() =>
+                          setCustomInterests((prev) =>
+                            active ? prev.filter((i) => i !== interest) : [...prev, interest]
+                          )
+                        }
+                        className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all border ${
+                          active
+                            ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white border-white/20 shadow-lg shadow-pink-500/30"
+                            : "bg-black/30 text-white border-white/20 hover:bg-white/10"
+                        }`}
+                      >
+                        {interest}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
               {/* Description */}
               <div className="mb-4">
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-white/80 mb-2">
                   Additional Description (Optional)
                 </label>
                 <textarea
@@ -392,14 +472,14 @@ export default function CharacterCreationModal({
                   onChange={(e) => setCustomDescription(e.target.value)}
                   placeholder="Add more details about your character's personality, background, or behavior..."
                   rows={3}
-                  className="w-full px-4 py-2 border-2 border-purple-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400 bg-white resize-none"
+                  className="w-full px-4 py-3 bg-gradient-to-br from-purple-900/20 to-black border-2 border-purple-500/30 rounded-xl text-white placeholder-white/60 focus:border-purple-500 focus:outline-none focus:shadow-lg focus:shadow-purple-500/20 resize-none"
                 />
               </div>
 
               {/* Create Button */}
               <button
                 onClick={handleCreateCustom}
-                className="w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-xl hover:shadow-lg transition-all"
+                className="w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-xl hover:shadow-lg hover:shadow-pink-500/40 transition-all"
               >
                 Create Character
               </button>
