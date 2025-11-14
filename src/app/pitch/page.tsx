@@ -620,7 +620,7 @@ export default function PitchPage() {
           </p>
           <div className="bg-gray-900 rounded-2xl overflow-hidden aspect-video">
             <iframe
-              src="https://www.youtube.com/embed/N-_cCxwKYOA"
+              src="https://www.youtube.com/embed/pY33EFasRQc"
               className="w-full h-full"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

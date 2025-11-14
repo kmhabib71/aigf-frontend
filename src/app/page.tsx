@@ -9,6 +9,7 @@ import { authService } from "../lib/auth/authService";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 import GlassEffect from "../components/GlassEffect";
+import DemoHero from "../components/DemoHero";
 import { backendUrl } from "../lib/config";
 interface TrendingStory {
   id: string;
@@ -107,37 +108,8 @@ export default function LandingPage() {
   };
 
   return (
-    <div
-      className="min-h-screen relative overflow-hidden bg-gradient-to-br from-purple-50 via-pink-50 to-cyan-50"
-      style={{
-        backgroundImage: 'url("/image.jpg")',
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        backgroundAttachment: "fixed",
-      }}
-    >
-      {/* Animated Background Orbs */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div
-          className="absolute w-[300px] sm:w-[500px] lg:w-[800px] h-[300px] sm:h-[500px] lg:h-[800px] rounded-full opacity-10 sm:opacity-15 lg:opacity-20 animate-float-slow"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(216, 180, 254, 0.4) 0%, rgba(233, 213, 255, 0.2) 50%, transparent 100%)",
-            top: "-20%",
-            right: "-10%",
-          }}
-        />
-        <div
-          className="absolute w-[250px] sm:w-[400px] lg:w-[700px] h-[250px] sm:h-[400px] lg:h-[700px] rounded-full opacity-10 sm:opacity-15 lg:opacity-20 animate-float-slow animation-delay-2000"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(251, 207, 232, 0.4) 0%, rgba(252, 231, 243, 0.2) 50%, transparent 100%)",
-            bottom: "-15%",
-            left: "-10%",
-          }}
-        />
-      </div>
+    <div className="min-h-screen relative overflow-hidden bg-black">
+      {/* Background orbs removed to match dark theme */}
 
       {/* Mouse Follow Glow - Desktop only */}
       <div
@@ -152,6 +124,7 @@ export default function LandingPage() {
       />
 
       <Header />
+      <DemoHero />
 
       <div className="relative z-20">
         {/* ==================== SECTION 1: IMMEDIATE IMMERSION ==================== */}
