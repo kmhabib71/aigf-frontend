@@ -745,16 +745,7 @@ export default function StoryViewPage() {
 
   if (loading) {
     return (
-      <div
-        className="min-h-screen flex items-center justify-center relative overflow-hidden"
-        style={{
-          backgroundImage: 'url("/image.jpg")',
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          backgroundAttachment: "fixed",
-        }}
-      >
+      <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-black">
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
           <div
             className="absolute w-[300px] sm:w-[500px] lg:w-[800px] h-[300px] sm:h-[500px] lg:h-[800px] rounded-full opacity-10 sm:opacity-15 lg:opacity-20 animate-float-slow"
@@ -779,16 +770,7 @@ export default function StoryViewPage() {
   // Only show error if we've loaded at least once AND there's an actual error or no story
   if (hasLoadedOnce && !loading && (error || !story)) {
     return (
-      <div
-        className="min-h-screen flex items-center justify-center relative overflow-hidden"
-        style={{
-          backgroundImage: 'url("/image.jpg")',
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          backgroundAttachment: "fixed",
-        }}
-      >
+      <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-black">
         Back
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
           <div
@@ -887,16 +869,7 @@ export default function StoryViewPage() {
     ) : undefined;
 
   return (
-    <div
-      className="min-h-screen relative overflow-hidden"
-      style={{
-        backgroundImage: 'url("/image.jpg")',
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        backgroundAttachment: "fixed",
-      }}
-    >
+    <div className="min-h-screen relative overflow-hidden bg-black">
       {/* SEO Schema Markup */}
       {story && <StorySchema story={story} />}
       {isEditing && editedStory && (

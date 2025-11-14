@@ -25,18 +25,20 @@ export default function DemoHero() {
           src="/demo/model.png"
           alt="Sophia - AI Companion"
           fill
-          className="object-cover object-center scale-110"
+          className="object-cover origin-bottom scale-[1.15]"
+          style={{ objectPosition: "center 8%", top: 100 }}
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+        {/* Stronger bottom-to-middle fade for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent" />
       </div>
 
       {/* Top-right mini header overlay removed for home page */}
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center w-full">
-          {/* LEFT: Character Card + Info */}
-          <div className="order-2 md:order-1 h-full flex items-center py-8 md:py-0">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center w-full">
+          {/* LEFT: Character Card + Info (hidden on mobile) */}
+          <div className="order-3 md:order-1 h-full items-center py-8 md:py-0 hidden md:flex">
             {/* Character Card */}
             <div className="relative max-w-[360px] w-full mx-auto md:mx-0 md:ml-4 lg:ml-12">
               {/* Glass card background */}
@@ -98,7 +100,7 @@ export default function DemoHero() {
                     Customize Your Experience
                   </Link>
                   <Link
-                    href="/demo/chat"
+                    href="/chat?personaPreset=sophia"
                     className="flex items-center justify-center gap-2 w-full px-4 py-2 bg-gradient-to-r from-cyan-500 via-blue-500 to-cyan-500 text-white font-semibold text-center rounded-lg hover:shadow-xl hover:shadow-cyan-500/40 transition-all text-xs"
                   >
                     <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
@@ -167,8 +169,58 @@ export default function DemoHero() {
             </div>
           </div>
 
+          {/* MIDDLE: Headline + CTAs (absolute at bottom on mobile) */}
+          <div className="order-1 md:order-2 text-white text-center md:text-left px-4 md:px-6 absolute inset-x-0 bottom-20 sm:bottom-24 z-10 md:static md:inset-auto md:bottom-auto">
+            <div className="max-w-xl mx-auto md:mx-0">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-tight">
+                Unlock Limitless Conversations
+              </h1>
+              <h2 className="mt-2 text-xl sm:text-2xl md:text-3xl font-extrabold text-white/90">
+                Connect with Your AI Companion
+              </h2>
+              <p className="mt-4 text-white/80 text-sm sm:text-base md:text-lg">
+                Experience personalized chats, custom stories, and unparalleled privacy.
+                Sophia is here 24/7.
+              </p>
+
+              {/* Feature Buttons */}
+              <div className="mt-6 flex flex-wrap md:flex-nowrap gap-4 justify-center md:justify-start">
+                {/* Chat */}
+                <Link href="/chat" className="flex flex-col items-center">
+                  <div className="w-16 h-16 rounded-full border-2 border-cyan-300/80 bg-black/40 flex items-center justify-center">
+                    <svg className="w-7 h-7 text-cyan-300" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z" />
+                      <path d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z" />
+                    </svg>
+                  </div>
+                  <span className="mt-2 text-sm text-white/90">Chat</span>
+                </Link>
+
+                {/* Stories */}
+                <Link href="/romance/create" className="flex flex-col items-center">
+                  <div className="w-16 h-16 rounded-full border-2 border-cyan-300/80 bg-black/40 flex items-center justify-center">
+                    <svg className="w-7 h-7 text-cyan-300" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M4 4a2 2 0 012-2h7a2 2 0 012 2v12a1 1 0 01-1.447.894L12 15.618l-4.553 1.276A1 1 0 016 16V4z" />
+                    </svg>
+                  </div>
+                  <span className="mt-2 text-sm text-white/90">Stories</span>
+                </Link>
+
+                {/* Secure */}
+                <div className="flex flex-col items-center">
+                  <div className="w-16 h-16 rounded-full border-2 border-cyan-300/80 bg-black/40 flex items-center justify-center">
+                    <svg className="w-7 h-7 text-cyan-300" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span className="mt-2 text-sm text-white/90">Secure</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* RIGHT: Full Model Image (desktop and up) */}
-          <div className="order-1 md:order-2 h-full items-end hidden md:flex">
+          <div className="order-3 md:order-3 h-full items-end hidden md:flex translate-x-6 md:translate-x-10 lg:translate-x-12">
             <div className="relative w-full h-full">
               {/* Pink glow effect */}
               <div className="absolute right-0 top-1/4 w-[500px] h-[500px] bg-pink-500/25 rounded-full blur-[100px]"></div>
@@ -179,7 +231,7 @@ export default function DemoHero() {
                   src="/demo/model.png"
                   alt="Sophia - AI Companion"
                   fill
-                  className="object-contain object-bottom scale-125 md:scale-[1.35]"
+                  className="object-contain object-bottom scale-150 md:scale-[1.5]"
                   priority
                 />
               </div>

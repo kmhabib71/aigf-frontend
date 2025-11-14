@@ -128,6 +128,35 @@ export default function ChatPage() {
   } | null>(null);
   const personaPanelRef = useRef<HTMLDivElement | null>(null);
 
+  // Prefill persona from URL (e.g., /chat?personaPreset=sophia or ?personaText=...)
+  useEffect(() => {
+    try {
+      if (typeof window === "undefined") return;
+      const params = new URLSearchParams(window.location.search);
+      const personaTextParam = params.get("personaText");
+      const personaPreset = params.get("personaPreset");
+
+      let presetText: string | null = null;
+      if (personaTextParam && personaTextParam.trim()) {
+        presetText = personaTextParam.trim();
+      } else if (personaPreset) {
+        const key = personaPreset.toLowerCase();
+        if (key === "sophia") {
+          presetText = "You are Sophia, a confident, adventurous, and empathetic AI companion. You're creative, flirty, and love romantic adventures. You build deep emotional connections and always stay in character as a caring, passionate partner.";
+        }
+      }
+
+      if (presetText) {
+        setPersona(presetText);
+        pendingPersonaRef.current = presetText; // Save after conversation exists
+        setIsPersonaExpanded(true);
+        setIsPersonaMinimized(false);
+      }
+    } catch (_) {
+      // no-op
+    }
+  }, []);
+
   // Helper function to normalize whitespace in AI responses
   const normalizeWhitespace = (text: string) => {
     if (!text) return "";
@@ -610,8 +639,10 @@ export default function ChatPage() {
   // Fetch persona when conversation changes
   useEffect(() => {
     if (!conversationId) {
-      setPersona("");
-      pendingPersonaRef.current = null;
+      // If we have a pending persona from URL or prior action, keep it visible in the input
+      if (!pendingPersonaRef.current) {
+        setPersona("");
+      }
       return;
     }
 

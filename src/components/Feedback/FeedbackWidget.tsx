@@ -61,16 +61,16 @@ export default function FeedbackWidget() {
 
   return (
     <>
-      <button
-        aria-label="Send feedback"
+      {/* <button
+        aria-label="Send feedback hidden"
         onClick={() => setOpen(true)}
         className="fixed z-40 top-14 md:right-12 right-6 rounded-full px-4 py-3 shadow-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold hover:from-indigo-600 hover:to-purple-700 feedback-glow cursor-pointer"
       >
         Feedback
-      </button>
+      </button> */}
 
       {/* Tooltip near the button, same fixed position */}
-      <div
+      {/* <div
         className={`fixed z-40 top-[3.25rem] md:right-[3.5rem] right-[1.25rem] -translate-y-3 transition-opacity duration-500 pointer-events-none ${
           showTip ? "opacity-100" : "opacity-0"
         }`}
@@ -79,7 +79,7 @@ export default function FeedbackWidget() {
         <div className="bg-black text-white text-xs px-3 py-1.5 rounded-lg shadow-lg whitespace-nowrap">
           Your feedback is very important
         </div>
-      </div>
+      </div> */}
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
