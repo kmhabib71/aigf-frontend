@@ -483,6 +483,7 @@ export default function ChatPage() {
     setStreamingContent((prev) => {
       const newContent = prev + incrementalChunk;
       streamingContentRef.current = newContent;
+      console.log(`🔄 Chat page accumulated: ${newContent.length} chars, last chunk: "${incrementalChunk}"`);
       return newContent;
     });
   };
@@ -596,6 +597,12 @@ export default function ChatPage() {
     textContent?: string
   ) => {
     const finalContent = textContent || streamingContentRef.current;
+
+    console.log(`🎬 Streaming complete handler called`);
+    console.log(`📊 textContent param:`, textContent?.substring(0, 100));
+    console.log(`📊 streamingContentRef.current:`, streamingContentRef.current.substring(0, 100));
+    console.log(`📊 Final content length: ${finalContent.length} chars`);
+    console.log(`📊 Final content preview:`, finalContent.substring(Math.max(0, finalContent.length - 100)));
 
     if (finalContent || (imageUrls && imageUrls.length > 0)) {
       const aiMessage: Message = {
@@ -1102,7 +1109,7 @@ export default function ChatPage() {
                 >
                   {/* Character Avatar for AI messages */}
                   {message.role === "assistant" && characterAvatar && (
-                    <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden ring-2 ring-purple-400/50 shadow-lg self-end mb-1">
+                    <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden ring-2 ring-purple-400/50 shadow-lg self-start">
                       <img
                         src={characterAvatar}
                         alt="Character"
@@ -1145,7 +1152,7 @@ export default function ChatPage() {
                     )}
 
                     <div
-                      className={`whitespace-pre-line leading-relaxed text-sm sm:text-base lg:text-base ${
+                      className={`whitespace-pre-line leading-relaxed text-sm sm:text-base lg:text-base break-words ${
                         message.role === "user"
                           ? "text-white drop-shadow-sm"
                           : "text-gray-50"
@@ -1173,7 +1180,7 @@ export default function ChatPage() {
                 <div className="flex justify-start gap-2 sm:gap-3 w-full">
                   {/* Character Avatar for streaming AI message */}
                   {characterAvatar && (
-                    <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden ring-2 ring-purple-400/50 shadow-lg self-end mb-1">
+                    <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden ring-2 ring-purple-400/50 shadow-lg self-start">
                       <img
                         src={characterAvatar}
                         alt="Character"
@@ -1181,7 +1188,7 @@ export default function ChatPage() {
                       />
                     </div>
                   )}
-                  <div className={`bg-gradient-to-br from-[#ae1e75]/90 via-[#c93387]/85 to-[#f06aa6]/80 backdrop-blur-lg border border-[#ffb1ec]/40 rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-5 shadow-lg shadow-black/25 min-h-[60px] ${
+                  <div className={`bg-gradient-to-br from-[#ae1e75]/90 via-[#c93387]/85 to-[#f06aa6]/80 backdrop-blur-lg border border-[#ffb1ec]/40 rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-5 shadow-lg shadow-black/25 min-h-[60px] overflow-visible ${
                     characterAvatar
                       ? "max-w-[calc(85%-2.5rem)] sm:max-w-[calc(75%-3rem)] lg:max-w-[calc(65%-3rem)]"
                       : "max-w-[85%] sm:max-w-[75%] lg:max-w-[65%]"
@@ -1194,7 +1201,7 @@ export default function ChatPage() {
                         </span>
                       </div>
                     ) : streamingContent ? (
-                      <div className="whitespace-pre-line leading-relaxed text-gray-50 text-sm sm:text-base lg:text-base min-h-[40px]">
+                      <div className="whitespace-pre-line leading-relaxed text-gray-50 text-sm sm:text-base lg:text-base min-h-[40px] break-words overflow-wrap-anywhere">
                         {renderStyledText(streamingContent)}
                         <div className="inline-block w-2 h-5 bg-purple-400 animate-pulse ml-1" />
                       </div>

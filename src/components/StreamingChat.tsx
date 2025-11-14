@@ -71,7 +71,9 @@ export const StreamingChat = React.forwardRef<any, StreamingChatProps>(
     ref
   ) => {
     const [isStreaming, setIsStreaming] = useState(false);
+    const isStreamingRef = React.useRef(false);
     const [streamingContent, setStreamingContent] = useState("");
+    const streamingContentRef = React.useRef("");
 
     useEffect(() => {
       if (!socket) return;
@@ -93,12 +95,20 @@ export const StreamingChat = React.forwardRef<any, StreamingChatProps>(
         switch (data.type) {
           case "chunk":
             // Real-time streaming chunk - pass incremental chunk to parent
+            // Ignore stray chunks if we've already marked streaming as complete
+            if (!isStreamingRef.current) {
+              return;
+            }
             const incrementalContent = data.content || "";
             console.log(
               `📨 Received chunk (${incrementalContent.length} chars):`,
               incrementalContent.substring(0, 50)
             );
-            setStreamingContent((prev) => prev + incrementalContent);
+            setStreamingContent((prev) => {
+              const newContent = prev + incrementalContent;
+              streamingContentRef.current = newContent;
+              return newContent;
+            });
             onResponse(incrementalContent);
             break;
 
@@ -111,9 +121,12 @@ export const StreamingChat = React.forwardRef<any, StreamingChatProps>(
           case "complete":
             // Streaming complete
             setIsStreaming(false);
-            const currentStreamingContent = streamingContent;
+            isStreamingRef.current = false;
+            // Use ref to get the latest content, not state which might be stale
+            const currentStreamingContent = streamingContentRef.current;
 
             console.log(`🌊 Streaming complete with model: ${data.modelUsed}`);
+            console.log(`📊 Final content length: ${currentStreamingContent.length} chars`);
             if (data.imageUrls && data.imageUrls.length > 0) {
               console.log(`🖼️ Generated ${data.imageUrls.length} image(s)`);
               console.log(`🖼️ Image URLs:`, data.imageUrls);
@@ -135,14 +148,19 @@ export const StreamingChat = React.forwardRef<any, StreamingChatProps>(
                 onComplete(data.imageUrls, data.imageMetadata, data.content);
               }, 0);
             } else {
+              // Prefer server-provided complete content if available
+              const finalText = data.fullContent || data.content || currentStreamingContent || "";
+              // Reset internal buffers, then pass final text to onComplete so caller shows the full message
               setStreamingContent("");
-              onComplete(data.imageUrls, data.imageMetadata);
+              streamingContentRef.current = "";
+              onComplete(data.imageUrls, data.imageMetadata, finalText);
             }
             break;
 
           case "error":
             // Streaming error
             setIsStreaming(false);
+            isStreamingRef.current = false;
             setStreamingContent("");
             onError(data.error || "Streaming error occurred", data);
             break;
@@ -165,6 +183,7 @@ export const StreamingChat = React.forwardRef<any, StreamingChatProps>(
           case "fallback_to_http":
             // Streaming not available, falling back to HTTP
             setIsStreaming(false);
+            isStreamingRef.current = false;
             setStreamingContent("");
             onToolProcessing(data.message || "Falling back to regular chat...");
             console.log(`🔄 Streaming fallback: ${data.message}`);
@@ -196,7 +215,9 @@ export const StreamingChat = React.forwardRef<any, StreamingChatProps>(
 
       console.log(`🌊 Starting streaming chat for: "${message}"`);
       setIsStreaming(true);
+      isStreamingRef.current = true;
       setStreamingContent("");
+      streamingContentRef.current = "";
       onStart();
 
       // Send streaming request to backend - Venice mode is now forced for chat page
