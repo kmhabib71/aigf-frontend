@@ -87,7 +87,7 @@ export default function DemoHero() {
                 {/* CTA Buttons */}
                 <div className="space-y-2 mb-4">
                   <Link
-                    href="/demo/create-character"
+                    href="/chat?openCharacter=custom"
                     className="flex items-center justify-center gap-2 w-full px-4 py-2 bg-gradient-to-r from-purple-600 via-purple-500 to-purple-600 text-white font-semibold text-center rounded-lg hover:shadow-xl hover:shadow-purple-500/40 transition-all text-xs"
                   >
                     <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">

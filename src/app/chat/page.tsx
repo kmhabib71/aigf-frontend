@@ -8,7 +8,7 @@ import ConversationSidebar from "@/components/ConversationSidebar";
 import { StreamingChat } from "@/components/StreamingChat";
 import SoftGateModal from "@/components/SoftGateModal";
 import Header from "@/components/layout/Header";
-import CharacterCreationModal from "@/components/CharacterCreationModal";
+import CharacterCreationModal from "@/components/CharacterCreationModal2";
 
 import GlassEffect from "@/components/GlassEffect";
 import { sessionService } from "@/lib/auth/sessionService";
@@ -105,6 +105,7 @@ export default function ChatPage() {
   const [isPersonaExpanded, setIsPersonaExpanded] = useState(true);
   const [isPersonaMinimized, setIsPersonaMinimized] = useState(false);
   const [showCharacterModal, setShowCharacterModal] = useState(false);
+  const [characterModalPreset, setCharacterModalPreset] = useState<string | null>(null);
 
   // SOFT GATE STATE
   const [showSoftGate, setShowSoftGate] = useState(false);
@@ -136,6 +137,7 @@ export default function ChatPage() {
       const params = new URLSearchParams(window.location.search);
       const personaTextParam = params.get("personaText");
       const personaPreset = params.get("personaPreset");
+      const openCharacter = params.get("openCharacter");
 
       let presetText: string | null = null;
       let presetAvatar: string | null = null;
@@ -177,6 +179,16 @@ export default function ChatPage() {
         pendingPersonaRef.current = presetText; // Save after conversation exists
         setIsPersonaExpanded(true);
         setIsPersonaMinimized(false);
+      }
+
+      // Open character modal directly in customization view if requested
+      if (openCharacter) {
+        setShowCharacterModal(true);
+        setCharacterModalPreset(openCharacter);
+        // Clean just this param to avoid persistent reopening when navigating
+        const url = new URL(window.location.href);
+        url.searchParams.delete("openCharacter");
+        window.history.replaceState({}, "", url.toString());
       }
     } catch (_) {
       // no-op
@@ -1296,6 +1308,7 @@ export default function ChatPage() {
         onClose={() => setShowCharacterModal(false)}
         onSelectCharacter={handleCharacterSelect}
         currentPersona={persona}
+        initialPresetId={characterModalPreset}
       />
 
       {/* Streaming Chat Component */}
